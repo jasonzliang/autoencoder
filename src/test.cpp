@@ -25,18 +25,18 @@ int main(int argc, char* argv[]){
 	// loop through the first 10 training examples and then print them
 	// to stdout.
 	for(int idx=0;idx<10;idx++){
-	auto im = training_images_sq[idx];
-	std::cout << int(training_labels[idx]) << std::endl;
-	for(auto rows: im){
-		for(auto elem: rows){
-			if(elem > 128){
-				std::cout << "\u2593" << "\u2593";
+		auto im = training_images_sq[idx];
+		std::cout << int(training_labels[idx]) << std::endl;
+		for(auto rows: im){
+			for(auto elem: rows){
+				if(elem > 128){
+					std::cout << "\u2593" << "\u2593";
+				}
+				else
+					std::cout << "  ";
 			}
-			else
-				std::cout << "  ";
+			std::cout << "\n";
 		}
-		std::cout << "\n";
-	}
 	}
 
 	return 0;
