@@ -1,0 +1,80 @@
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+RandomNumber	hidden_layer.cpp	/^float RandomNumber(float Min, float Max)$/;"	f
+compute_delta_hidden	hidden_layer.cpp	/^void hidden_layer::compute_delta_hidden(float *delta, float *delta_next_layer, float *output_curr_layer, hidden_layer *output_layer)$/;"	f	class:hidden_layer
+compute_delta_output	hidden_layer.cpp	/^void hidden_layer::compute_delta_output(float *delta, float *o, float *t, float)$/;"	f	class:hidden_layer
+decode	hidden_layer.cpp	/^void hidden_layer::decode(float *input, float *output)$/;"	f	class:hidden_layer
+encode	hidden_layer.cpp	/^void hidden_layer::encode(float *input, float *output)$/;"	f	class:hidden_layer
+hidden_layer	hidden_layer.cpp	/^hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):$/;"	f	class:hidden_layer
+hidden_layer	hidden_layer.cpp	/^hidden_layer::hidden_layer(int numInputs, int numHiddenUnits, float weightRange):$/;"	f	class:hidden_layer
+init	hidden_layer.cpp	/^void hidden_layer::init()$/;"	f	class:hidden_layer
+sigmoidTransform	hidden_layer.cpp	/^void sigmoidTransform(float *x)$/;"	f
+softMaxTransform	hidden_layer.cpp	/^void softMaxTransform(float *x)$/;"	f
+squared_loss_function	hidden_layer.cpp	/^float hidden_layer::squared_loss_function(float *input)$/;"	f	class:hidden_layer
+updateWeights	hidden_layer.cpp	/^void hidden_layer::updateWeights(float *delta, float *output, float learn_rate)$/;"	f	class:hidden_layer
+~hidden_layer	hidden_layer.cpp	/^hidden_layer::~hidden_layer()$/;"	f	class:hidden_layer
+HIDDEN_LAYER	hidden_layer.h	2;"	d
+biases	hidden_layer.h	/^  float *biases;$/;"	m	class:hidden_layer
+getNumHiddenUnits	hidden_layer.h	/^  inline int getNumHiddenUnits()$/;"	f	class:hidden_layer
+getNumInputUnits	hidden_layer.h	/^  inline int getNumInputUnits()$/;"	f	class:hidden_layer
+getWeights	hidden_layer.h	/^  inline float *getWeights()$/;"	f	class:hidden_layer
+hidden_layer	hidden_layer.h	/^class hidden_layer$/;"	c
+numHiddenUnits	hidden_layer.h	/^  int numInputs, numHiddenUnits, numWeights;$/;"	m	class:hidden_layer
+numInputs	hidden_layer.h	/^  int numInputs, numHiddenUnits, numWeights;$/;"	m	class:hidden_layer
+numWeights	hidden_layer.h	/^  int numInputs, numHiddenUnits, numWeights;$/;"	m	class:hidden_layer
+weightRange	hidden_layer.h	/^  float weightRange;$/;"	m	class:hidden_layer
+weights	hidden_layer.h	/^  float *weights;$/;"	m	class:hidden_layer
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
+train_and_test_network	main.cpp	/^void train_and_test_network()$/;"	f
+MNIST_READER_HPP	mnist/include/mnist_reader.hpp	9;"	d
+MNIST_dataset	mnist/include/mnist_reader.hpp	/^struct MNIST_dataset {$/;"	s	namespace:mnist
+mnist	mnist/include/mnist_reader.hpp	/^namespace mnist {$/;"	n
+read_header	mnist/include/mnist_reader.hpp	/^inline uint32_t read_header(const std::unique_ptr<char[]>& buffer, size_t position){$/;"	f	namespace:mnist
+read_mnist_image_file	mnist/include/mnist_reader.hpp	/^Container<Sub<Pixel>> read_mnist_image_file(const std::string& path, std::size_t limit = 0){$/;"	f	namespace:mnist
+read_mnist_image_file_sq	mnist/include/mnist_reader.hpp	/^Container<Sub<Sub<Pixel>>> read_mnist_image_file_sq(const std::string& path, std::size_t limit = 0){$/;"	f	namespace:mnist
+read_mnist_label_file	mnist/include/mnist_reader.hpp	/^Container<Label> read_mnist_label_file(const std::string& path, std::size_t limit = 0){$/;"	f	namespace:mnist
+resize_test	mnist/include/mnist_reader.hpp	/^    void resize_test(std::size_t new_size){$/;"	f	struct:mnist::MNIST_dataset
+resize_training	mnist/include/mnist_reader.hpp	/^    void resize_training(std::size_t new_size){$/;"	f	struct:mnist::MNIST_dataset
+test_images	mnist/include/mnist_reader.hpp	/^    Container<Sub<Pixel>> test_images;$/;"	m	struct:mnist::MNIST_dataset
+test_labels	mnist/include/mnist_reader.hpp	/^    Container<Label> test_labels;$/;"	m	struct:mnist::MNIST_dataset
+training_images	mnist/include/mnist_reader.hpp	/^    Container<Sub<Pixel>> training_images;$/;"	m	struct:mnist::MNIST_dataset
+training_labels	mnist/include/mnist_reader.hpp	/^    Container<Label> training_labels;$/;"	m	struct:mnist::MNIST_dataset
+MNIST_READER_HPP	mnist/include/mnist_reader_less.hpp	9;"	d
+MNIST_dataset	mnist/include/mnist_reader_less.hpp	/^struct MNIST_dataset {$/;"	s	namespace:mnist
+mnist	mnist/include/mnist_reader_less.hpp	/^namespace mnist {$/;"	n
+read_header	mnist/include/mnist_reader_less.hpp	/^inline uint32_t read_header(const std::unique_ptr<char[]>& buffer, size_t position){$/;"	f	namespace:mnist
+read_mnist_image_file	mnist/include/mnist_reader_less.hpp	/^std::vector<std::vector<Pixel>> read_mnist_image_file(const std::string& path){$/;"	f	namespace:mnist
+read_mnist_image_file_sq	mnist/include/mnist_reader_less.hpp	/^std::vector<std::vector<std::vector<Pixel>>> read_mnist_image_file_sq(const std::string& path){$/;"	f	namespace:mnist
+read_mnist_label_file	mnist/include/mnist_reader_less.hpp	/^std::vector<Label> read_mnist_label_file(const std::string& path){$/;"	f	namespace:mnist
+test_images	mnist/include/mnist_reader_less.hpp	/^    std::vector<std::vector<Pixel>> test_images;$/;"	m	struct:mnist::MNIST_dataset
+test_labels	mnist/include/mnist_reader_less.hpp	/^    std::vector<Label> test_labels;$/;"	m	struct:mnist::MNIST_dataset
+training_images	mnist/include/mnist_reader_less.hpp	/^    std::vector<std::vector<Pixel>> training_images;$/;"	m	struct:mnist::MNIST_dataset
+training_labels	mnist/include/mnist_reader_less.hpp	/^    std::vector<Label> training_labels;$/;"	m	struct:mnist::MNIST_dataset
+MNIST_UTILS_HPP	mnist/include/mnist_utils.hpp	9;"	d
+binarize_dataset	mnist/include/mnist_utils.hpp	/^void binarize_dataset(Dataset& dataset){$/;"	f	namespace:mnist
+binarize_each	mnist/include/mnist_utils.hpp	/^void binarize_each(Container& values, double threshold = 30.0){$/;"	f	namespace:mnist
+mean	mnist/include/mnist_utils.hpp	/^double mean(const Container& container){$/;"	f	namespace:mnist
+mnist	mnist/include/mnist_utils.hpp	/^namespace mnist {$/;"	n
+normalize_dataset	mnist/include/mnist_utils.hpp	/^void normalize_dataset(Dataset& dataset){$/;"	f	namespace:mnist
+normalize_each	mnist/include/mnist_utils.hpp	/^void normalize_each(Container& values){$/;"	f	namespace:mnist
+stddev	mnist/include/mnist_utils.hpp	/^double stddev(const Container& container, double mean){$/;"	f	namespace:mnist
+backprop	neural_network.cpp	/^neural_network::backprop(float *o_i, float* t)$/;"	f	class:neural_network
+neural_network	neural_network.cpp	/^neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate):$/;"	f	class:neural_network
+~neural_network	neural_network.cpp	/^neural_network::~neural_network()$/;"	f	class:neural_network
+NEURAL_NETWORK	neural_network.h	2;"	d
+delta_j	neural_network.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:neural_network
+delta_k	neural_network.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:neural_network
+h	neural_network.h	/^  hidden_layer *h;$/;"	m	class:neural_network
+learn_rate	neural_network.h	/^  float learn_rate;$/;"	m	class:neural_network
+neural_network	neural_network.h	/^class neural_network$/;"	c
+o	neural_network.h	/^  hidden_layer *o;$/;"	m	class:neural_network
+o_j	neural_network.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:neural_network
+o_k	neural_network.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:neural_network
+encode	output_layer.cpp	/^void output_layer::encode(float *input, float *output)$/;"	f	class:output_layer
+softMaxTransform	output_layer.cpp	/^void softMaxTransform(float *x)$/;"	f
+OUTPUT_LAYER	output_layer.h	2;"	d
+output_layer	output_layer.h	/^class output_layer: public hidden_layer$/;"	c

@@ -5,11 +5,25 @@ float RandomNumber(float Min, float Max)
   return ((float(rand()) / float(RAND_MAX)) * (Max - Min)) + Min;
 }
 
-void sigmoidTransform(float *x)
+void sigmoidTransform(float *x, int numHiddenUnits)
 {
-  for (int i = 0; i < numWeights; i++)
+  for (int i = 0; i < numHiddenUnits; i++)
   {
-    x[i] = 1 / (1 + exp(-x));
+    x[i] = 1 / (1 + exp(-1 * x[i]));
+  }
+}
+
+void softMaxTransform(float *x, int numHiddenUnits)
+{
+  float sum = 0.0;
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    sum += x[i];
+  }
+
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    x[i] = 1 / (1 + exp(-1 * x[i] / sum));
   }
 }
 
@@ -17,7 +31,7 @@ hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):
   numInputs(numInputs),
   numHiddenUnits(numHiddenUnits)
 {
-  weightRange = 4. * sqrt(6. / (numInputs + numHiddenUnits));
+  weightRange = 1.0 / sqrt(numInputs);
   init();
 }
 
@@ -33,11 +47,18 @@ void hidden_layer::init()
 {
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
-
   for (int i = 0; i < numWeights; i++)
   {
     weights[i] = RandomNumber(-weightRange, weightRange);
   }
+
+  biases = new float[numHiddenUnits];
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    biases[i] = 0.0;
+  }
+
+  __t = new float[numHiddenUnits];
 }
 
 void hidden_layer::encode(float *input, float *output)
@@ -49,9 +70,9 @@ void hidden_layer::encode(float *input, float *output)
     {
       sum += weights[i * numInputs + j] * input[j];
     }
-    output[i] = sum;
+    output[i] = sum + biases[i];
   }
-  sigmoidTransform(output);
+  sigmoidTransform(output, numHiddenUnits);
 }
 
 void hidden_layer::decode(float *input, float *output)
@@ -65,25 +86,91 @@ void hidden_layer::decode(float *input, float *output)
     }
     output[i] = sum;
   }
-  sigmoidTransform(output);
+  sigmoidTransform(output, numHiddenUnits);
 }
 
-float hidden_layer::loss_function(float *input)
+float hidden_layer::autoencoder_squared_loss(float *input)
 {
   float hiddenValues[numHiddenUnits];
   float output[numInputs];
-  encode(input, &hiddenValues);
-  decode(&hiddenValues, &output);
+  encode(input, hiddenValues);
+  decode(hiddenValues, output);
 
   float error = 0.0;
   for (int i = 0; i < numInputs; i++)
   {
-  	error += pow(input[i] - output[i], 2);
+    error += pow(input[i] - output[i], 2);
   }
-  return 0.5*error;
+  return 0.5 * error;
+}
+
+float hidden_layer::squared_loss(float *output, int t)
+{
+  float error = 0.0;
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    error += pow(output[i] - __t[i], 2);
+  }
+  return 0.5 * error;
+}
+
+void hidden_layer::compute_delta_output(float *delta, float *o, int t)
+{
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    __t[i] = 0.0;
+  }
+  __t[t] = 1.0;
+
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    delta[i] = o[i] * (1.0 - o[i]) * (o[i] - __t[i]);
+  }
+}
+
+void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)
+{
+  //i is actually j
+  //j is actually k
+  float *output_layer_weights = next_layer->getWeights();
+  int next_layer_num_hid = next_layer->getNumHiddenUnits();
+
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    float sum = 0.0;
+
+    for (int j = 0; j < next_layer_num_hid; j++)
+    {
+      // cout << endl;
+      // cout << numHiddenUnits << endl;
+      // cout << next_layer_num_hid << endl;
+      // cout << i * next_layer_num_hid + j << endl;
+      sum += delta_next_layer[j] * output_layer_weights[i * next_layer_num_hid + j];
+    }
+
+    delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum;
+  }
+}
+
+void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
+{
+  for (int i = 0; i < numInputs; i++)
+  {
+    for (int j = 0; j < numHiddenUnits; j++)
+    {
+      weights[i * numHiddenUnits + j] -= learn_rate * delta_curr_layer[j] * output_prev_layer[i];
+    }
+  }
+
+  for (int i = 0 ; i < numHiddenUnits; i++)
+  {
+    biases[i] += learn_rate * delta_curr_layer[i];
+  }
 }
 
 hidden_layer::~hidden_layer()
 {
   delete[] weights;
+  delete[] biases;
+  delete[] __t;
 }
