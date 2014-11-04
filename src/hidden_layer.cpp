@@ -7,6 +7,7 @@ float RandomNumber(float Min, float Max)
 
 void sigmoidTransform(float *x, int numHiddenUnits)
 {
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     x[i] = 1 / (1 + exp(-1 * x[i]));
@@ -16,11 +17,14 @@ void sigmoidTransform(float *x, int numHiddenUnits)
 void softMaxTransform(float *x, int numHiddenUnits)
 {
   float sum = 0.0;
+
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     sum += x[i];
   }
 
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     x[i] = 1 / (1 + exp(-1 * x[i] / sum));
@@ -47,12 +51,16 @@ void hidden_layer::init()
 {
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
+
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits)
   for (int i = 0; i < numWeights; i++)
   {
     weights[i] = RandomNumber(-weightRange, weightRange);
   }
 
   biases = new float[numHiddenUnits];
+
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     biases[i] = 0.0;
@@ -63,6 +71,7 @@ void hidden_layer::init()
 
 void hidden_layer::encode(float *input, float *output)
 {
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -77,6 +86,7 @@ void hidden_layer::encode(float *input, float *output)
 
 void hidden_layer::decode(float *input, float *output)
 {
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numInputs; i++)
   {
     float sum = 0.0;
@@ -97,6 +107,8 @@ float hidden_layer::autoencoder_squared_loss(float *input)
   decode(hiddenValues, output);
 
   float error = 0.0;
+
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numInputs; i++)
   {
     error += pow(input[i] - output[i], 2);
@@ -107,6 +119,7 @@ float hidden_layer::autoencoder_squared_loss(float *input)
 float hidden_layer::squared_loss(float *output, int t)
 {
   float error = 0.0;
+  
   for (int i = 0; i < numHiddenUnits; i++)
   {
     error += pow(output[i] - __t[i], 2);
@@ -133,32 +146,30 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
   //i is actually j
   //j is actually k
   float *output_layer_weights = next_layer->getWeights();
-  int next_layer_num_hid = next_layer->getNumHiddenUnits();
+  int numHidUnits_nextLayer = next_layer->getNumHiddenUnits();
 
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
 
-    for (int j = 0; j < next_layer_num_hid; j++)
+    for (int j = 0; j < numHidUnits_nextLayer; j++)
     {
-      // cout << endl;
-      // cout << numHiddenUnits << endl;
-      // cout << next_layer_num_hid << endl;
-      // cout << i * next_layer_num_hid + j << endl;
-      sum += delta_next_layer[j] * output_layer_weights[i * next_layer_num_hid + j];
+      //we are iterating through ith column of next layer's weight matrix
+      sum += delta_next_layer[j] * output_layer_weights[j * numHiddenUnits + i];
     }
-
     delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum;
   }
 }
 
 void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
 {
-  for (int i = 0; i < numInputs; i++)
+  #pragma omp parallel for schedule(dynamic, 1)
+  for (int i = 0; i < numHiddenUnits; i++)
   {
-    for (int j = 0; j < numHiddenUnits; j++)
+    for (int j = 0; j < numInputs; j++)
     {
-      weights[i * numHiddenUnits + j] -= learn_rate * delta_curr_layer[j] * output_prev_layer[i];
+      weights[i * numInputs + j] -= learn_rate * output_prev_layer[j] * delta_curr_layer[i];
     }
   }
 

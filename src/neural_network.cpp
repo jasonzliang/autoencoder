@@ -3,7 +3,7 @@
 neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate):
   learn_rate(learn_rate)
 {
-  cout << "created a neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output and " << learn_rate << " learn rate" << endl;
+  cout << "created a neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
   h = new hidden_layer(numInput, numHidden);
   o = new hidden_layer(numHidden, numOutput);
   o_j = new float[h->getNumHiddenUnits()];
@@ -35,11 +35,13 @@ int neural_network::predict(float *o_i)
   float bestValue = -1;
   for (int i = 0; i < (int) o->getNumHiddenUnits(); i++)
   {
+  	// cout << o_k[i] << " ";
   	if (o_k[i] > bestValue) {
   		bestValue = o_k[i];
   		bestIndex = i;
   	}
   }
+	// cout << endl;
   return bestIndex;
 }
 

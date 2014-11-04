@@ -9,7 +9,7 @@
 CC = g++
 
 # define any compile-time flags
-CFLAGS = -Wall -std=c++11 -O3
+CFLAGS = -Wall -fopenmp -std=c++11 -O3 
 
 # define any directories containing header files other than /usr/include
 #

@@ -27,7 +27,8 @@ void parseImages(vector<vector<vector<float> > > &__images, float **images, int 
 
 void train_and_test_network(int numOuterIter, neural_network *myNeuralNet, vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
-  cout << "cycling through " << numTrainingImages << " training images" << endl;
+  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+  double start = omp_get_wtime();
   for (int i = 0; i < numOuterIter; i++ )
   {
     float sum_squared_error = 0.0;
@@ -35,7 +36,7 @@ void train_and_test_network(int numOuterIter, neural_network *myNeuralNet, vecto
     {
       sum_squared_error += myNeuralNet->backprop(trainingImages[j], trainLabels[j]);
     }
-    cout << "outer iter: " << i+1 << " total error: " << sum_squared_error << endl;
+    cout << "outer iter: " << i+1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
   }
 
   cout << "evaluating network on " << numTestingImages << " test digits" << endl;
@@ -51,6 +52,8 @@ void train_and_test_network(int numOuterIter, neural_network *myNeuralNet, vecto
 
 int main(int argc, char *argv[])
 {
+	cout << "this machine has " << omp_get_num_procs() << " cores" << endl;
+	omp_set_num_threads(omp_get_num_procs());
   string train_labels_file("../data/train-labels-idx1-ubyte");
   string test_labels_file("../data/t10k-labels-idx1-ubyte");
   string train_images_file("../data/train-images-idx3-ubyte");
@@ -64,8 +67,8 @@ int main(int argc, char *argv[])
   // read_mnist_image_file_sq reads the images in as a 2D vector
   vector<int> training_labels = mnist::read_mnist_label_file<vector, int>(train_labels_file);
   vector<vector<vector<float> > > training_images_sq = mnist::read_mnist_image_file_sq<vector, vector, float>(train_images_file);
-  // numTrainingImages = (int) training_images_sq.size();
-  numTrainingImages = 1000;
+  numTrainingImages = (int) training_images_sq.size();
+  // numTrainingImages = 1000;
   float **training_images = new float*[numTrainingImages];
   for (int i = 0; i < numTrainingImages; i++)
   {
@@ -106,15 +109,17 @@ int main(int argc, char *argv[])
   //   }
   // }
 
-  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.0001);
+  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.5);
   train_and_test_network(30, myNeuralNet, training_labels, training_images, testing_labels, testing_images);
 
   delete myNeuralNet;
+
   for (int i = 0; i < numTrainingImages; i++)
   {
     delete[] training_images[i];
   }
   delete[] training_images;
+
   for (int i = 0; i < numTestingImages; i++)
   {
     delete[] testing_images[i];
