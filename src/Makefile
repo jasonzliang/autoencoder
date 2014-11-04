@@ -6,6 +6,7 @@
 #
 
 # define the C compiler to use
+#CC = /lusr/bin/g++-4.8
 CC = g++
 
 # define any compile-time flags
