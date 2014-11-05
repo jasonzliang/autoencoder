@@ -1,5 +1,6 @@
 #include "mnist/include/mnist_reader.hpp"
 #include "neural_network.h"
+#include "neural_network_cross.h"
 #include <iomanip>
 // #include <iostream>
 // #include <vector>
@@ -25,6 +26,30 @@ void parseImages(vector<vector<vector<float> > > &__images, float **images, int 
   }
 }
 
+void train_and_test_network_cross(int numOuterIter, neural_network_cross *myNeuralNet, vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
+{
+  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+  double start = omp_get_wtime();
+  for (int i = 0; i < numOuterIter; i++ )
+  {
+    float sum_squared_error = 0.0;
+    for (int j = 0; j < numTrainingImages; j++)
+    {
+      sum_squared_error += myNeuralNet->backprop(trainingImages[j], trainLabels[j]);
+    }
+    cout << "outer iter: " << i+1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+  }
+
+  cout << "evaluating network on " << numTestingImages << " test digits" << endl;
+  float correct = 0;
+  for (int i = 0; i < numTestingImages; i++) {
+  	int predict_value = myNeuralNet->predict(testingImages[i]);
+  	if (predict_value == testLabels[i]) {
+  		correct += 1;
+  	}
+  }
+  cout << "accuracy rate: " << correct/numTestingImages << endl;
+}
 void train_and_test_network(int numOuterIter, neural_network *myNeuralNet, vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
   cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
@@ -109,10 +134,13 @@ int main(int argc, char *argv[])
   //   }
   // }
 
-  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.1, true);
+  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.1);
   train_and_test_network(2, myNeuralNet, training_labels, training_images, testing_labels, testing_images);
-
   delete myNeuralNet;
+
+  neural_network_cross *myNeuralNetCross = new neural_network_cross(784, 500, 10, 0.1);
+  train_and_test_network_cross(2, myNeuralNetCross, training_labels, training_images, testing_labels, testing_images);
+  delete myNeuralNetCross;
 
   for (int i = 0; i < numTrainingImages; i++)
   {

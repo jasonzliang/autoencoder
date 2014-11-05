@@ -1,17 +1,16 @@
-#ifndef NEURAL_NETWORK
-#define NEURAL_NETWORK
+#ifndef NEURAL_NETWORK_CROSS
+#define NEURAL_NETWORK_CROSS
 
 #include "hidden_layer.h"
 #include "output_layer.h"
 
 using namespace std;
 
-class neural_network
+class neural_network_cross
 {
-protected:
-  //hidden_layer *h, *o;
+private:
 	hidden_layer *h;
-	hidden_layer *o;
+	output_layer *o;
   float *o_j, *o_k, *delta_k, *delta_j;
 
   float learn_rate;
@@ -19,10 +18,10 @@ protected:
   // vector<*hidden_layer> myLayers;
 
 public:
-  neural_network(int numInput, int numHidden, int numOutput, float learn_rate);
+  neural_network_cross(int numInput, int numHidden, int numOutput, float learn_rate);
   float backprop(float *o_i, int t);
   int predict(float *o_i);
-  ~neural_network();
+  ~neural_network_cross();
 };
 
 #endif
