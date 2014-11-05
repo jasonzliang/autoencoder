@@ -7,7 +7,7 @@
 
 # define the C compiler to use
 #CC = /lusr/bin/g++-4.8
-CC = g++
+CC = g++-4.9
 
 # define any compile-time flags
 CFLAGS = -Wall -fopenmp -std=c++11 -O3 
@@ -27,7 +27,7 @@ LFLAGS =
 LIBS =
 
 # define the C source files
-SRCS = main.cpp neural_network.cpp hidden_layer.cpp
+SRCS = main.cpp neural_network.cpp hidden_layer.cpp output_layer.cpp
 
 # define the C object files 
 #

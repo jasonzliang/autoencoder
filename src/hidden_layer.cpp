@@ -141,6 +141,7 @@ void hidden_layer::compute_delta_output(float *delta, float *o, int t)
   }
 }
 
+
 void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)
 {
   //i is actually j
@@ -164,15 +165,16 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
 
 void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
 {
-  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
+  	#pragma omp parallel for schedule(dynamic, 1)
     for (int j = 0; j < numInputs; j++)
     {
       weights[i * numInputs + j] -= learn_rate * output_prev_layer[j] * delta_curr_layer[i];
     }
   }
 
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0 ; i < numHiddenUnits; i++)
   {
     biases[i] += learn_rate * delta_curr_layer[i];
