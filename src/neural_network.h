@@ -11,7 +11,8 @@ class neural_network
 private:
   //hidden_layer *h, *o;
 	hidden_layer *h;
-	output_layer *o;
+	hidden_layer *o;
+	output_layer *oc;
   float *o_j, *o_k, *delta_k, *delta_j;
 	bool cross_entropy;
 
