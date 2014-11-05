@@ -1,12 +1,15 @@
 #include "neural_network.h"
 
-neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate):
+neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate, bool cross_entropy):
+	cross_entropy(cross_entropy),
   learn_rate(learn_rate)
 {
   cout << "created a neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
   h = new hidden_layer(numInput, numHidden);
- // o = new hidden_layer(numHidden, numOutput);
- o = new output_layer(numHidden, numOutput);
+	//if(cross_entropy)
+	o = new output_layer(numHidden, numOutput);
+	//else o = new hidden_layer(numHidden, numOutput);
+
   o_j = new float[h->getNumHiddenUnits()];
   o_k = new float[o->getNumHiddenUnits()];
   delta_k = new float[o->getNumHiddenUnits()];
@@ -25,8 +28,8 @@ float neural_network::backprop(float *o_i, int t)
   o->updateWeights(delta_k, o_j, learn_rate);
   h->updateWeights(delta_j, o_i, learn_rate);
 
-  //return o->squared_loss(o_k, t);
-  return o->cross_entropy_loss(o_k, t);
+	if(cross_entropy) return o->cross_entropy_loss(o_k, t);
+	else return o->squared_loss(o_k, t);
 }
 
 int neural_network::predict(float *o_i)

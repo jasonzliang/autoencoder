@@ -109,8 +109,8 @@ int main(int argc, char *argv[])
   //   }
   // }
 
-  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.1);
-  train_and_test_network(30, myNeuralNet, training_labels, training_images, testing_labels, testing_images);
+  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.1, true);
+  train_and_test_network(2, myNeuralNet, training_labels, training_images, testing_labels, testing_images);
 
   delete myNeuralNet;
 
