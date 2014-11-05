@@ -14,6 +14,11 @@ void sigmoidTransform(float *x, int numHiddenUnits)
   }
 }
 
+float sigmoidTransform(float x)
+{
+  return 1 / (1 + exp(-1 * x));
+}
+
 void softMaxTransform(float *x, int numHiddenUnits)
 {
   float sum = 0.0;
@@ -79,9 +84,10 @@ void hidden_layer::encode(float *input, float *output)
     {
       sum += weights[i * numInputs + j] * input[j];
     }
-    output[i] = sum + biases[i];
+    // output[i] = sum + biases[i];
+    output[i] = 1 / (1 + exp(-1 * (sum + biases[i])));
   }
-  sigmoidTransform(output, numHiddenUnits);
+  // sigmoidTransform(output, numHiddenUnits);
 }
 
 void hidden_layer::decode(float *input, float *output)
@@ -94,9 +100,10 @@ void hidden_layer::decode(float *input, float *output)
     {
       sum += weights[i + numHiddenUnits * j] * input[j];
     }
-    output[i] = sum;
+    // output[i] = sum;
+    output[i] = 1 / (1 + exp(-1 * sum));
   }
-  sigmoidTransform(output, numHiddenUnits);
+  // sigmoidTransform(output, numHiddenUnits);
 }
 
 float hidden_layer::autoencoder_squared_loss(float *input)
@@ -119,7 +126,7 @@ float hidden_layer::autoencoder_squared_loss(float *input)
 float hidden_layer::squared_loss(float *output, int t)
 {
   float error = 0.0;
-  
+
   for (int i = 0; i < numHiddenUnits; i++)
   {
     error += pow(output[i] - __t[i], 2);
