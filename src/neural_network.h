@@ -7,7 +7,7 @@ using namespace std;
 
 class neural_network
 {
-private:
+protected:
   hidden_layer *h, *o;
   float *o_j, *o_k, *delta_k, *delta_j;
 
@@ -17,9 +17,9 @@ private:
 
 public:
   neural_network(int numInput, int numHidden, int numOutput, float learn_rate);
-  float backprop(float *o_i, int t);
-  int predict(float *o_i);
-  ~neural_network();
+  virtual float backprop(float *o_i, int t);
+  virtual int predict(float *o_i);
+  virtual ~neural_network();
 };
 
 #endif

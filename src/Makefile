@@ -10,7 +10,8 @@
 CC = g++
 
 # define any compile-time flags
-CFLAGS = -Wall -fopenmp -std=c++11 -O3 
+CFLAGS = -Wall -fopenmp -std=c++11 -O3
+#-O3 
 
 # define any directories containing header files other than /usr/include
 #
@@ -27,7 +28,7 @@ LFLAGS =
 LIBS =
 
 # define the C source files
-SRCS = main.cpp neural_network.cpp hidden_layer.cpp
+SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp auto_hidden_layer.cpp
 
 # define the C object files 
 #

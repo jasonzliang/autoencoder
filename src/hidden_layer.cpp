@@ -1,41 +1,5 @@
 #include "hidden_layer.h"
 
-float RandomNumber(float Min, float Max)
-{
-  return ((float(rand()) / float(RAND_MAX)) * (Max - Min)) + Min;
-}
-
-void sigmoidTransform(float *x, int numHiddenUnits)
-{
-  #pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < numHiddenUnits; i++)
-  {
-    x[i] = 1 / (1 + exp(-1 * x[i]));
-  }
-}
-
-float sigmoidTransform(float x)
-{
-  return 1 / (1 + exp(-1 * x));
-}
-
-void softMaxTransform(float *x, int numHiddenUnits)
-{
-  float sum = 0.0;
-
-  #pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < numHiddenUnits; i++)
-  {
-    sum += x[i];
-  }
-
-  #pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < numHiddenUnits; i++)
-  {
-    x[i] = 1 / (1 + exp(-1 * x[i] / sum));
-  }
-}
-
 hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):
   numInputs(numInputs),
   numHiddenUnits(numHiddenUnits)
@@ -65,7 +29,7 @@ void hidden_layer::init()
 
   biases = new float[numHiddenUnits];
 
-  #pragma omp parallel for schedule(dynamic, 1)
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     biases[i] = 0.0;
@@ -74,9 +38,18 @@ void hidden_layer::init()
   __t = new float[numHiddenUnits];
 }
 
+void hidden_layer::sigmoidTransform(float *x, int numHiddenUnits)
+{
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    x[i] = 1 / (1 + exp(-1 * x[i]));
+  }
+}
+
 void hidden_layer::encode(float *input, float *output)
 {
-  #pragma omp parallel for schedule(dynamic, 1)
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -84,43 +57,8 @@ void hidden_layer::encode(float *input, float *output)
     {
       sum += weights[i * numInputs + j] * input[j];
     }
-    // output[i] = sum + biases[i];
-    output[i] = 1 / (1 + exp(-1 * (sum + biases[i])));
+    output[i] = sigmoidTransform(sum + biases[i]);
   }
-  // sigmoidTransform(output, numHiddenUnits);
-}
-
-void hidden_layer::decode(float *input, float *output)
-{
-  #pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < numInputs; i++)
-  {
-    float sum = 0.0;
-    for (int j = 0; j < numHiddenUnits; j++)
-    {
-      sum += weights[i + numHiddenUnits * j] * input[j];
-    }
-    // output[i] = sum;
-    output[i] = 1 / (1 + exp(-1 * sum));
-  }
-  // sigmoidTransform(output, numHiddenUnits);
-}
-
-float hidden_layer::autoencoder_squared_loss(float *input)
-{
-  float hiddenValues[numHiddenUnits];
-  float output[numInputs];
-  encode(input, hiddenValues);
-  decode(hiddenValues, output);
-
-  float error = 0.0;
-
-  #pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < numInputs; i++)
-  {
-    error += pow(input[i] - output[i], 2);
-  }
-  return 0.5 * error;
 }
 
 float hidden_layer::squared_loss(float *output, int t)
@@ -129,7 +67,7 @@ float hidden_layer::squared_loss(float *output, int t)
 
   for (int i = 0; i < numHiddenUnits; i++)
   {
-    error += pow(output[i] - __t[i], 2);
+    error += (output[i] - __t[i])*(output[i] - __t[i]);
   }
   return 0.5 * error;
 }
@@ -155,7 +93,7 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
   float *output_layer_weights = next_layer->getWeights();
   int numHidUnits_nextLayer = next_layer->getNumHiddenUnits();
 
-  #pragma omp parallel for schedule(dynamic, 1)
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -171,17 +109,13 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
 
 void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
 {
-  #pragma omp parallel for schedule(dynamic, 1)
+  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     for (int j = 0; j < numInputs; j++)
     {
       weights[i * numInputs + j] -= learn_rate * output_prev_layer[j] * delta_curr_layer[i];
     }
-  }
-
-  for (int i = 0 ; i < numHiddenUnits; i++)
-  {
     biases[i] += learn_rate * delta_curr_layer[i];
   }
 }

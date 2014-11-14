@@ -13,7 +13,7 @@ using namespace std;
 
 class hidden_layer
 {
-private:
+protected:
   int numInputs, numHiddenUnits, numWeights;
   float weightRange;
   float *weights, *biases, *__t;
@@ -23,15 +23,14 @@ public:
   hidden_layer(int numInputs, int numHiddenUnits, float weightRange);
   virtual ~hidden_layer();
   void init();
-  virtual void encode(float *input, float *output);
-  void decode(float *input, float *output);
-  float autoencoder_squared_loss(float *input);
-  float squared_loss(float *output, int t);
 
+  void sigmoidTransform(float *x, int numHiddenUnits);
+  void encode(float *input, float *output);
 
-  void compute_delta_output(float *delta, float *o, int t);
-  void compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer);
-  void updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate);
+  virtual float squared_loss(float *output, int t);
+  virtual void compute_delta_output(float *delta, float *o, int t);
+  virtual void compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer);
+  virtual void updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate);
 
   inline int getNumHiddenUnits()
   {
@@ -47,7 +46,17 @@ public:
   }
   inline float *getWeights()
   {
-  	return weights;
+    return weights;
+  }
+
+  inline float RandomNumber(float Min, float Max)
+  {
+    return ((float(rand()) / float(RAND_MAX)) * (Max - Min)) + Min;
+  }
+
+  inline float sigmoidTransform(float x)
+  {
+    return 1 / (1 + exp(-1 * x));
   }
 };
 
