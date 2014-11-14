@@ -9,7 +9,6 @@ class auto_hidden_layer: public hidden_layer
 {
 private:
 	float *decode_biases;
-	int hiddenChunkSize, inputChunkSize;
 
 public:
 	auto_hidden_layer(int numInputs, int numHiddenUnits);

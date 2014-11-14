@@ -18,6 +18,9 @@ hidden_layer::hidden_layer(int numInputs, int numHiddenUnits, float weightRange)
 
 void hidden_layer::init()
 {
+  hiddenChunkSize = max(numHiddenUnits/32, 1);
+  inputChunkSize = max(numInputs/32, 1);
+
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
 
@@ -29,7 +32,7 @@ void hidden_layer::init()
 
   biases = new float[numHiddenUnits];
 
-  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     biases[i] = 0.0;
@@ -40,7 +43,7 @@ void hidden_layer::init()
 
 void hidden_layer::sigmoidTransform(float *x, int numHiddenUnits)
 {
-  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     x[i] = 1 / (1 + exp(-1 * x[i]));
@@ -49,7 +52,7 @@ void hidden_layer::sigmoidTransform(float *x, int numHiddenUnits)
 
 void hidden_layer::encode(float *input, float *output)
 {
-  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -64,10 +67,9 @@ void hidden_layer::encode(float *input, float *output)
 float hidden_layer::squared_loss(float *output, int t)
 {
   float error = 0.0;
-
   for (int i = 0; i < numHiddenUnits; i++)
   {
-    error += (output[i] - __t[i])*(output[i] - __t[i]);
+    error += (output[i] - __t[i]) * (output[i] - __t[i]);
   }
   return 0.5 * error;
 }
@@ -86,6 +88,7 @@ void hidden_layer::compute_delta_output(float *delta, float *o, int t)
   }
 }
 
+
 void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)
 {
   //i is actually j
@@ -93,7 +96,7 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
   float *output_layer_weights = next_layer->getWeights();
   int numHidUnits_nextLayer = next_layer->getNumHiddenUnits();
 
-  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -109,15 +112,17 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
 
 void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
 {
-  #pragma omp parallel for schedule(dynamic, numHiddenUnits/64 + 1)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
+    //#pragma omp parallel for schedule(dynamic, 1)
     for (int j = 0; j < numInputs; j++)
     {
       weights[i * numInputs + j] -= learn_rate * output_prev_layer[j] * delta_curr_layer[i];
     }
     biases[i] += learn_rate * delta_curr_layer[i];
   }
+
 }
 
 hidden_layer::~hidden_layer()

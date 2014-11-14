@@ -14,7 +14,7 @@ using namespace std;
 class hidden_layer
 {
 protected:
-  int numInputs, numHiddenUnits, numWeights;
+  int numInputs, numHiddenUnits, numWeights, hiddenChunkSize, inputChunkSize;
   float weightRange;
   float *weights, *biases, *__t;
 
@@ -24,8 +24,8 @@ public:
   virtual ~hidden_layer();
   void init();
 
-  void sigmoidTransform(float *x, int numHiddenUnits);
   void encode(float *input, float *output);
+  void sigmoidTransform(float *x, int numHiddenUnits);
 
   virtual float squared_loss(float *output, int t);
   virtual void compute_delta_output(float *delta, float *o, int t);

@@ -2,6 +2,7 @@
 #define NEURAL_NETWORK
 
 #include "hidden_layer.h"
+#include "output_layer.h"
 
 using namespace std;
 
@@ -10,7 +11,6 @@ class neural_network
 protected:
   hidden_layer *h, *o;
   float *o_j, *o_k, *delta_k, *delta_j;
-
   float learn_rate;
   // int numHiddenLayers;
   // vector<*hidden_layer> myLayers;
