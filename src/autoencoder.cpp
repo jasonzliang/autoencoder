@@ -41,6 +41,7 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, int numInput, int numH
 
 void autoencoder::corrupt_masking(float *input, float *corrupted_input, float fraction, int length)
 {
+  #pragma omp parallel for schedule(dynamic, max(length/16, 1))
   for (int i = 0; i < length; i++)
   {
     if (uniformRandom() < fraction)
@@ -56,6 +57,7 @@ void autoencoder::corrupt_masking(float *input, float *corrupted_input, float fr
 
 void autoencoder::corrupt_gaussian(float *input, float *corrupted_input, float sigma, int length)
 {
+  #pragma omp parallel for schedule(dynamic, max(length/16, 1))
   for (int i = 0; i < length; i++)
   {
     corrupted_input[i] = input[i] + normalRandom() * sigma;
@@ -87,13 +89,13 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages, int nu
   double start = omp_get_wtime();
   for (int i = 0; i < numOuterIter; i++ )
   {
-    float total_encode_time = 0;
-    float total_decode_time = 0;
-    float total_compute_delta_output_time = 0;
-    float total_compute_delta_hidden_time = 0;
-    float total_updateWeights_time = 0;
-    float total_squared_loss_time = 0;
-    float t;
+    // float total_encode_time = 0;
+    // float total_decode_time = 0;
+    // float total_compute_delta_output_time = 0;
+    // float total_compute_delta_hidden_time = 0;
+    // float total_updateWeights_time = 0;
+    // float total_squared_loss_time = 0;
+    // float t;
 
     float sum_squared_error = 0.0;
     for (int j = 0; j < numTrainingImages; j++)
@@ -101,40 +103,39 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages, int nu
       float *o_i = trainingImages[j];
       corrupt_masking(o_i, corrupted_o_i, 0.25, a->getNumInputUnits());
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       a->encode(corrupted_o_i, o_e);
-      total_encode_time += omp_get_wtime() - t;
+      // total_encode_time += omp_get_wtime() - t;
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       a->decode(o_e, o_d);
-      total_decode_time += omp_get_wtime() - t;
+      // total_decode_time += omp_get_wtime() - t;
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       a->compute_delta_output(delta_d, o_d, o_i);
-      total_compute_delta_output_time += omp_get_wtime() - t;
+      // total_compute_delta_output_time += omp_get_wtime() - t;
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       a->compute_delta_hidden(delta_e, delta_d, o_e);
-      total_compute_delta_hidden_time += omp_get_wtime() - t;
+      // total_compute_delta_hidden_time += omp_get_wtime() - t;
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       a->updateWeights(delta_e, corrupted_o_i, delta_d, o_e, learn_rate);
-      total_updateWeights_time += omp_get_wtime() - t;
+      // total_updateWeights_time += omp_get_wtime() - t;
 
-      t = omp_get_wtime();
+      // t = omp_get_wtime();
       sum_squared_error += a->squared_loss(o_i, o_d);
-      total_squared_loss_time += omp_get_wtime() - t;
+      // total_squared_loss_time += omp_get_wtime() - t;
 
     }
     cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
-    cout << "total_encode_time: " << total_encode_time << endl;
-    cout << "total_decode_time: " << total_decode_time << endl;
-    cout << "total_compute_delta_output_time: " << total_compute_delta_output_time << endl;
-    cout << "total_compute_delta_hidden_time: " << total_compute_delta_hidden_time << endl;
-    cout << "total_updateWeights_time: " << total_updateWeights_time << endl;
-    cout << "total_squared_loss_time: " << total_squared_loss_time << endl;
-
-    cout << endl;
+    // cout << "total_encode_time: " << total_encode_time << endl;
+    // cout << "total_decode_time: " << total_decode_time << endl;
+    // cout << "total_compute_delta_output_time: " << total_compute_delta_output_time << endl;
+    // cout << "total_compute_delta_hidden_time: " << total_compute_delta_hidden_time << endl;
+    // cout << "total_updateWeights_time: " << total_updateWeights_time << endl;
+    // cout << "total_squared_loss_time: " << total_squared_loss_time << endl;
+    // cout << endl;
   }
 
   delete corrupted_o_i;

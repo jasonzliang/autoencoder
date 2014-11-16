@@ -40,7 +40,8 @@ void auto_hidden_layer::decode(float *input, float *output)
       buffer[i] += weights[j * numInputs + i] * input[j];
     }
   }
-  
+
+  #pragma omp parallel for schedule(dynamic, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     output[i] = sigmoidTransform(buffer[i] + decode_biases[i]);
@@ -75,7 +76,6 @@ void auto_hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *del
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
-
     for (int j = 0; j < numInputs; j++)
     {
       //we are iterating through ith column of next layer's weight matrix
@@ -87,7 +87,7 @@ void auto_hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *del
 
 void auto_hidden_layer::updateWeights(float *delta_e, float *o_i, float *delta_d, float *o_e, float learn_rate)
 {
-  #pragma omp parallel for schedule(dynamic, inputChunkSize)
+  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int j = 0; j < numHiddenUnits; j++)
   {
     for (int i = 0; i < numInputs; i++)
@@ -95,6 +95,8 @@ void auto_hidden_layer::updateWeights(float *delta_e, float *o_i, float *delta_d
       weights[j * numInputs + i] -= learn_rate * o_e[j] * delta_d[i];
     }
   }
+
+  #pragma omp parallel for schedule(dynamic, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     decode_biases[i] += learn_rate * delta_d[i];
