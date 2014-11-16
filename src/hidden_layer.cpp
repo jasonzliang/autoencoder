@@ -41,7 +41,7 @@ void hidden_layer::init()
   __t = new float[numHiddenUnits];
 }
 
-void hidden_layer::sigmoidTransform(float *x, int numHiddenUnits)
+void hidden_layer::sigmoidTransform(float *x)
 {
   #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)

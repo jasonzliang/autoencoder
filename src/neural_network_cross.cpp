@@ -3,7 +3,7 @@
 neural_network_cross::neural_network_cross(int numInput, int numHidden, int numOutput, float learn_rate):
   learn_rate(learn_rate)
 {
-  cout << "created a neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
+  cout << "created a cross entrophy loss neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
   h = new hidden_layer(numInput, numHidden);
 	o = new output_layer(numHidden, numOutput);
 
@@ -18,7 +18,6 @@ float neural_network_cross::backprop(float *o_i, int t)
 	h->encode(o_i, o_j);
 	o->encode(o_j, o_k);
 	
-
 	o->compute_delta_output(delta_k, o_k, t);
 	h->compute_delta_hidden(delta_j, delta_k, o_j, o);
 

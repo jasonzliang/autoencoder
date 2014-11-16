@@ -25,7 +25,7 @@ public:
   void init();
 
   void encode(float *input, float *output);
-  void sigmoidTransform(float *x, int numHiddenUnits);
+  void sigmoidTransform(float *x);
 
   virtual float squared_loss(float *output, int t);
   virtual void compute_delta_output(float *delta, float *o, int t);

@@ -3,7 +3,7 @@
 neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate):
   learn_rate(learn_rate)
 {
-  cout << "created a neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
+  cout << "created a squared loss neural network with " << numInput << " input, " << numHidden << " hidden, " << numOutput << " output units and " << learn_rate << " learn rate" << endl;
   h = new hidden_layer(numInput, numHidden);
 	o = new hidden_layer(numHidden, numOutput);
 

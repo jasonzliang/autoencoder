@@ -16,7 +16,7 @@ CFLAGS = -Wall -fopenmp -std=c++11 -O3
 
 # define any directories containing header files other than /usr/include
 #
-INCLUDES = -I.  -I./mnist/include
+INCLUDES = -I. -I./mnist/include
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
@@ -42,7 +42,7 @@ SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file 
-MAIN = neural
+MAIN = autoencoder
 
 #
 # The following part of the makefile is generic; it can be used to 

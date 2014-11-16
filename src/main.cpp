@@ -92,7 +92,7 @@ void train_and_test_autoencoder(int numOuterIter, vector<int> &trainLabels, floa
 {
   vector<int> autoencoder_layers {784};
   //learning rate of 0.01 works best
-  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, 400, 200, 10, 0.01);
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, 500, 200, 10, 0.0001);
   myAutoencoder->preTrain(trainingImages, numTrainingImages, numOuterIter);
   delete myAutoencoder;
 }
@@ -136,8 +136,8 @@ int main(int argc, char *argv[])
   cout << "finished parsing input data! " << endl;
 
   // train_and_test_network_square(40, training_labels, training_images, testing_labels, testing_images);
-  train_and_test_network_cross(40, training_labels, training_images, testing_labels, testing_images);
-  // train_and_test_autoencoder(15, training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_network_cross(40, training_labels, training_images, testing_labels, testing_images);
+  train_and_test_autoencoder(20, training_labels, training_images, testing_labels, testing_images);
 
   for (int i = 0; i < numTrainingImages; i++)
   {
