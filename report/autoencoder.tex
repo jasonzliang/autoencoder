@@ -14,6 +14,8 @@
 \usepackage{float}
 \usepackage{color}
 \usepackage{balance}
+%\usepackage{caption} %uncomment these for more space between a table and its caption
+%\captionsetup[table]{skip=5pt}
 
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
@@ -71,7 +73,7 @@ Cant{\'u}-Paz discusses parallel genetic algorithms, which will be essentially t
 %todo: we need to mention that for autoencoders, the weight matrix of output layer is transpose of the weight matrix of hidden layer
 %todo: also mention how autoencoders can be stacked on each other (see page 3383 in vincent2010stacked)
 We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and 
-compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (one input, one hidden and one output node). Some notation:
+compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (one input, one hidden and one output node). Some notation is given in Table \ref{tab:notation}.
 
 \begin{table}[h]
 \normalsize
@@ -85,8 +87,12 @@ $n_j$       & $\sum_{i=1}^n W_{ij}x_i + b_j$                                   \
 $t_j$       & Target output at node $j$                                   \\
 $W_{ij}^H$ & Weight $i,j$ from input to hidden layer \\
 $W_{ij}^O$ & Weight $i,j$ from hidden to output layer \\
-$s(x_j)$    & $1/(1+e^{-x_j})$                                                 
+$s(x_j)$    & $1/(1+e^{-x_j})$                                                 \\
+$b_j^{\{H,O\}}$    & Biases for hidden and output layer                                                \\
+\hline
 \end{tabular}
+\caption{Table giving notation for the derivation of updates.}
+\label{tab:notation}
 \end{table}
 
 The derivative of the output error $E$ with respect to an output matrix weight $W_{ij}^O$ is as follows.
@@ -104,8 +110,8 @@ Now that we have the gradient for the error associated to a single training exam
 \begin{equation}
 \begin{split}
 \delta^O_j &= (z_j-t_j)z_j(1-z_j) \\
-W^O_{ij} &\leftarrow W_{ij} - \eta \delta^O_j x_i \\
-b_j &\leftarrow b_j - \eta\delta_j
+W^O_{ij} &\leftarrow W^O_{ij} - \eta \delta^O_j x_i \\
+b^O_j &\leftarrow b^O_j - \eta\delta^O_j
 \end{split}
 \end{equation}
 
@@ -113,7 +119,7 @@ The computation of the gradient for the weight matrix between hidden layers is s
 \begin{equation}
 \begin{split}
 \frac{\partial E}{\partial W^H_{ij}} &= \frac{\partial E}{\partial y_j}\frac{\partial y_j}{\partial W^H_{ij}} \\
-																	 &=\left(\sum_{k=1}^m \frac{\partial E}{\partial z_k}\frac{\partial z_k}{\partial n_k}\frac{\partial n_k}{\partial y_j} \right)\frac{\partial y_j}{\partial n_j}\frac{\partial n_j}\partial W_{ij}^H\\
+&=\left(\sum_{k=1}^m \frac{\partial E}{\partial z_k}\frac{\partial z_k}{\partial n_k}\frac{\partial n_k}{\partial y_j} \right)\frac{\partial y_j}{\partial n_j}\frac{\partial n_j}{\partial W_{ij}^H}\\
 																	 &=\left(\sum_{k=1}^m (z_k - t_k)(1-z_k)z_kW_{jk}^O \right)y_j(1-y_j)x_i
 \end{split}
 \label{}
@@ -123,7 +129,7 @@ And then using the computed gradient we can define the updates to be used for th
 \begin{split}
 \delta^H_j &= \left(\sum_{k=1}^m (z_k - t_k)(1-z_k)z_kW_{jk}^O \right)y_j(1-y_j) \\
 W^H_{ij} &\leftarrow W^H_{ij} - \eta\delta^H_jx_i \\
-b_j &\leftarrow b_j - \eta\delta^H_j
+b^H_j &\leftarrow b^H_j - \eta\delta^H_j
 \end{split}
 \end{equation}
 
@@ -137,8 +143,8 @@ for computing the gradient and the updates, we find that for hidden/output layer
 \begin{split}
 \frac{\partial E}{\partial W^O_{ij}} &= (z_j - t_j)y_i \\
 \delta^O_j &= (z_j-t_j) \\
-W^O_{ij} &\leftarrow W_{ij} - \eta \delta^O_j x_i \\
-b_j &\leftarrow b_j - \eta\delta_j.
+W^O_{ij} &\leftarrow W^O_{ij} - \eta \delta^O_j x_i \\
+b^O_j &\leftarrow b^O_j - \eta\delta^O_j.
 \end{split}
 \end{equation}
 
