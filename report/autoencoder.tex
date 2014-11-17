@@ -56,7 +56,12 @@ Usually for ordinary autoencoders, we want that $n<m$ so that the learned repres
 \end{figure}
 
 \section{Related Work}
-related work here, cite like this \cite{vincent2010stacked}
+There are several papers that we'd like to mention developing the topics related to the present work. Yoshua Bengio, Aaron Courville, and Pascal Vincent review representation learning and why it is important,
+single layer and deep models, autoencoders, as well as other related architectures for deep learning \cite{bengio2012rep}. For further elaboration on stacked autoencoders (and more specifically denoising autoencoders)
+we refer the reader to \cite{vincent2010stacked}. Hinton et al. describe in \cite{hinton2006learning} how to successfully train deep multilayer networks, like the stacked autoencoder we use in this paper. The theory and methods behind the backpropagation algorithm that we use
+is classic and can be found in \cite{hecht1989theory}. We are presently training the neural network using a stochastic gradient descent algorithm for neural networks, which is a topic covered in \cite{bottou-91c}.
+Future plans include using a genetic algorithm to train the autoencoder instead of backpropagation. A survey of genetic algorithms can be found in \cite{srinivas1994genetic}.
+Cant{\'u}-Paz discusses parallel genetic algorithms, which will be essentially to efficiently training our autoencoder \cite{cantu1998survey}.
 
 \section{Algorithm Description}
 %todo: we need to mention that for autoencoders, the weight matrix of output layer is transpose of the weight matrix of hidden layer
