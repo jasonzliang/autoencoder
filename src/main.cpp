@@ -67,12 +67,12 @@ void train_and_test_network_square(int numOuterIter, vector<int> &trainLabels, f
 
 void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
-  vector<int> autoencoder_layers {784, 500, 500};
-  vector<float> auto_learn_rates {0.0005, 0.0005, 0.0005};
+  vector<int> autoencoder_layers {784, 1000, 1000};
+  vector<float> auto_learn_rates {0.001, 0.001, 0.001};
   vector<int> auto_iters {15, 15, 15};
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
-  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.1);
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.1);
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
   myAutoencoder->train(trainingImages, trainLabels, 30, numTrainingImages);
   myAutoencoder->test(testingImages, testLabels, numTestingImages);
