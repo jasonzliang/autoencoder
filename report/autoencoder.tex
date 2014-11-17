@@ -55,12 +55,19 @@ Usually for ordinary autoencoders, we want that $n<m$ so that the learned repres
 \end{figure}
 
 \section{Related Work}
-related work here, cite like this \cite{vincent2010stacked}
+There are several papers that we'd like to mention developing the topics related to the present work. Yoshua Bengio, Aaron Courville, and Pascal Vincent review representation learning and why it is importatn,
+single layer and deep models, autoencoders, as well as other related architectures for deep learning \cite{bengio2012rep}. For further elaboration on stacked autoencoders (and more specifically denoising autoencoders)
+we refer the reader to \cite{vincent2010stacked}. Hinton et al. describe in \cite{hinton2006learning} how to successfully train deep multilayer networks, like the stacked autoencoder we use in this paper. The theory and methods behind the backpropogation algorithm that we use
+is classic and can be found in \cite{hecht1989theory}. We are presently training the neurla network using a stochastic gradient descent algorithm for neural networks, which is a topic covered in \cite{bottou-91c}. 
+Future plans include using a genetic algorithm to train the autoencoder instead of backpropogation. A survey of genetic algorithms can be found in \cite{srinivas1994genetic}.
+Cant{\'u}-Paz discusses parallel genetic algorithms, which will be essentially to efficiently training our autoencoder \cite{cantu1998survey}.
 
 \section{Algorithm Description}
 %todo: we need to mention that for autoencoders, the weight matrix of output layer is transpose of the weight matrix of hidden layer
 %todo: also mention how autoencoders can be stacked on each other (see page 3383 in vincent2010stacked)
-We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and 
+
+\subsection{Training a neural network}
+As an example, we describe how to train a simple 3-layer neural network, then afterwards discuss how to specialize this for a n autoencoder. We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and 
 compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (one input, one hidden and one output node). Some notation:
 
 \begin{table}[h]
@@ -72,10 +79,12 @@ $x_j$       & Node $j$ in the input layer                                      \
 $y_j$       & Node $j$ in the hidden layer                                     \\
 $z_j$       & Node $j$ in the output layer                                     \\
 $n_j$       & $\sum_{i=1}^n W_{ij}x_i + b_j$                                   \\
-$t_j$       & Target output at node $j$                                   \\
-$W_{ij}^H$ & Weight $i,j$ from input to hidden layer \\
-$W_{ij}^O$ & Weight $i,j$ from hidden to output layer \\
-$s(x_j)$    & $1/(1+e^{-x_j})$                                                 
+$t_j$       & Target output at node $j$                                       \\
+$W_{ij}^H$ & Weight $i,j$ from input to hidden layer                        \\
+$W_{ij}^O$ & Weight $i,j$ from hidden to output layer                         \\
+$s(x_j)$    & $1/(1+e^{-x_j})$                                              \\                                              
+$b_j^{\{O,H\}}$ & Bias vector for output/hidden layer, respectively          \\                                              
+$\eta$ & Learning rate                                                       \\
 \end{tabular}
 \end{table}
 
@@ -134,13 +143,16 @@ b_j &\leftarrow b_j - \eta\delta_j.
 
 Note also that we find that the updates for the input/hidden layer is the same as in the squared error loss function with sigmoid activation.
 
-The algorithm and derivations for the autoencoder (a special type of neural network) are a slight variation on the above derivations
-for a more general neural network.
+In order to ensure that updates and feedforward activation can be done in a reasonable amount of time we have parallelized the update step
+(parallel for loops for updating the weight matrices and biases), as well as parallelizing the matrix multiplication, vector addixction,
+sigmoid transfer function, and error computations. Each stochastic gradient descent step is taken sequentially at present, i.e. we train
+the weights and biases with one training example (and therefore loss function value) at a time.
+
 
 We give the whole algorithm in Algorithm \ref{alg:backprop}.
 
 
-\begin{algorithm}[h]
+\begin{algorithm}[htbp]
 \caption{Backpropogation}
 \label{alg:backprop}
 \begin{algorithmic}
@@ -150,16 +162,20 @@ We give the whole algorithm in Algorithm \ref{alg:backprop}.
 		\STATE $z\gets$ Feedforward $x$
 		\STATE Compute output layer $\delta_j^O$
 		\STATE ${W_{ij} \leftarrow W_{ij} - \eta \delta^O_j x_i}$
-		\STATE $b_j \leftarrow b_j - \eta\delta^O_j$
-		\FORALL{Layers in reverse order}
+		\STATE $b^O_j \leftarrow b^O_j - \eta\delta^O_j$
 			\STATE Compute hidden layer delta $\delta_k^H$
 			\STATE ${W^H_{ij} \leftarrow W^H_{ij} - \eta\delta^H_jx_i}$
-			\STATE $b_j \leftarrow b_j - \eta\delta^H_j$
-		\ENDFOR
+			\STATE $b^H_j \leftarrow b^H_j - \eta\delta^H_j$
 	\ENDFOR
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{Training the autoencoder}
+The algorithm and derivations for the autoencoder (a special type of neural network) are a slight variation on the above derivations
+for a more general neural network. In an autoencoder, the decoding weight matrix is simply the transpose of the encoding weight matrix (so it maps the output back to the same space as the input).
+For a stacked autoencoder we sandwich more hidden layers (with different weights and biases) between the input and the output layers, but we train them one at a time in a greedy fashion \cite{hinton2006learning}.
+
 
 \begin{figure}[h]
 \centering
