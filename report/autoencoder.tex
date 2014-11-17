@@ -13,6 +13,7 @@
 \usepackage{amssymb}
 \usepackage{float}
 \usepackage{color}
+\usepackage{balance}
 
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
@@ -165,27 +166,32 @@ The algorithm and derivations for the autoencoder are a slight variation on the 
 \end{figure}
 
 \section{Experimental Results}
-For our experiments, we train our autoencoder over the MNIST handwritten digit dataset. The MNIST dataset is composed of 60000 training images and 10000 testing images; each image is in greyscale, 28 by 28 pixels in size, and has a corresponding label range from 0 to 9. Thus, the input vector for our autoencoder has 784 dimensions. We also make use of the denoising criterion mentioned in \cite{vincent2010stacked}, and for each training image, randomly corrupt it by setting each pixel to zero with probability 0.25. 
+For our experiments, we train our autoencoder over the MNIST handwritten digit dataset. The MNIST dataset is composed of 60000 training images and 10000 testing images Each image is in greyscale, is 28 by 28 pixels in size, and has a corresponding label ranging from 0 to 9. Thus, the input vector for our autoencoder has 784 dimensions. We also make use of the denoising criterion mentioned in \cite{vincent2010stacked}, and for each training image, randomly corrupt it by setting each pixel to zero with probability 0.25. 
 
-\begin{figure}[t]
+We first analyze how the number of threads affects the rate at which training error decreases. We train a single autoencoder layer with 500 hidden nodes for 15 iterations over 5000 training images. An iteration involves going through all training images and for each image, use SGD to update the weight matrix. Fig.~\ref{fig:experiment1} shows the relationship between training error, total time elapsed, and the number of threads used. Regardless of the number of threads, the training error decreases sharply in the first few iterations before flattening out to around the same value after 15 iterations. The rate at which error decreases is significantly faster for 4 and 8 threads when compared to just using one. Nonetheless, the speedup is not linear and is due to 2 reasons: 1) Possible cache conflicts as each thread read and writes to different locations in the weight matrix. 2) All the steps for backpropagation/SGD, described in Algorithm \ref{alg:backprop}, must be done sequentially. Parallelization can only be done within each step and incurs an overhead cost.
+
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.9\linewidth]{experiment2.png}
 \caption{Time per iteration versus number of threads and hidden nodes. All 60000 training images are used.}
 \label{fig:experiment2}
 \end{figure}
 
-We first analyze how the number of threads affects the rate at which training error decreases. We train a single autoencoder layer with 500 hidden nodes for 15 iterations over 5000 training images. An iteration involves going through all training images and for each image, use SGD to update the weight matrix. Fig.~\ref{fig:experiment1} shows the relationship between training error, total time elapsed, and the number of threads used. Regardless of the number of threads, the training error decreases sharply in the first few iterations before flattening out to around the same value after 15 iterations. The rate at which error decreases is significantly faster for 4 and 8 threads when compared to just using one. Nonetheless, the speedup is not linear and is due to 2 reasons: 1) Possible cache conflicts as each thread read and writes to different locations in the weight matrix. 2) All the steps for backpropagation/SGD, described in Algorithm \ref{alg:backprop}, must be done sequentially. Parallelization can only be done within each step and incurs an overhead cost.
-
 Fig.~\ref{fig:experiment2}, shows the time per iteration of SGD over all 60000 training images versus the number of threads and hidden nodes in the autoencoder layer. For 1 thread, the speedup is essentially linear with the number of hidden nodes. For 4 threads and 8 threads, the speedup becomes sublinear due to the overhead resulting from parallelization. This is especially noticeable when using 8 threads and having lower number of hidden nodes; the time per iteration for 8 threads with 100 hidden nodes is even slower than just using 1 thread. Using 8 threads only becomes faster than using 4 when the number of hidden nodes reach 800. 
 
 Next, in Fig.~\ref{fig:experiment3_1}, we visualize the filters that are learned by training an autoencoder layer with 500 hidden nodes over all 60000 training images. The  filter for each hidden node is a row vector of the weight matrix and indicates which aspects of the input the hidden unit is sensitive to. Since each row in the weight matrix is the same dimensionality as the input, we can visualize it as a 28 by 28 pixel image. The filters will not identical to the input images, do show some similarity to them. In Fig.~\ref{fig:experiment3_1}, we visualize the reconstructed digits when given noisy test digits as input. The reconstructed outputs for most of the input images are easily recognizable as digits, which indicates that the autoencoder is indeed denoising and learning a good representation of the images.
 
-\begin{figure}[t]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.8\linewidth]{experiment3_1.png}
 \caption{Visualization of the filters of the first 100 hidden nodes in an autoencoder trained over all 60000 images.}
 \label{fig:experiment3_1}
 \end{figure}
+
+Finally we evaluate the classification accuracy of a deep neural network that has multiple stacked denoising autoencoders. We train 3 stacked autoencoder layers, each with 1000 hidden units, and using noise levels 0.1, 0.2, and 0.3 respectively. Each layer is trained for 15 iterations with a learning rate of 0.001. After the unsupervised pretraining, a conventional feedforward network with 1000 input units, 500 hidden units and 10 outputs is connected to the hidden units of the last the autoencoder layer. This conventional network is then trained for 30 iterations (learning rate 0.1) in a supervised manner, where the target $t$ is the indicator vector representation of the training label. Our final classification accuracy is 98.04\%. In comparison, the accuracy achieved with a SVM with RBF kernel is 98.60\% \cite{vincent2010stacked}. 
+
+\section{Future Work}
+For future work, we plan on using a genetic algorithm (GA) to train the autoencoder's weight matrix and biases. A GA is a black-box optimization algorithm that iteratively improves upon a population of candidate solution vectors until the global optima of the objective function is reached \cite{srinivas1994genetic}. It uses operators such as mutation and crossover, which are inspired by biological evolution. GAs are superior when compared to SGD in training autoencoders in two aspects: 1) Since the loss function is highly nonconvex, SGD will always converge to a local minima, while GA are capable of eventually reaching the global optima. 2) SGD is not trivial to parallelize; as seen by our experimental results, SGD does not achieve linear speedup. On the other hand, GAs are much simplier to parallelize in one of two following ways \cite{cantu1998survey}: a) Each individual in a population can be evaluated in parallel. b) The mutation and crossover operators operate on each element of a solution vector independently and thus are embarrassing parallel. An overview of how genetic algorithms work is given by Algorithm \ref{alg:genetic}. For autoencoders, each individual in the population is some particular weight matrix and its two associated bias vectors. The objective function would be the loss function described earlier and the fitness is how small the error outputted by the loss function is. 
 
 \begin{figure}[h]
 \centering
@@ -193,11 +199,6 @@ Next, in Fig.~\ref{fig:experiment3_1}, we visualize the filters that are learned
 \caption{Visualization of the reconstruction capabilities of an denoising autoencoder with 500 hidden units. Odd columns show noisy digit input images, even columns show reconstructed outputs.}
 \label{fig:experiment3_2}
 \end{figure}
-
-Finally we evaluate the classification accuracy of a deep neural network that has multiple stacked denoising autoencoders. We train 3 stacked autoencoder layers, each with 1000 hidden units, and using noise levels 0.1, 0.2, and 0.3 respectively. Each layer is trained for 15 iterations with a learning rate of 0.001. After the unsupervised pretraining, a conventional feedforward network with 1000 input units, 500 hidden units and 10 outputs is connected to the hidden units of the last the autoencoder layer. This conventional network is then trained for 30 iterations (learning rate 0.1) in a supervised manner, where the target $t$ is the indicator vector representation of the training label. Our final classification accuracy is 98.04\%. In comparison, the accuracy achieved with a SVM with RBF kernel is 98.60\% \cite{vincent2010stacked}. 
-
-\section{Future Work}
-For future work, we plan on using a genetic algorithm (GA) to train the autoencoder's weight matrix and biases. A GA is a black-box optimization algorithm that iteratively improves upon a population of candidate solution vectors until the global optima of the objective function is reached \cite{srinivas1994genetic}. It uses operators such as mutation and crossover, which are inspired by biological evolution. GAs are superior when compared to SGD in training autoencoders in two aspects: 1) Since the loss function is highly nonconvex, SGD will always converge to a local minima, while GA are capable of eventually reaching the global optima. 2) SGD is not trivial to parallelize; as seen by our experimental results, SGD does not achieve linear speedup. On the other hand, GAs are much simplier to parallelize in one of two following ways \cite{cantu1998survey}: a) Each individual in a population can be evaluated in parallel. b) The mutation and crossover operators operate on each element of a solution vector independently and thus are embarrassing parallel. An overview of how genetic algorithms work is given by Algorithm \ref{alg:genetic}. For autoencoders, each individual in the population is some particular weight matrix and its two associated bias vectors. The objective function would be the loss function described earlier and the fitness is how small the error outputted by the loss function is. 
 
 We also plan on evaluating the performance of our autoencoder on additional harder image datasets mentioned in \cite{vincent2010stacked} such as \textit{bg-rand, bg-img-rot} which contain images with noise and rotation. 
 
