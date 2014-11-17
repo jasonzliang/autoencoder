@@ -1,0 +1,35 @@
+outer iter: 0 wall time: 0.00000 total error: 5.47347e+06
+outer iter: 1 wall time: 17.0133 total error: 1.73556e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.44741e+06
+outer iter: 1 wall time: 9.26715 total error: 1.73789e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.42548e+06
+outer iter: 1 wall time: 30.329 total error: 1.73949e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.40668e+06
+outer iter: 1 wall time: 31.2084 total error: 1.43759e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.48831e+06
+outer iter: 1 wall time: 11.2409 total error: 1.47917e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.42454e+06
+outer iter: 1 wall time: 11.9142 total error: 1.47778e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.51003e+06
+outer iter: 1 wall time: 69.791 total error: 1.58271e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.5249e+06
+outer iter: 1 wall time: 24.2322 total error: 1.58812e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.42858e+06
+outer iter: 1 wall time: 23.9954 total error: 1.5871e+06
+
+outer iter: 0 wall time: 0.00000 total error: 5.48889e+06
+outer iter: 1 wall time: 123.305 total error: 817688
+
+outer iter: 0 wall time: 0.00000 total error: 5.55144e+06
+outer iter: 1 wall time: 48.2516 total error: 832577
+
+outer iter: 0 wall time: 0.00000 total error: 5.48108e+06
+outer iter: 1 wall time: 35.6074 total error: 822656

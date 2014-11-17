@@ -55,12 +55,7 @@ Usually for ordinary autoencoders, we want that $n<m$ so that the learned repres
 We will consider training denoising autoencoders with stochastic gradient descent (SGD). Background literature for denoising autoencoders can be found in the related work section. The algorithm description section contains more details about how SGD is implemented for autoencoders. The experiments section describes the results of training an autoencoder on a handwritten digit image dataset. Finally in future work, we discuss our plans to improve upon existing training algorithms.
 
 \section{Related Work}
-There are several papers that we would like to mention developing the topics related to the present work. Yoshua Bengio, Aaron Courville, and Pascal Vincent review representation learning and why it is important,
-single layer and deep models, autoencoders, as well as other related architectures for deep learning \cite{bengio2012rep}. For further elaboration on stacked autoencoders (and more specifically denoising autoencoders)
-we refer the reader to \cite{vincent2010stacked}. Hinton et al. describe in \cite{hinton2006learning} how to successfully train deep multilayer networks, like the stacked autoencoder we use in this paper. The theory and methods behind the backpropagation algorithm that we use
-is classic and can be found in \cite{hecht1989theory}. We are presently training the neural network using a stochastic gradient descent algorithm for neural networks, which is a topic covered in \cite{bottou-91c}.
-Future plans include using a genetic algorithm to train the autoencoder instead of backpropagation. A survey of genetic algorithms can be found in \cite{srinivas1994genetic}.
-Cant{\'u}-Paz discusses parallel genetic algorithms, which will be essentially to efficiently training our autoencoder \cite{cantu1998survey}.
+There are several papers that we would like to mention developing the topics related to the present work. Yoshua Bengio, Aaron Courville, and Pascal Vincent review representation learning and why it is important, single layer and deep models, autoencoders, as well as other related architectures for deep learning \cite{bengio2012rep}. For further elaboration on stacked autoencoders (and more specifically denoising autoencoders) we refer the reader to \cite{vincent2010stacked}. Hinton et al. describe in \cite{hinton2006learning} how to successfully train deep multilayer networks, like the stacked autoencoder we use in this paper. The theory and methods behind the backpropagation algorithm, a variant of SGD designed for neural networks, that we use is classic and can be found in \cite{hecht1989theory,bottou-91c}. Future plans include using a genetic algorithm (GA) to train the autoencoder instead of backpropagation. A survey of GAs and how they perform optimization can be found in \cite{srinivas1994genetic}. Cant{\'u}-Paz discusses parallel GAs, which will be essential to efficiently training our autoencoder \cite{cantu1998survey}.
 
 \begin{figure}[h]
 \centering
@@ -88,7 +83,6 @@ $W_{ij}^H$ & Weight $i,j$ from input to hidden layer \\
 $W_{ij}^O$ & Weight $i,j$ from hidden to output layer \\
 $s(x_j)$    & $1/(1+e^{-x_j})$                                                 \\
 $b_j^{\{H,O\}}$    & Biases for hidden and output layer                                                \\
-\hline
 \end{tabular}
 \caption{Table giving notation for the derivation of updates.}
 \label{tab:notation}
