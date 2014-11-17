@@ -59,41 +59,82 @@ void train_and_test_network_cross(int numOuterIter, vector<int> &trainLabels, fl
 
 void train_and_test_network_square(int numOuterIter, vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
-  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.5);
-
-  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
-  double start = omp_get_wtime();
-  for (int i = 0; i < numOuterIter; i++ )
-  {
-    float sum_squared_error = 0.0;
-    for (int j = 0; j < numTrainingImages; j++)
-    {
-      sum_squared_error += myNeuralNet->backprop(trainingImages[j], trainLabels[j]);
-    }
-    cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
-  }
-
-  cout << "evaluating network on " << numTestingImages << " test digits" << endl;
-  float correct = 0;
-  for (int i = 0; i < numTestingImages; i++)
-  {
-    int predict_value = myNeuralNet->predict(testingImages[i]);
-    if (predict_value == testLabels[i])
-    {
-      correct += 1;
-    }
-  }
-  cout << "accuracy rate: " << correct / numTestingImages << endl;
-
+  neural_network *myNeuralNet = new neural_network(784, 500, 10, 0.1);
+  myNeuralNet->train(trainingImages, trainLabels, numOuterIter, numTrainingImages);
+  myNeuralNet->test(testingImages, testLabels, numTestingImages);
   delete myNeuralNet;
 }
 
-void train_and_test_autoencoder(int numOuterIter, vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
+void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
+  vector<int> autoencoder_layers {784, 500, 500};
+  vector<float> auto_learn_rates {0.0005, 0.0005, 0.0005};
+  vector<int> auto_iters {15, 15, 15};
+  vector<float> noise_levels {0.1, 0.2, 0.3};
+
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.1);
+  myAutoencoder->preTrain(trainingImages, numTrainingImages);
+  myAutoencoder->train(trainingImages, trainLabels, 30, numTrainingImages);
+  myAutoencoder->test(testingImages, testLabels, numTestingImages);
+  delete myAutoencoder;
+}
+
+void experiment_1(vector<int> &trainLabels, float **trainingImages)
+{
+  cout << "running experiment 1" << endl;
   vector<int> autoencoder_layers {784};
-  //learning rate of 0.01 works best
-  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, 500, 200, 10, 0.0001);
-  myAutoencoder->preTrain(trainingImages, numTrainingImages, numOuterIter);
+  vector<float> auto_learn_rates {0.001};
+  vector<int> auto_iters {15};
+  vector<float> noise_levels {0.25};
+
+  int cores[3] = {1, 4, 8};
+  for (int i = 0; i < 3; i++)
+  {
+    omp_set_num_threads(cores[i]);
+    autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
+    cout << "using " << cores[i] << " cores" << endl;;
+    myAutoencoder->preTrain(trainingImages, 5000);
+    delete myAutoencoder;
+  }
+}
+
+void experiment_2(vector<int> &trainLabels, float **trainingImages)
+{
+  cout << "running experiment 2" << endl;
+  vector<int> autoencoder_layers {784};
+  vector<float> auto_learn_rates {0.001};
+  vector<int> auto_iters {1};
+  vector<float> noise_levels {0.25};
+
+  int cores[3] = {1, 4, 8};
+  int num_hidden_units[4] = {100, 200, 500, 800};
+  for (int i = 0; i < 4; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      omp_set_num_threads(cores[j]);
+      autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, num_hidden_units[i], 300, 10, 0.05);
+      cout << "using " << num_hidden_units[i] << " hidden units and " << cores[j] << " cores" << endl;
+      myAutoencoder->preTrain(trainingImages, 60000);
+      delete myAutoencoder;
+    }
+  }
+}
+
+void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
+{
+  omp_set_num_threads(omp_get_num_procs());
+  cout << "running experiment 3" << endl;
+  vector<int> autoencoder_layers {784};
+  vector<float> auto_learn_rates {0.001};
+  vector<int> auto_iters {15};
+  vector<float> noise_levels {0.25};
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
+
+  myAutoencoder->preTrain(trainingImages, 60000);
+  myAutoencoder->visualizeWeights(0, 100);
+  myAutoencoder->reconstructImage(testingImages, 0, 100);
+
   delete myAutoencoder;
 }
 
@@ -115,7 +156,7 @@ int main(int argc, char *argv[])
   vector<int> training_labels = mnist::read_mnist_label_file<vector, int>(train_labels_file);
   vector<vector<vector<float> > > training_images_sq = mnist::read_mnist_image_file_sq<vector, vector, float>(train_images_file);
   numTrainingImages = (int) training_images_sq.size();
-  // numTrainingImages = 1000;
+
   float **training_images = new float*[numTrainingImages];
   for (int i = 0; i < numTrainingImages; i++)
   {
@@ -135,9 +176,12 @@ int main(int argc, char *argv[])
 
   cout << "finished parsing input data! " << endl;
 
-  // train_and_test_network_square(40, training_labels, training_images, testing_labels, testing_images);
-  // train_and_test_network_cross(40, training_labels, training_images, testing_labels, testing_images);
-  train_and_test_autoencoder(20, training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_network_cross(30, training_labels, training_images, testing_labels, testing_images);
+  train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
+  // experiment_1(training_labels, training_images);
+  // experiment_2(training_labels, training_images);
+  // experiment_3(training_labels, training_images, testing_labels, testing_images);
 
   for (int i = 0; i < numTrainingImages; i++)
   {

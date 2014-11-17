@@ -23,14 +23,15 @@ public:
   hidden_layer(int numInputs, int numHiddenUnits, float weightRange);
   virtual ~hidden_layer();
   void init();
+  void printWeights(int n);
 
   void encode(float *input, float *output);
   void sigmoidTransform(float *x);
 
-  virtual float squared_loss(float *output, int t);
-  virtual void compute_delta_output(float *delta, float *o, int t);
-  virtual void compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer);
-  virtual void updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate);
+  float squared_loss(float *output, int t);
+  void compute_delta_output(float *delta, float *o, int t);
+  void compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer);
+  void updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate);
 
   inline int getNumHiddenUnits()
   {

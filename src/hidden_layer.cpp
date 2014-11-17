@@ -18,8 +18,8 @@ hidden_layer::hidden_layer(int numInputs, int numHiddenUnits, float weightRange)
 
 void hidden_layer::init()
 {
-  hiddenChunkSize = max(numHiddenUnits/32, 1);
-  inputChunkSize = max(numInputs/32, 1);
+  hiddenChunkSize = max(numHiddenUnits / 32, 1);
+  inputChunkSize = max(numInputs / 32, 1);
 
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
@@ -32,13 +32,26 @@ void hidden_layer::init()
 
   biases = new float[numHiddenUnits];
 
-  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
+  //#pragma omp parallel for schedule(dynamic, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     biases[i] = 0.0;
   }
 
   __t = new float[numHiddenUnits];
+}
+
+void hidden_layer::printWeights(int n)
+{
+  n = min(numHiddenUnits, n);
+  for (int i = 0; i < n; i++)
+  {
+    for (int j = 0; j < numInputs; j++)
+    {
+      cout << weights[i * numInputs + j] << " ";
+    }
+    cout << endl;
+  }
 }
 
 void hidden_layer::sigmoidTransform(float *x)
@@ -66,6 +79,12 @@ void hidden_layer::encode(float *input, float *output)
 
 float hidden_layer::squared_loss(float *output, int t)
 {
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    __t[i] = 0.0;
+  }
+  __t[t] = 1.0;
+
   float error = 0.0;
   for (int i = 0; i < numHiddenUnits; i++)
   {

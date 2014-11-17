@@ -17,6 +17,9 @@ protected:
 
 public:
   neural_network(int numInput, int numHidden, int numOutput, float learn_rate);
+  void train(float **trainingImages, vector<int> &trainLabels, int numOuterIter, int numTrainingImages);
+  void test(float **testingImages, vector<int> &testLabels, int numTestingImages);
+  virtual void getInput(float *&o_i) {};
   virtual float backprop(float *o_i, int t);
   virtual int predict(float *o_i);
   virtual ~neural_network();

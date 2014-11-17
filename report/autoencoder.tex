@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{Parallel Stochastic Gradient Descent for Stacked Autoencoders}
+\title{Parallel Stochastic Gradient Descent for Stacked Denoising Autoencoders}
 
 \author{\IEEEauthorblockN{Jason Liang}
 \IEEEauthorblockA{jasonzliang@utexas.edu}
@@ -33,25 +33,24 @@ The abstract goes here.
 \end{abstract}
 
 \section{Introduction}
-Autoencoders are a method for performing representation learning, a process during which a more useful representation of the
+Autoencoders are a method for performing representation learning, an unsupervised pretraining process during which a more useful representation of the
 input data is automatically determined. Representation learning is important in machine learning since ``the performance of 
 machine learning methods is heavily dependent on the choice of data representation (or features) in which they are applied" 
-\cite{bengio2012rep}. An autoencoder is a neural network in which the output layer and the input layer have the same size,
+\cite{bengio2012rep}. For many supervised classification tasks, the high dimensionality of the input data means that the classifier requires an enormous number of training examples in order to generalize well and not overfit. One solution is to use unsupervised pretraining to learn a good representation for the input data and during actual training, transform the input examples into an easier form for the classifier to learn. Autoencoders are one such representation learning tool.
+
+An autoencoder is a neural network in which the output layer and the input layer have the same size,
 so that the original input can be used to determine how well or how poorly the autoencoder encodes the data. Consider a 
 neural network with one hidden layer and one output layer which has the same size as the input layer. Suppose
 that the input $x\in\mathbb{R}^m$ (and the output as well) and suppose that the hidden layer has $n$ nodes. Then we
 have a weight matrix $W\in\mathbb{R}^{m\times n}$ and bias vectors $b$ and $b^{'}$ in $\mathbb{R}^m$ and $\mathbb{R}^n$, respectively.
-Let $s(x) = 1/(1+e^{-x})$ be the sigmoid (logistic) transfer function. Then we have a neural network as shown in \ref{fig:autoencoder}.
-We want that $n<m$ so that the learned representation of the input exists in a lower dimensional space than the input. The output
-can be considered a prediction of the input given the code in the hidden layer. We can then determine how well the autoencoder
-encodes (and then decodes) the data by comparing input to the output. If they are similar, then the code in the hidden layer
-represents a good, lower dimensional representation of the input data.
+Let $s(x) = 1/(1+e^{-x})$ be the sigmoid (logistic) transfer function. Then we have a neural network as shown in Fig.~\ref{fig:autoencoder}. When using an autoencoder to encode data, we calculate the vector $y=s(Wx + b)$; corresponding when we use an autoencoder to decode and reconstruct back the original input, we calculate $z=s(W^{T}x+b^{'})$. The weight matrix of the decoding stage is the transpose of weight matrix of the encoding stage in order to reduce the number of parameters to learn. We want to optimize $W$, $b$, and $b^{'}$ so that the reconstruction is as similar to the original input as possible with respect to some loss function. In this report, the loss function used is the least squares loss: $L(z)=\frac{1}{2}\norm{t-z}_2^2$, where $t$ is the original input. After an autoencoder is trained, its decoding stage is discarded and the encoding stage is used to transform the training input examples as a preprocessing step. In this report, we will refer to the trained encoding stage of the autoencoder as an `` autoencoder layer".  
 
+Usually for ordinary autoencoders, we want that $n<m$ so that the learned representation of the input exists in a lower dimensional space than the input. This is done to ensure that the autoencoder does not learn a trivial identity transformation. However, there also exists an autoencoder variant called \textit{denoising autoencoders} that use a different reconstruction criterion to learn overcomplete representations \cite{vincent2010stacked}. In other words, even if $n>m$, a denoising autoencoder can still learn a good representation of the input. This is achieved by corrupting the input image and training the autoencoder to reconstruct the original uncorrupted image. By learning how to denoise, the autoencoder is forced to understand the true structure of input data and learn a good representation of it. 
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\linewidth]{autoencoder.png}
-\caption{autoencoder}
+\caption{Overview of an autoencoder and its encoding, decoding stages. The weight matrix of the decoding stage is the transpose of the weight matrix of the encoding stage.}
 \label{fig:autoencoder}
 \end{figure}
 
@@ -59,12 +58,10 @@ represents a good, lower dimensional representation of the input data.
 related work here, cite like this \cite{vincent2010stacked}
 
 \section{Algorithm Description}
+%todo: we need to mention that for autoencoders, the weight matrix of output layer is transpose of the weight matrix of hidden layer
+%todo: also mention how autoencoders can be stacked on each other (see page 3383 in vincent2010stacked)
 We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and 
-compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference
-between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation
-of the data. A common method of updating the weight and biases is via backpropogation. We can use gradient descent to update the weights and biases. We
-will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. 
-We use as an example a simple three layer neural network (one input, one hidden and one output node). Some notation:
+compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (one input, one hidden and one output node). Some notation:
 
 \begin{table}[h]
 \normalsize
@@ -164,14 +161,63 @@ We give the whole algorithm in algorithm \ref{alg:backprop}.
 \end{algorithmic}
 \end{algorithm}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\linewidth]{experiment1.png}
+\caption{Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, and 8 threads.}
+\label{fig:experiment1}
+\end{figure}
+
 \section{Experimental Results}
-experimental results here
+For our experiments, we train our autoencoder over the MNIST handwritten digit dataset. The MNIST dataset is composed of 60000 training images and 10000 testing images; each image is in greyscale, 28 by 28 pixels in size, and has a corresponding label range from 0 to 9. Thus, the input vector for our autoencoder has 784 dimensions. We also make use of the denoising criterion mentioned in \cite{vincent2010stacked}, and for each training image, randomly corrupt it by setting each pixel to zero with probability 0.25. 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{experiment2.png}
+\caption{Time per iteration versus number of threads and hidden nodes. All 60000 training images are used.}
+\label{fig:experiment2}
+\end{figure}
+
+We first analyze how the number of threads affects the rate at which training error decreases. We train a single autoencoder layer with 500 hidden nodes for 15 iterations over 5000 training images. An iteration involves going through all training images and for each image, use SGD to update the weight matrix. Fig.~\ref{fig:experiment1} shows the relationship between training error, total time elapsed, and the number of threads used. Regardless of the number of threads, the training error decreases sharply in the first few iterations before flattening out to around the same value after 15 iterations. The rate at which error decreases is significantly faster for 4 and 8 threads when compared to just using one. Nonetheless, the speedup is not linear and is due to 2 reasons: 1) Possible cache conflicts as each thread read and writes to different locations in the weight matrix. 2) Certain steps of backpropagation/SGD must be done sequentially, for example, calculating the update for $W^{T}$ must be done before doing the same for $W$. 
+
+Fig.~\ref{fig:experiment2}, shows the time per iteration of SGD over all 60000 training images versus the number of threads and hidden nodes in the autoencoder layer. For 1 thread, the speedup is essentially linear with the number of hidden nodes. For 4 threads and 8 threads, the speedup becomes sublinear due to the overhead resulting from parallelization. This is especially noticeable when using 8 threads and having lower number of hidden nodes; the time per iteration for 8 threads with 100 hidden nodes is even slower than just using 1 thread. Using 8 threads only becomes faster than using 4 when the number of hidden nodes reach 800. 
+
+Next, in Fig.~\ref{fig:experiment3_1}, we visualize the filters that are learned by training an autoencoder layer with 500 hidden nodes over all 60000 training images. The  filter for each hidden node is a row vector of the weight matrix and indicates which aspects of the input the hidden unit is sensitive to. Since each row in the weight matrix is the same dimensionality as the input, we can visualize it as a 28 by 28 pixel image. The filters will not identical to the input images, do show some similarity to them. In Fig.~\ref{fig:experiment3_1}, we visualize the reconstructed output when given test images of digits as input. As we can see reconstructed output for most of the input images are easily recognizable as digits. 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{experiment3_1.png}
+\caption{Visualization of the filters of the first 100 hidden nodes in an autoencoder trained over all 60000 images.}
+\label{fig:experiment3_1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{experiment3_2.png}
+\caption{Visualization of the reconstructed output when given test images of digits.}
+\label{fig:experiment3_2}
+\end{figure}
 
 \section{Future Work}
-future work goes here
+For future work, we plan on using a genetic algorithm (GA) to train the autoencoder's weight matrix and biases. A GA is a black-box optimization algorithm that iteratively improves upon a population of candidate solution vectors until the global optima of the objective function is reached \cite{srinivas1994genetic}. It uses operators such as mutation and crossover, which are inspired by biological evolution. GAs are superior when compared to SGD in training autoencoders in two aspects: 1) Since the loss function is highly nonconvex, SGD will always converge to a local minima, while GA are capable of eventually reaching the global optima. 2) SGD is not trivial to parallelize; as seen by our experimental results, SGD does not achieve linear speedup. On the other hand, GAs are much simplier to parallelize at two levels \cite{cantu1998survey}: a) Each individual in a population can be evaluated in parallel. b) The mutation and crossover operators operate on each element of a solution vector independently and thus are embarrassing parallel. An overview of how genetic algorithms work is given by algorithm \ref{alg:genetic}. For autoencoders, each individual in the population is some particular weight matrix and its two associated bias vectors. The objective function would be the loss function described earlier and the fitness is how small the error outputted by the loss function is. 
+
+We also plan on evaluating the performance of our autoencoder on additional harder image datasets mentioned in \cite{vincent2010stacked} such as \textit{bg-rand, bg-img-rot} which contain images with noise and rotation. 
+
+\begin{algorithm}[h]
+\caption{Genetic Algorithm}
+\label{alg:genetic}
+\begin{algorithmic}
+\STATE Initialize $N$ individuals randomly
+\FOR{iter $=1,2,3...$}
+	\STATE Evaluate each individual with objective function and assign fitness.
+	\STATE Create $\alpha N$ new individuals by selecting good individuals from population and applying mutation and crossover operators to them.
+	\STATE Replace worst $\alpha N$ individuals in population with newly created individuals.
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
 \section{Conclusion}
-conclusion goes here
+We have implemented a stacked
 
 \bibliographystyle{unsrt}
 \bibliography{autoencoder}
