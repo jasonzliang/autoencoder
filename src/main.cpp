@@ -68,8 +68,8 @@ void train_and_test_network_square(int numOuterIter, vector<int> &trainLabels, f
 void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
   vector<int> autoencoder_layers {784, 1000, 1000};
-  vector<float> auto_learn_rates {0.001, 0.001, 0.001};
-  vector<int> auto_iters {15, 15, 15};
+  vector<float> auto_learn_rates {0.0015, 0.0015, 0.0015};
+  vector<int> auto_iters {10, 10, 10};
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.1);
@@ -102,7 +102,7 @@ void experiment_2(vector<int> &trainLabels, float **trainingImages)
 {
   cout << "running experiment 2" << endl;
   vector<int> autoencoder_layers {784};
-  vector<float> auto_learn_rates {0.001};
+  vector<float> auto_learn_rates {0.0001};
   vector<int> auto_iters {1};
   vector<float> noise_levels {0.25};
 
@@ -113,7 +113,7 @@ void experiment_2(vector<int> &trainLabels, float **trainingImages)
     for (int j = 0; j < 3; j++)
     {
       omp_set_num_threads(cores[j]);
-      autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, num_hidden_units[i], 300, 10, 0.05);
+      autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
       cout << "using " << num_hidden_units[i] << " hidden units and " << cores[j] << " cores" << endl;
       myAutoencoder->preTrain(trainingImages, 60000);
       delete myAutoencoder;
@@ -132,7 +132,7 @@ void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
 
   myAutoencoder->preTrain(trainingImages, 60000);
-  myAutoencoder->visualizeWeights(0, 100);
+  // myAutoencoder->visualizeWeights(0, 100);
   myAutoencoder->reconstructImage(testingImages, 0, 100);
 
   delete myAutoencoder;
@@ -178,10 +178,10 @@ int main(int argc, char *argv[])
 
   // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
   // train_and_test_network_cross(30, training_labels, training_images, testing_labels, testing_images);
-  train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
-  // experiment_3(training_labels, training_images, testing_labels, testing_images);
+  experiment_3(training_labels, training_images, testing_labels, testing_images);
 
   for (int i = 0; i < numTrainingImages; i++)
   {

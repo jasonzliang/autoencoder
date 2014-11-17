@@ -188,14 +188,16 @@ void autoencoder::reconstructImage(float **testingImages, int layer, int n)
   auto_hidden_layer *myLayer = preTrainLayers[layer];
   float *myLayerOutput = preTrainLayersOutputs[layer];
   float *reconstructed_output = new float[784];
+  float *corrupted_input = new float[784];
   for (int i = 0; i < n; i++)
   {
     float *image = testingImages[i];
-    myLayer->encode(image, myLayerOutput);
+    corrupt_masking(image, corrupted_input, 0.25, 784);
+    myLayer->encode(corrupted_input, myLayerOutput);
     myLayer->decode(myLayerOutput, reconstructed_output);
     for (int j = 0; j < 784; j++)
     {
-      cout << image[j] << " ";
+      cout << corrupted_input[j] << " ";
     }
     cout << endl;
     for (int j = 0; j < 784; j++)
@@ -205,6 +207,7 @@ void autoencoder::reconstructImage(float **testingImages, int layer, int n)
     cout << endl;
   }
   delete[] reconstructed_output;
+  delete[] corrupted_input;
 }
 
 autoencoder::~autoencoder()
