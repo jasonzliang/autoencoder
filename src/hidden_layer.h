@@ -59,6 +59,12 @@ public:
   {
     return 1 / (1 + exp(-1 * x));
   }
+
+  inline void setChunkSize(int x)
+  {
+    inputChunkSize = x;
+    hiddenChunkSize = x;
+  }
 };
 
 #endif

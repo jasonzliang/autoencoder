@@ -3,12 +3,14 @@
 auto_hidden_layer::auto_hidden_layer(int numInputs, int numHiddenUnits):
   hidden_layer(numInputs, numHiddenUnits)
 {
-  hiddenChunkSize = max(numHiddenUnits / 32, 1);
-  inputChunkSize = max(numInputs / 32, 1);
+  // hiddenChunkSize = max(numHiddenUnits / 32, 1);
+  // inputChunkSize = max(numInputs / 32, 1);
+  hiddenChunkSize = 1;
+  inputChunkSize = 1;
 
   decode_biases = new float[numInputs];
 
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  //#pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     decode_biases[i] = 0.0;
@@ -21,7 +23,7 @@ void auto_hidden_layer::decode(float *input, float *output)
 {
   resetBuffer();
 
-  #pragma omp parallel for schedule(dynamic, inputChunkSize)
+  #pragma omp parallel for schedule(static, inputChunkSize)
   for (int j = 0; j < numHiddenUnits; j++)
   {
     for (int i = 0; i < numInputs; i++)
@@ -30,7 +32,7 @@ void auto_hidden_layer::decode(float *input, float *output)
     }
   }
 
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  #pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     output[i] = sigmoidTransform(buffer[i] + decode_biases[i]);
@@ -39,7 +41,7 @@ void auto_hidden_layer::decode(float *input, float *output)
 
 void auto_hidden_layer::resetBuffer()
 {
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  //#pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     buffer[i] = 0.0;
@@ -50,7 +52,7 @@ float auto_hidden_layer::auto_squared_loss(float *input, float *output)
 {
   float error = 0.0;
 
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  //#pragma omp parallel for schedule(static, inputChunkSize) reduction(+:error)
   for (int i = 0; i < numInputs; i++)
   {
     error += (input[i] - output[i]) * (input[i] - output[i]);
@@ -61,7 +63,7 @@ float auto_hidden_layer::auto_squared_loss(float *input, float *output)
 
 void auto_hidden_layer::auto_compute_delta_output(float *delta, float *o, float *t)
 {
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  #pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     delta[i] = o[i] * (1.0 - o[i]) * (o[i] - t[i]);
@@ -70,7 +72,7 @@ void auto_hidden_layer::auto_compute_delta_output(float *delta, float *o, float 
 
 void auto_hidden_layer::auto_compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer)
 {
-  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
+  #pragma omp parallel for schedule(static, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     float sum = 0.0;
@@ -85,7 +87,7 @@ void auto_hidden_layer::auto_compute_delta_hidden(float *delta_curr_layer, float
 
 void auto_hidden_layer::auto_updateWeights(float *delta_e, float *o_i, float *delta_d, float *o_e, float learn_rate)
 {
-  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
+  #pragma omp parallel for schedule(static, hiddenChunkSize)
   for (int j = 0; j < numHiddenUnits; j++)
   {
     for (int i = 0; i < numInputs; i++)
@@ -94,20 +96,20 @@ void auto_hidden_layer::auto_updateWeights(float *delta_e, float *o_i, float *de
     }
   }
 
-  //#pragma omp parallel for schedule(dynamic, inputChunkSize)
+  #pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
-    decode_biases[i] += learn_rate * delta_d[i];
+    decode_biases[i] -= learn_rate * delta_d[i];
   }
 
-  #pragma omp parallel for schedule(dynamic, hiddenChunkSize)
+  #pragma omp parallel for schedule(static, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
     for (int j = 0; j < numInputs; j++)
     {
       weights[i * numInputs + j] -= learn_rate * o_i[j] * delta_e[i];
     }
-    biases[i] += learn_rate * delta_e[i];
+    biases[i] -= learn_rate * delta_e[i];
   }
 }
 
@@ -122,13 +124,13 @@ auto_hidden_layer::~auto_hidden_layer()
 // {
 //   float sum = 0.0;
 
-//   // #pragma omp parallel for schedule(dynamic, numInputs) reduction(+:sum)
+//   // #pragma omp parallel for schedule(static, numInputs) reduction(+:sum)
 //   for (int i = 0; i < numInputs; i++)
 //   {
 //     sum += exp(x[i]);
 //   }
 
-//   #pragma omp parallel for schedule(dynamic, numInputs)
+//   #pragma omp parallel for schedule(static, numInputs)
 //   for (int i = 0; i < numInputs; i++)
 //   {
 //     x[i] = exp(x[i]) / sum;
@@ -137,7 +139,7 @@ auto_hidden_layer::~auto_hidden_layer()
 
 // void auto_hidden_layer::cross_decode(float *input, float *output)
 // {
-//   #pragma omp parallel for schedule(dynamic, inputChunkSize)
+//   #pragma omp parallel for schedule(static, inputChunkSize)
 //   for (int i = 0; i < numInputs; i++)
 //   {
 //     float sum = 0.0;
@@ -152,7 +154,7 @@ auto_hidden_layer::~auto_hidden_layer()
 
 // void auto_hidden_layer::cross_compute_delta_output(float *delta, float *o, float *t)
 // {
-//   #pragma omp parallel for schedule(dynamic, inputChunkSize)
+//   #pragma omp parallel for schedule(static, inputChunkSize)
 //   for (int i = 0; i < numInputs; i++)
 //   {
 //     delta[i] = (o[i] - t[i]);
@@ -162,7 +164,7 @@ auto_hidden_layer::~auto_hidden_layer()
 // float auto_hidden_layer::cross_entropy_loss(float *input, float *output)
 // {
 //   float error = 0.0;
-//   #pragma omp parallel for schedule(dynamic, inputChunkSize) reduction(+:error)
+//   #pragma omp parallel for schedule(static, inputChunkSize) reduction(+:error)
 //   for (int i = 0; i < numInputs; i++)
 //   {
 //     // float o = ((output[i] < .5) ? max((float)1e-6, output[i]) : min(1 - (float)1e-6, output[i]));

@@ -11,7 +11,7 @@ class neural_network
 protected:
   hidden_layer *h, *o;
   float *o_j, *o_k, *delta_k, *delta_j;
-  float learn_rate;
+  float learn_rate, prevTrainError;
   // int numHiddenLayers;
   // vector<*hidden_layer> myLayers;
 

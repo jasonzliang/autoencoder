@@ -46,7 +46,7 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
 
 void autoencoder::corrupt_masking(float *input, float *corrupted_input, float fraction, int length)
 {
-  //#pragma omp parallel for schedule(dynamic, max(length/16, 1))
+  // #pragma omp parallel for schedule(static, 2)
   for (int i = 0; i < length; i++)
   {
     if (uniformRandom() < fraction)
@@ -62,7 +62,7 @@ void autoencoder::corrupt_masking(float *input, float *corrupted_input, float fr
 
 void autoencoder::corrupt_gaussian(float *input, float *corrupted_input, float sigma, int length)
 {
-  #pragma omp parallel for schedule(dynamic, max(length/16, 1))
+  // #pragma omp parallel for schedule(static, 50)
   for (int i = 0; i < length; i++)
   {
     corrupted_input[i] = input[i] + normalRandom() * sigma;
@@ -113,6 +113,9 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       sum_squared_error += a->auto_squared_loss(o_i, o_d);
     }
     cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+    prevTrainError = sum_squared_error;
+    float initLearningRate = preTrainLayersLearnRates[k];
+    float thres = 0.02;
 
     double start = omp_get_wtime();
     for (int i = 0; i < preTrainLayersOuterIter[k]; i++ )
@@ -165,6 +168,12 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       // cout << "total_updateWeights_time: " << total_updateWeights_time << endl;
       // cout << "total_squared_loss_time: " << total_squared_loss_time << endl;
       // cout << endl;
+      if (sum_squared_error > (1-thres)*prevTrainError) {
+        preTrainLayersLearnRates[k] /= 2;
+        thres /= 2;
+        cout << "error converging, using new learning rate " << preTrainLayersLearnRates[k] << endl;
+      }
+      prevTrainError = sum_squared_error;
     }
 
     delete[] corrupted_o_i;

@@ -6,9 +6,9 @@
 #
 
 # define the C compiler to use
-#CC = g++
+CC = g++
 #CC = g++-4.9
-CC = /lusr/bin/g++-4.8
+#CC = /lusr/bin/g++-4.8
 
 # define any compile-time flags
 CFLAGS = -Wall -fopenmp -std=c++11 -O3
