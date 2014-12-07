@@ -5,8 +5,8 @@ auto_hidden_layer::auto_hidden_layer(int numInputs, int numHiddenUnits):
 {
   // hiddenChunkSize = max(numHiddenUnits / 32, 1);
   // inputChunkSize = max(numInputs / 32, 1);
-  hiddenChunkSize = 1;
-  inputChunkSize = 1;
+  // hiddenChunkSize = 2;
+  // inputChunkSize = 2;
 
   decode_biases = new float[numInputs];
 

@@ -95,27 +95,55 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
     cout << "pretraining layer #" << k + 1 << ", cycling through " << numTrainingImages << " training images for " << preTrainLayersOuterIter[k] << " outer iterations" << endl;
 
     auto_hidden_layer *a = preTrainLayers[k];
-    float *corrupted_o_i = new float[a->getNumInputUnits()];
+
+    float **o_i;
+    if (k > 0)
+    {
+      o_i = new float*[numTrainingImages];
+      for (int i = 0; i < numTrainingImages; i++)
+      {
+        o_i[i] = new float[a->getNumInputUnits()];
+      }
+
+      for (int i = 0; i < numTrainingImages; i++)
+      {
+        float *o_t = trainingImages[i];
+        getInputK(o_t, k);
+        for (int j = 0; j < a->getNumInputUnits(); j++)
+        {
+          o_i[i][j] = o_t[j];
+        }
+      }
+    }
+    else
+    {
+      o_i = trainingImages;
+    }
+
+    float **corrupted_o_i = new float*[numTrainingImages];
+    for (int i = 0; i < numTrainingImages; i++)
+    {
+      corrupted_o_i[i] = new float[a->getNumInputUnits()];
+      corrupt_masking(o_i[i], corrupted_o_i[i], preTrainLayersNoiseLevels[k], a->getNumInputUnits());
+    }
+
     float *o_e = new float[a->getNumHiddenUnits()];
     float *delta_e = new float[a->getNumHiddenUnits()];
     float *o_d = new float[a->getNumInputUnits()];
     float *delta_d = new float[a->getNumInputUnits()];
 
     float sum_squared_error = 0.0;
-    for (int j = 0; j < numTrainingImages; j++)
+    for (int i = 0; i < numTrainingImages; i++)
     {
-      float *o_i = trainingImages[j];
-      getInputK(o_i, k);
+      float *o_t = o_i[i];
+      getInputK(o_t, k);
 
-      a->encode(o_i, o_e);
+      a->encode(o_t, o_e);
       a->decode(o_e, o_d);
 
-      sum_squared_error += a->auto_squared_loss(o_i, o_d);
+      sum_squared_error += a->auto_squared_loss(o_t, o_d);
     }
     cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
-    prevTrainError = sum_squared_error;
-    float initLearningRate = preTrainLayersLearnRates[k];
-    float thres = 0.02;
 
     double start = omp_get_wtime();
     for (int i = 0; i < preTrainLayersOuterIter[k]; i++ )
@@ -123,7 +151,7 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       // float total_encode_time = 0;
       // float total_decode_time = 0;
       // float total_compute_delta_output_time = 0;
-      // float total_compute_delta_hidden_time = 0;
+      // float/ total_compute_delta_hidden_time = 0;
       // float total_updateWeights_time = 0;
       // float total_squared_loss_time = 0;
       // float t;
@@ -131,12 +159,11 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       float sum_squared_error = 0.0;
       for (int j = 0; j < numTrainingImages; j++)
       {
-        float *o_i = trainingImages[j];
-        getInputK(o_i, k);
-        corrupt_masking(o_i, corrupted_o_i, preTrainLayersNoiseLevels[k], a->getNumInputUnits());
+        float *o_t = o_i[j];
+        float *corrupted_o_t = corrupted_o_i[j];
 
         // t = omp_get_wtime();
-        a->encode(corrupted_o_i, o_e);
+        a->encode(corrupted_o_t, o_e);
         // total_encode_time += omp_get_wtime() - t;
 
         // t = omp_get_wtime();
@@ -144,7 +171,7 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
         // total_decode_time += omp_get_wtime() - t;
 
         // t = omp_get_wtime();
-        a->auto_compute_delta_output(delta_d, o_d, o_i);
+        a->auto_compute_delta_output(delta_d, o_d, o_t);
         // total_compute_delta_output_time += omp_get_wtime() - t;
 
         // t = omp_get_wtime();
@@ -152,11 +179,11 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
         // total_compute_delta_hidden_time += omp_get_wtime() - t;
 
         // t = omp_get_wtime();
-        a->auto_updateWeights(delta_e, corrupted_o_i, delta_d, o_e, preTrainLayersLearnRates[k]);
+        a->auto_updateWeights(delta_e, corrupted_o_t, delta_d, o_e, preTrainLayersLearnRates[k]);
         // total_updateWeights_time += omp_get_wtime() - t;
 
         // t = omp_get_wtime();
-        sum_squared_error += a->auto_squared_loss(o_i, o_d);
+        sum_squared_error += a->auto_squared_loss(o_t, o_d);
         // total_squared_loss_time += omp_get_wtime() - t;
 
       }
@@ -168,15 +195,22 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       // cout << "total_updateWeights_time: " << total_updateWeights_time << endl;
       // cout << "total_squared_loss_time: " << total_squared_loss_time << endl;
       // cout << endl;
-      if (sum_squared_error > (1-thres)*prevTrainError) {
-        preTrainLayersLearnRates[k] /= 2;
-        thres /= 2;
-        cout << "error converging, using new learning rate " << preTrainLayersLearnRates[k] << endl;
-      }
-      prevTrainError = sum_squared_error;
     }
 
+    if (k > 0)
+    {
+      for (int i = 0; i < numTrainingImages; i++)
+      {
+        delete[] o_i[i];
+      }
+      delete[] o_i;
+    }
+    for (int i = 0; i < numTrainingImages; i++)
+    {
+      delete[] corrupted_o_i[i];
+    }
     delete[] corrupted_o_i;
+
     delete[] o_e;
     delete[] o_d;
     delete[] delta_e;

@@ -69,10 +69,10 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
 {
   vector<int> autoencoder_layers {784, 1000, 1000};
   vector<float> auto_learn_rates {0.005, 0.005, 0.005};
-  vector<int> auto_iters {15, 15, 15};
+  vector<int> auto_iters {1, 1, 1};
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
-  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 300, 10, 0.5);
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
   myAutoencoder->train(trainingImages, trainLabels, 30, numTrainingImages);
   myAutoencoder->test(testingImages, testLabels, numTestingImages);
@@ -176,9 +176,9 @@ int main(int argc, char *argv[])
 
   cout << "finished parsing input data! " << endl;
 
-  // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
+  train_and_test_network_square(40, training_labels, training_images, testing_labels, testing_images);
   // train_and_test_network_cross(30, training_labels, training_images, testing_labels, testing_images);
-  train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
   // experiment_3(training_labels, training_images, testing_labels, testing_images);

@@ -21,8 +21,8 @@ void hidden_layer::init()
 {
   // hiddenChunkSize = max(numHiddenUnits / 32, 1);
   // inputChunkSize = max(numInputs / 32, 1);
-  hiddenChunkSize = 1;
-  inputChunkSize = 1;  
+  hiddenChunkSize = 2;
+  inputChunkSize = 2;  
 
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
