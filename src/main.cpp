@@ -74,10 +74,11 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 300, 10, 0.1);
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
- 	myAutoencoder->train(trainingImages, trainLabels, 5, numTrainingImages);
+  //myAutoencoder->train(trainingImages, trainLabels, 5, numTrainingImages);
   //myAutoencoder->fineTune(trainingImages, numTrainingImages, trainLabels);
-  //myAutoencoder->fineTuneNoHidden(trainingImages, numTrainingImages, trainLabels);
-  myAutoencoder->test(testingImages, testLabels, numTestingImages);
+  myAutoencoder->fineTuneNoHidden(trainingImages, numTrainingImages, trainLabels);
+  myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
+  //myAutoencoder->test(testingImages, testLabels, numTestingImages);
   delete myAutoencoder;
 }
 
