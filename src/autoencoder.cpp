@@ -17,6 +17,8 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
   preTrainLayersLearnRates(preTrainLayersLearnRates),
   preTrainLayersOuterIter(preTrainLayersOuterIter),
   preTrainLayersNoiseLevels(preTrainLayersNoiseLevels)
+	output_layer *output = new output_layer(preTrainLayerWidths[numPreTrainLayers],10);
+
 
 {
   numPreTrainLayers = (int) preTrainLayerWidths.size();
@@ -232,3 +234,224 @@ autoencoder::~autoencoder()
     preTrainLayersOutputs.pop_back();
   }
 }
+
+void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels){
+	cout << "STARTING THE FINE TUNING STEP" << endl;
+
+	int numOuterIter = 5;
+
+	cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+	float sum_squared_error = 0.0;
+
+	// Forward activiate the network to compute the initial output error
+	/*
+	for (int j = 0; j < numTrainingImages; j++)
+	{
+		float *o_i = trainingImages[j];
+		getInput(o_i);
+
+		h->encode(o_i, o_j);
+		o->encode(o_j, o_k);
+		sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
+	}
+	*/
+	sum_squared_error = 1234123;
+	cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
+	double start = omp_get_wtime();
+	for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
+	{
+		float sum_squared_error = 0.0;
+
+		int p = numPreTrainLayers;
+		for (int j = 0; j < numTrainingImages; j++)
+		{
+			// compute all forward activations
+			float *o_i = trainingImages[j];
+			float **activations;
+			float **deltas;
+			activations =  new float*[p+2];
+			deltas =  new float*[p+2];
+			for(int k=0; k<p;k++){
+				auto_hidden_layer *a = preTrainLayers[k];
+				activations[k] = new float[a->getNumHiddenUnits()];
+				deltas[k] = new float[a->getNumHiddenUnits()];
+				if(k==0){
+					a->encode(o_i, activations[k]);
+				}
+				else{
+					a->encode(activations[k-1], activations[k]);
+				}
+			}
+			activations[p] = new float[h->getNumHiddenUnits()];
+			h->encode(activations[p-1], activations[p]);
+			deltas[p] = new float[h->getNumHiddenUnits()];
+			activations[p+1] = new float[o->getNumHiddenUnits()];
+			o->encode(activations[p], activations[p+1]);
+			deltas[p+1] = new float[o->getNumHiddenUnits()];
+			// all activations computed
+			
+			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
+			o->compute_delta_output(deltas[p+1], activations[p+1], trainLabels[j]);
+			h->compute_delta_hidden(deltas[p], deltas[p+1], activations[p], o);
+
+  		o->updateWeights(deltas[p+1], activations[p], learn_rate);
+  		h->updateWeights(deltas[p], activations[p-1], learn_rate);
+
+			// get layers in order starting from the last one and we'll update in that order
+			for (int k = numPreTrainLayers-1; k > 1; k--) // TODO should this really only go until 1?
+			{
+				auto_hidden_layer *a = preTrainLayers[k];
+				// we use the compute delta hidden from the neural net as opposed to the
+				// autoencoder since we don't want to compare the original with encoded/decoded images.
+				if(k == p-1){
+					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], h);
+				}
+				else{
+					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], preTrainLayers[k+1]);
+				}
+				a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
+				// Need to add fine tuning for the weights from the input to the first activation layer here.
+			}
+			
+			// after updating all the weights we compute the error again
+			for(int k=0; k<p;k++){
+				auto_hidden_layer *a = preTrainLayers[k];
+				if(k==0){
+					a->encode(o_i, activations[k]);
+				}
+				else{
+					a->encode(activations[k-1], activations[k]);
+				}
+			}
+			h->encode(activations[p-1], activations[p]);
+			o->encode(activations[p], activations[p+1]);
+
+			sum_squared_error += o->squared_loss(activations[p+1], trainLabels[j]);
+
+			// Free the memory that we allocated
+			for(int k=0; k<p;k++){
+				delete[] activations[k];
+				delete[] deltas[k];
+			}
+			delete activations;
+			delete deltas;
+		}
+		cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+	}
+
+
+	return;
+}
+
+
+void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels){
+	cout << "STARTING THE FINE TUNING STEP" << endl;
+
+	int numOuterIter = 5;
+
+	cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+	float sum_squared_error = 0.0;
+
+	// Forward activiate the network to compute the initial output error
+	/*
+	for (int j = 0; j < numTrainingImages; j++)
+	{
+		float *o_i = trainingImages[j];
+		getInput(o_i);
+
+		h->encode(o_i, o_j);
+		o->encode(o_j, o_k);
+		sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
+	}
+	*/
+	sum_squared_error = 1234123;
+	cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
+	double start = omp_get_wtime();
+	for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
+	{
+		float sum_squared_error = 0.0;
+
+		int p = numPreTrainLayers;
+		for (int j = 0; j < numTrainingImages; j++)
+		{
+			// compute all forward activations
+			float *o_i = trainingImages[j];
+			float **activations;
+			float **deltas;
+			activations =  new float*[p+1];
+			deltas =  new float*[p+1];
+			for(int k=0; k<p;k++){
+				auto_hidden_layer *a = preTrainLayers[k];
+				activations[k] = new float[a->getNumHiddenUnits()];
+				deltas[k] = new float[a->getNumHiddenUnits()];
+				if(k==0){
+					a->encode(o_i, activations[k]);
+				}
+				else{
+					a->encode(activations[k-1], activations[k]);
+				}
+			}
+			activations[p] = new float[output->getNumHiddenUnits()];
+			output->encode(activations[p-1], activations[p]);
+			deltas[p] = new float[output->getNumHiddenUnits()];
+			// all activations computed
+			
+			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
+			output->compute_delta_output(deltas[p], activations[p], trainLabels[j]);
+
+  		output->updateWeights(deltas[p], activations[p-1], learn_rate);
+
+			// get layers in order starting from the last one and we'll update in that order
+			for (int k = numPreTrainLayers-1; k > 0; k--) // TODO should this really only go until 1?
+			{
+				auto_hidden_layer *a = preTrainLayers[k];
+				// we use the compute delta hidden from the neural net as opposed to the
+				// autoencoder since we don't want to compare the original with encoded/decoded images.
+				if(k == p-1){
+					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], h);
+				}
+				else{
+					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], preTrainLayers[k+1]);
+				}
+
+				if(k == 0){ // if we're on the first hidden layer, the input is the images, not the previous layer
+					a->updateWeights(deltas[k], o_i, preTrainLayersLearnRates[k]);
+				}
+				else{
+					a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
+				}
+				// Need to add fine tuning for the weights from the input to the first activation layer here.
+			}
+			
+			// after updating all the weights we compute the error again
+			for(int k=0; k<p;k++){
+				auto_hidden_layer *a = preTrainLayers[k];
+				if(k==0){
+					a->encode(o_i, activations[k]);
+				}
+				else{
+					a->encode(activations[k-1], activations[k]);
+				}
+			}
+			output->encode(activations[p-1], activations[p]);
+
+			sum_squared_error += o->squared_loss(activations[p+1], trainLabels[j]);
+
+			// Free the memory that we allocated
+			for(int k=0; k<p;k++){
+				delete[] activations[k];
+				delete[] deltas[k];
+			}
+			delete activations;
+			delete deltas;
+		}
+		cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+	}
+
+
+	return;
+}
+
+

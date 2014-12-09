@@ -1,4 +1,6 @@
 #include "output_layer.h"
+#include "cblas.h"
+#include "openblas_config.h"
 
 /*
 void softMaxTransform(float *x)
@@ -36,6 +38,19 @@ void output_layer::softMaxTransform(float *x)
 
 void output_layer::encode(float *input, float *output)
 {
+
+			/*	
+			float* y = new float[numHiddenUnits];
+			cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, y, 1);
+
+			#pragma omp parallel for schedule(static, hiddenChunkSize)
+			for (int i = 0; i < numHiddenUnits; i++){
+			output[i] = y[i] + biases[i];
+			}
+			softMaxTransform(output);
+			delete y;
+			*/
+
   #pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < numHiddenUnits; i++)
   {
@@ -46,7 +61,7 @@ void output_layer::encode(float *input, float *output)
     }
     output[i] = sum + biases[i];
   }
-  softMaxTransform(output);
+	softMaxTransform(output);
 }
 
 

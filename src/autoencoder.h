@@ -27,6 +27,8 @@ public:
   void corrupt_masking(float *input, float *corrupted_input, float fraction, int length);
   void corrupt_gaussian(float *input, float *corrupted_input, float sigma, int length);
   void preTrain(float **trainingImages, int numTrainingImages);
+	void fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
+	void fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
 
   void reconstructImage(float **testingImages, int layer, int n);
   void visualizeWeights(int layer, int n);
