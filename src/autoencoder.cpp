@@ -455,3 +455,42 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 }
 
 
+
+void autoencoder::testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages)
+{
+  cout << "evaluating network on " << numTestingImages << " test digits" << endl;
+  float correct = 0;
+  for (int i = 0; i < numTestingImages; i++)
+  {
+    float *o_i = testingImages[i];
+    getInput(o_i);
+    int predict_value = predictFineNoHidden(o_i);
+    if (predict_value == testLabels[i])
+    {
+      correct += 1;
+    }
+  }
+  cout << "accuracy rate: " << correct / numTestingImages << endl;
+}
+
+int autoencoder::predictFineNoHidden(float *o_i)
+{
+	float out[output->getNumHiddenUnits()];
+  output->encode(o_i, out);
+
+  int bestIndex = -1;
+  float bestValue = -1;
+  for (int i = 0; i < (int) output->getNumHiddenUnits(); i++)
+  {
+    // cout << o_k[i] << " ";
+    if (out[i] > bestValue)
+    {
+      bestValue = out[i];
+      bestIndex = i;
+    }
+  }
+  // cout << endl;
+  return bestIndex;
+}
+
+

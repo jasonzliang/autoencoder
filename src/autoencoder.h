@@ -29,6 +29,8 @@ public:
   void preTrain(float **trainingImages, int numTrainingImages);
 	void fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
 	void fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
+	void testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages);
+	int predictFineNoHidden(float *o_i);
 
   void reconstructImage(float **testingImages, int layer, int n);
   void visualizeWeights(int layer, int n);
