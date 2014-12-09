@@ -17,8 +17,6 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
   preTrainLayersLearnRates(preTrainLayersLearnRates),
   preTrainLayersOuterIter(preTrainLayersOuterIter),
   preTrainLayersNoiseLevels(preTrainLayersNoiseLevels)
-	output_layer *output = new output_layer(preTrainLayerWidths[numPreTrainLayers],10);
-
 
 {
   numPreTrainLayers = (int) preTrainLayerWidths.size();
@@ -43,6 +41,7 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
 
     cout << "layer " << i + 1 << ": number of outer iterations " << preTrainLayersOuterIter[i] << ", learning rate " << preTrainLayersLearnRates[i] << ", number of hidden units " << auto_num_output << ", noise level " << preTrainLayersNoiseLevels[i] << endl;
   }
+  output = new output_layer(preTrainLayerWidths[numPreTrainLayers],10);
 
 }
 
@@ -290,7 +289,7 @@ void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector
 			o->encode(activations[p], activations[p+1]);
 			deltas[p+1] = new float[o->getNumHiddenUnits()];
 			// all activations computed
-			
+
 			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
 			o->compute_delta_output(deltas[p+1], activations[p+1], trainLabels[j]);
 			h->compute_delta_hidden(deltas[p], deltas[p+1], activations[p], o);
@@ -313,7 +312,7 @@ void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector
 				a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
 				// Need to add fine tuning for the weights from the input to the first activation layer here.
 			}
-			
+
 			// after updating all the weights we compute the error again
 			for(int k=0; k<p;k++){
 				auto_hidden_layer *a = preTrainLayers[k];
@@ -397,7 +396,7 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 			output->encode(activations[p-1], activations[p]);
 			deltas[p] = new float[output->getNumHiddenUnits()];
 			// all activations computed
-			
+
 			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
 			output->compute_delta_output(deltas[p], activations[p], trainLabels[j]);
 
@@ -424,7 +423,7 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 				}
 				// Need to add fine tuning for the weights from the input to the first activation layer here.
 			}
-			
+
 			// after updating all the weights we compute the error again
 			for(int k=0; k<p;k++){
 				auto_hidden_layer *a = preTrainLayers[k];
