@@ -6,27 +6,32 @@
 #
 
 # define the C compiler to use
-CC = g++
-#CC = g++-4.9
+#CC = g++
+CC = g++-4.9
 #CC = /lusr/bin/g++-4.8
 
+#OpenBLAS dirs
+OPEN_BLAS_INC=/usr/local/opt/openblas/include
+OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
+
+
 # define any compile-time flags
-CFLAGS = -Wall -fopenmp -std=c++11 -O3
+CFLAGS = -Wall -g -fopenmp -std=c++11 -O3
 #-O3 
 
 # define any directories containing header files other than /usr/include
 #
-INCLUDES = -I. -I./mnist/include
+INCLUDES = -I. -I./mnist/include -I$(OPEN_BLAS_INC)
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
-LFLAGS =
+LFLAGS = -L$(OPEN_BLAS_LIB)
 
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-LIBS =
+LIBS = -lopenblas
 
 # define the C source files
 SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp
