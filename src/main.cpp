@@ -67,17 +67,22 @@ void train_and_test_network_square(int numOuterIter, vector<int> &trainLabels, f
 
 void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
-  vector<int> autoencoder_layers {784, 1000, 1000};
-  vector<float> auto_learn_rates {0.005, 0.005, 0.005};
-  vector<int> auto_iters {1, 1, 1};
-  vector<float> noise_levels {0.1, 0.2, 0.3};
+  //vector<int> autoencoder_layers {784, 1000, 1000};
+  //vector<float> auto_learn_rates {0.005, 0.005, 0.005};
+  //vector<int> auto_iters {1, 1, 1};
+  //vector<float> noise_levels {0.1, 0.2, 0.3};
 
-  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 300, 10, 0.1);
+  vector<int> autoencoder_layers {784};
+  vector<float> auto_learn_rates {0.005};
+  vector<int> auto_iters {1};
+  vector<float> noise_levels {0.1};
+
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 784, 300, 10, 0.1);
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
   //myAutoencoder->train(trainingImages, trainLabels, 5, numTrainingImages);
   //myAutoencoder->fineTune(trainingImages, numTrainingImages, trainLabels);
   myAutoencoder->fineTuneNoHidden(trainingImages, numTrainingImages, trainLabels);
-  myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
+ myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
   //myAutoencoder->test(testingImages, testLabels, numTestingImages);
   delete myAutoencoder;
 }
