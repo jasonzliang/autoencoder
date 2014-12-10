@@ -17,7 +17,7 @@ private:
 
   vector<auto_hidden_layer *> preTrainLayers;
   vector<float *> preTrainLayersOutputs;
-  output_layer *output;
+  hidden_layer *output_l;
 
 public:
   autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrainLayersLearnRates, vector<int> preTrainLayersOuterIter, vector<float> preTrainLayersNoiseLevels, int numInput, int numHidden, int numOutput, float learn_rate);
