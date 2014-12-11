@@ -73,9 +73,14 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
+
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
-  myAutoencoder->train(trainingImages, trainLabels, 30, numTrainingImages);
-  myAutoencoder->test(testingImages, testLabels, numTestingImages);
+  //myAutoencoder->train(trainingImages, trainLabels, 5, numTrainingImages);
+	// This fine tune just below uses the hidden layer, the following one uses just an output layer (added it to the autoencoder class)
+  //myAutoencoder->fineTune(trainingImages, numTrainingImages, trainLabels);
+  myAutoencoder->fineTuneNoHidden(trainingImages, numTrainingImages, trainLabels);
+	myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
+  //myAutoencoder->test(testingImages, testLabels, numTestingImages);
   delete myAutoencoder;
 }
 

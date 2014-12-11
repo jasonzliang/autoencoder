@@ -1,4 +1,8 @@
 #include "hidden_layer.h"
+#if HAS_OPENBLAS
+#include "cblas.h"
+#include "openblas_config.h"
+#endif
 
 hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):
   numInputs(numInputs),
@@ -68,6 +72,19 @@ void hidden_layer::sigmoidTransform(float *x)
 
 void hidden_layer::encode(float *input, float *output)
 {
+#if HAS_OPENBLAS
+	float* y = new float[numHiddenUnits];
+	cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, y, 1);
+
+	#pragma omp parallel for schedule(static, hiddenChunkSize)
+	for (int i = 0; i < numHiddenUnits; i++){
+		output[i] = sigmoidTransform(y[i] + biases[i]);
+	}
+
+	delete y;
+
+#else
+
   #pragma omp parallel for schedule(static, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
@@ -77,7 +94,10 @@ void hidden_layer::encode(float *input, float *output)
       sum += weights[i * numInputs + j] * input[j];
     }
     output[i] = sigmoidTransform(sum + biases[i]);
-  }
+ }
+#endif
+ 
+	
 }
 
 float hidden_layer::squared_loss(float *output, int t)
@@ -113,6 +133,23 @@ void hidden_layer::compute_delta_output(float *delta, float *o, int t)
 
 void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)
 {
+#if HAS_OPENBLAS
+  //i is actually j
+  //j is actually k
+  float *output_layer_weights = next_layer->getWeights();
+  int numHidUnits_nextLayer = next_layer->getNumHiddenUnits();
+
+	float sum[numHiddenUnits];
+	cblas_sgemv(CblasRowMajor, CblasTrans, numHidUnits_nextLayer, numHiddenUnits, 1.0, output_layer_weights, numHiddenUnits, delta_next_layer, 1, 0.0, sum, 1);
+
+	#pragma omp parallel for schedule(static, hiddenChunkSize)
+	for (int i = 0; i < numHiddenUnits; i++)
+	{
+		delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum[i];
+	}
+
+#else
+
   //i is actually j
   //j is actually k
   float *output_layer_weights = next_layer->getWeights();
@@ -130,6 +167,7 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
     }
     delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum;
   }
+#endif
 }
 
 void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)
