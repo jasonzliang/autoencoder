@@ -347,7 +347,7 @@ void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector
 void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels){
 	cout << "STARTING THE FINE TUNING STEP" << endl;
 
-	int numOuterIter = 5;
+	int numOuterIter = 3;
 
 	cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
 	float sum_squared_error = 0.0;

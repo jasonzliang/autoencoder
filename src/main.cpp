@@ -69,7 +69,7 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
 {
   vector<int> autoencoder_layers {784, 1000, 1000};
   vector<float> auto_learn_rates {0.005, 0.005, 0.005};
-  vector<int> auto_iters {3, 3, 3};
+  vector<int> auto_iters {1, 1, 1};
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
   //vector<int> autoencoder_layers {784};

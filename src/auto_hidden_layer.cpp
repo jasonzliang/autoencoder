@@ -1,6 +1,8 @@
 #include "auto_hidden_layer.h"
+#if HAS_OPENBLAS
 #include "cblas.h"
 #include "openblas_config.h"
+#endif
 
 auto_hidden_layer::auto_hidden_layer(int numInputs, int numHiddenUnits):
   hidden_layer(numInputs, numHiddenUnits)
@@ -23,19 +25,17 @@ auto_hidden_layer::auto_hidden_layer(int numInputs, int numHiddenUnits):
 
 void auto_hidden_layer::decode(float *input, float *output)
 {
-/*	
+#if HAS_OPENBLAS
   resetBuffer();
 
-	cblas_sgemv(CblasRowMajor, CblasTrans, numInputs, numHiddenUnits, 1.0, weights, numHiddenUnits, input, 1, 0.0, buffer, 1);
+	cblas_sgemv(CblasRowMajor, CblasTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, buffer, 1);
 
   #pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)
   {
     output[i] = sigmoidTransform(buffer[i] + decode_biases[i]);
   }
-
-	*/
-
+#else
   resetBuffer();
   #pragma omp parallel for schedule(static, inputChunkSize)
   for (int j = 0; j < numHiddenUnits; j++)
@@ -50,6 +50,7 @@ void auto_hidden_layer::decode(float *input, float *output)
   {
     output[i] = sigmoidTransform(buffer[i] + decode_biases[i]);
   }
+#endif
 }
 
 void auto_hidden_layer::resetBuffer()
