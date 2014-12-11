@@ -22,6 +22,13 @@ public:
   void auto_compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer);
   void auto_updateWeights(float *delta_e, float *o_i, float *delta_d, float *o_e, float learn_rate);
 
+  inline float* getDecodeBiases() {
+    return decode_biases;
+  }
+
+  inline void setDecodeBiases(float *newBiases) {
+    decode_biases = newBiases;
+  }
   //cross entrophy-loss functions
   // void softMaxTransform(float *x);
   // void cross_decode(float *input, float *output);

@@ -22,8 +22,6 @@ void neural_network::train(float **trainingImages, vector<int> &trainLabels, int
   {
   	// cout << "image " << j << endl;
     float *o_i = trainingImages[j];
-    getInput(o_i);
-
     // for (int i = 0; i < h->getNumInputUnits(); i++)
     // {
     // 	float x = o_i[i];
@@ -44,7 +42,6 @@ void neural_network::train(float **trainingImages, vector<int> &trainLabels, int
     for (int j = 0; j < numTrainingImages; j++)
     {
       float *o_i = trainingImages[j];
-      getInput(o_i);
       sum_squared_error += backprop(o_i, trainLabels[j]);
     }
     cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;

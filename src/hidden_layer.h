@@ -37,17 +37,15 @@ public:
   {
     return numHiddenUnits;
   }
+
   inline int getNumInputUnits()
   {
     return numInputs;
   }
+
   inline int getNumWeights()
   {
     return numWeights;
-  }
-  inline float *getWeights()
-  {
-    return weights;
   }
 
   inline float RandomNumber(float Min, float Max)
@@ -64,6 +62,30 @@ public:
   {
     inputChunkSize = x;
     hiddenChunkSize = x;
+  }
+
+  inline float *getWeights()
+  {
+    return weights;
+  }
+
+  inline void setWeights(float *newWeights)
+  {
+    weights = newWeights;
+  }
+
+  inline float *getEncodeBiases()
+  {
+    return biases;
+  }
+  inline void setEncodeBiases(float *newBiases)
+  {
+    biases = newBiases;
+  }
+
+  inline float getWeightRange()
+  {
+    return weightRange;
   }
 };
 

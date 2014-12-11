@@ -87,6 +87,42 @@ void autoencoder::getInput(float *&o_i)
   }
 }
 
+void autoencoder::setO_i(float **o_i, float **trainingImages, int k, int numTrainingImages, int length)
+{
+  for (int i = 0; i < numTrainingImages; i++)
+  {
+    o_i[i] = new float[length];
+  }
+
+  for (int i = 0; i < numTrainingImages; i++)
+  {
+    float *o_t = trainingImages[i];
+    getInputK(o_t, k);
+    for (int j = 0; j < length; j++)
+    {
+      o_i[i][j] = o_t[j];
+    }
+  }
+}
+
+void autoencoder::setCorruptedO_i(float **corrupted_o_i, float **o_i, int k, int numTrainingImages, int length)
+{
+  for (int i = 0; i < numTrainingImages; i++)
+  {
+    corrupted_o_i[i] = new float[length];
+    corrupt_masking(o_i[i], corrupted_o_i[i], preTrainLayersNoiseLevels[k], length);
+  }
+}
+
+void autoencoder::deleteO_i(float **o_i, int numTrainingImages)
+{
+  for (int i = 0; i < numTrainingImages; i++)
+  {
+    delete[] o_i[i];
+  }
+  delete[] o_i;
+}
+
 void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
 {
   for (int k = 0; k < numPreTrainLayers; k++)
@@ -96,36 +132,17 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
 
     auto_hidden_layer *a = preTrainLayers[k];
 
-    float **o_i;
+    float **o_i = new float*[numTrainingImages];
+    float **corrupted_o_i = new float*[numTrainingImages];
     if (k > 0)
     {
-      o_i = new float*[numTrainingImages];
-      for (int i = 0; i < numTrainingImages; i++)
-      {
-        o_i[i] = new float[a->getNumInputUnits()];
-      }
-
-      for (int i = 0; i < numTrainingImages; i++)
-      {
-        float *o_t = trainingImages[i];
-        getInputK(o_t, k);
-        for (int j = 0; j < a->getNumInputUnits(); j++)
-        {
-          o_i[i][j] = o_t[j];
-        }
-      }
+      setO_i(o_i, trainingImages, k, numTrainingImages, a->getNumInputUnits());
     }
     else
     {
       o_i = trainingImages;
     }
-
-    float **corrupted_o_i = new float*[numTrainingImages];
-    for (int i = 0; i < numTrainingImages; i++)
-    {
-      corrupted_o_i[i] = new float[a->getNumInputUnits()];
-      corrupt_masking(o_i[i], corrupted_o_i[i], preTrainLayersNoiseLevels[k], a->getNumInputUnits());
-    }
+    setCorruptedO_i(corrupted_o_i, o_i, k, numTrainingImages, a->getNumHiddenUnits());
 
     float *o_e = new float[a->getNumHiddenUnits()];
     float *delta_e = new float[a->getNumHiddenUnits()];
@@ -151,7 +168,7 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
       // float total_encode_time = 0;
       // float total_decode_time = 0;
       // float total_compute_delta_output_time = 0;
-      // float/ total_compute_delta_hidden_time = 0;
+      // float total_compute_delta_hidden_time = 0;
       // float total_updateWeights_time = 0;
       // float total_squared_loss_time = 0;
       // float t;
@@ -199,23 +216,151 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
 
     if (k > 0)
     {
-      for (int i = 0; i < numTrainingImages; i++)
-      {
-        delete[] o_i[i];
-      }
-      delete[] o_i;
+      deleteO_i(o_i, numTrainingImages);
     }
-    for (int i = 0; i < numTrainingImages; i++)
-    {
-      delete[] corrupted_o_i[i];
-    }
-    delete[] corrupted_o_i;
+    deleteO_i(corrupted_o_i, numTrainingImages);
 
     delete[] o_e;
     delete[] o_d;
     delete[] delta_e;
     delete[] delta_d;
   }
+}
+
+void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
+{
+  for (int k = 0; k < numPreTrainLayers; k++)
+  {
+
+    cout << "pretraining layer #" << k + 1 << "with GA, cycling through " << numTrainingImages << " training images for " << preTrainLayersOuterIter[k] << " outer iterations" << endl;
+
+    auto_hidden_layer *a = preTrainLayers[k];
+
+    float **o_i = new float*[numTrainingImages];
+    float **corrupted_o_i = new float*[numTrainingImages];
+    if (k > 0)
+    {
+      setO_i(o_i, trainingImages, k, numTrainingImages, a->getNumInputUnits());
+    }
+    else
+    {
+      o_i = trainingImages;
+    }
+    setCorruptedO_i(corrupted_o_i, o_i, k, numTrainingImages, a->getNumHiddenUnits());
+
+    float *o_e = new float[a->getNumHiddenUnits()];
+    float *o_d = new float[a->getNumInputUnits()];
+
+    float sum_squared_error = 0.0;
+    for (int i = 0; i < numTrainingImages; i++)
+    {
+      float *o_t = o_i[i];
+      getInputK(o_t, k);
+      a->encode(o_t, o_e);
+      a->decode(o_e, o_d);
+      sum_squared_error += a->auto_squared_loss(o_t, o_d);
+    }
+    cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
+    double start = omp_get_wtime();
+
+    //setup GA and its parameters
+    ga_params myParams;
+    myParams.mutRate = 0.1;
+    myParams.mutAmount = 0.1 * a->getWeightRange();
+    myParams.crossRate = 0.5;
+    myParams.popSize = 50;
+    myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
+    myParams.numToReplace = 25;
+    myParams.initRange = 1.0 * a->getWeightRange();
+    genetic *ga = new genetic(myParams);
+
+    delete[] a->getWeights();
+    delete[] a->getEncodeBiases();
+    delete[] a->getDecodeBiases();
+    int encodeBiasesOffset = a->getNumWeights();
+    int decodeBiasesOffset = encodeBiasesOffset + a->getNumHiddenUnits();
+
+    for (int i = 0; i < preTrainLayersOuterIter[k]; i++ )
+    {
+
+      float sum_squared_error = 0.0;
+      for (int j = 0; j < numTrainingImages; j++)
+      {
+        float *o_t = o_i[j];
+        float *corrupted_o_t = corrupted_o_i[j];
+        ga->step();
+
+        for (int currInd = 0; currInd < myParams.numToReplace; currInd++)
+        {
+          float *genome = ga->getGenome(currInd);
+          a->setWeights(genome);
+          a->setEncodeBiases(&(genome[encodeBiasesOffset]));
+          a->setDecodeBiases(&(genome[decodeBiasesOffset]));
+          a->encode(corrupted_o_t, o_e);
+          a->decode(o_e, o_d);
+          float error = a->auto_squared_loss(o_t, o_d);
+          ga->setFitness(currInd, 1.0 / log(error * numTrainingImages));
+        }
+
+        float *genome = ga->getGenome(myParams.popSize - 1);
+        a->setWeights(genome);
+        a->setEncodeBiases(&(genome[encodeBiasesOffset]));
+        a->setDecodeBiases(&(genome[decodeBiasesOffset]));
+        a->encode(corrupted_o_t, o_e);
+        a->decode(o_e, o_d);
+        sum_squared_error += a->auto_squared_loss(o_t, o_d);
+      }
+      cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+    }
+
+    //cleanup
+    if (k > 0)
+    {
+      deleteO_i(o_i, numTrainingImages);
+    }
+    deleteO_i(corrupted_o_i, numTrainingImages);
+
+    delete[] o_e;
+    delete[] o_d;
+
+    delete ga;
+  }
+}
+
+void autoencoder::train(float **trainingImages, vector<int> &trainLabels, int numOuterIter, int numTrainingImages)
+{
+  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+
+  float **o_i = new float*[numTrainingImages];
+  setO_i(o_i, trainingImages, numPreTrainLayers, numTrainingImages, h->getNumInputUnits());
+
+  float sum_squared_error = 0.0;
+  for (int j = 0; j < numTrainingImages; j++)
+  {
+    float *_o_i = o_i[j];
+
+    h->encode(_o_i, o_j);
+    o->encode(o_j, o_k);
+
+    sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
+  }
+  cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
+  double start = omp_get_wtime();
+  for (int i = 0; i < numOuterIter; i++ )
+  {
+    float sum_squared_error = 0.0;
+    for (int j = 0; j < numTrainingImages; j++)
+    {
+      float *_o_i = o_i[j];
+
+      sum_squared_error += backprop(_o_i, trainLabels[j]);
+    }
+    cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+  }
+
+  deleteO_i(o_i, numTrainingImages);
 }
 
 void autoencoder::visualizeWeights(int layer, int n)
