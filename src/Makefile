@@ -13,6 +13,7 @@ CC = g++-4.9
 #OpenBLAS dirs
 OPEN_BLAS_INC=/usr/local/opt/openblas/include
 OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
+HAS_OPENBLAS=1
 
 
 # define any compile-time flags
@@ -60,7 +61,7 @@ MAIN = autoencoder
 all:    $(MAIN)
 
 $(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) -D HAS_OPENBLAS=$(HAS_OPENBLAS) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
