@@ -29,7 +29,7 @@ LFLAGS =
 LIBS =
 
 # define the C source files
-SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp
+SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp ga.cpp
 
 # define the C object files 
 #
