@@ -353,25 +353,25 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 	float sum_squared_error = 0.0;
 
 	// Forward activiate the network to compute the initial output error
-	/*
+	float *initac = new float[output_l->getNumHiddenUnits()];
 	for (int j = 0; j < numTrainingImages; j++)
 	{
 		float *o_i = trainingImages[j];
 		getInput(o_i);
 
-		h->encode(o_i, o_j);
-		o->encode(o_j, o_k);
-		sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
+
+		output_l->encode(o_i, initac);
+		sum_squared_error += o->squared_loss(initac, trainLabels[j]);
 	}
-	*/
-	sum_squared_error = 1234123;
+	delete[] initac;
+
 	cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
 
 	double start = omp_get_wtime();
 	for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
 	{
 		float sum_squared_error = 0.0;
-		//cout << "ck1" << endl;
 		int p = numPreTrainLayers;
 		//cout << "p: " << p << endl;
 		for (int j = 0; j < numTrainingImages; j++)
@@ -383,7 +383,6 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 			float **deltas;
 			activations =  new float*[p+1];
 			deltas =  new float*[p+1];
-			//cout << "ck2" << endl;
 
 			//auto_hidden_layer *a = preTrainLayers[0];
 			//activations[0] = new float[a->getNumHiddenUnits()];
@@ -402,28 +401,21 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 				}
 			}
 			
-			//cout << "ck3" << endl;
 			activations[p] = new float[output_l->getNumHiddenUnits()];
 			output_l->encode(activations[p-1], activations[p]);
 			deltas[p] = new float[output_l->getNumHiddenUnits()];
 			// all activations computed
 
-			//cout << "ck4" << endl;
 			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
 			output_l->compute_delta_output(deltas[p], activations[p], trainLabels[j]);
   		output_l->updateWeights(deltas[p], activations[p-1], learn_rate);
-
-			//cout << "ck4.5" << endl;
 			
 			if(p>=2){
-				cout << "ck5" << endl;
 				preTrainLayers[p-1]->compute_delta_hidden(deltas[p-1], deltas[p], activations[p-1], output_l);
-				cout << "ck5.5" << endl;
 				preTrainLayers[p-1]->updateWeights(deltas[p-1], activations[p-2], preTrainLayersLearnRates[p-1]);
 
-				//cout << "ck6" << endl;
 				// get layers in order starting from the last one and we'll update in that order
-				for (int k = numPreTrainLayers-2; k > 1; k--) // TODO should this really only go until 1?
+				for (int k = numPreTrainLayers-2; k > 0; k--) // TODO should this really only go until 1?
 				{
 					auto_hidden_layer *a = preTrainLayers[k];
 					// we use the compute delta hidden from the neural net as opposed to the
@@ -431,16 +423,12 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], preTrainLayers[k+1]);
 					a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
 				}
-				//cout << "ck7" << endl;
+			}
+
 			preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], preTrainLayers[1]);
+			//preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], output_l);
 			preTrainLayers[0]->updateWeights(deltas[0], o_i, preTrainLayersLearnRates[0]);
-			}
-			else{
-				preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], output_l);
-				preTrainLayers[0]->updateWeights(deltas[0], o_i, preTrainLayersLearnRates[0]);
-			}
 			
-			//cout << "ck8" << endl;
 			// after updating all the weights we compute the error again
 			/*
 			for(int k=0; k<p;k++){
@@ -458,11 +446,9 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 			output_l->encode(o_i,activations[p]);
 			//output_l->encode(activations[p-1], activations[p]);
 
-			//cout << "ck9" << endl;
-			for(int l=0;l< output_l->getNumHiddenUnits();l++){
+			//for(int l=0;l< output_l->getNumHiddenUnits();l++){
 			//	cout << activations[p][l] <<endl;
-			}
-			//cout << "ck10" << endl;
+			//}
 			sum_squared_error += output_l->squared_loss(activations[p], trainLabels[j]);
 			//cout << "j: " << j << " error: " << sum_squared_error << " label: "<< trainLabels[j] << endl;
 
@@ -480,8 +466,6 @@ void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages
 
 	return;
 }
-
-
 
 void autoencoder::testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages)
 {
