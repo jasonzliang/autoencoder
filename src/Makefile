@@ -7,12 +7,12 @@
 
 # define the C compiler to use
 #CC = g++
-#CC = g++-4.9
-CC = /lusr/bin/g++-4.8
+CC = g++-4.9
+#CC = /lusr/bin/g++-4.8
 
 #OpenBLAS dirs
-#OPEN_BLAS_INC=/usr/local/opt/openblas/include
-#OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
+OPEN_BLAS_INC=/usr/local/opt/openblas/include
+OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
 #OPEN_BLAS_INC=/home1/02370/kwkelly/local/include
 #OPEN_BLAS_LIB=/home1/02370/kwkelly/local/lib
 HAS_OPENBLAS=0
