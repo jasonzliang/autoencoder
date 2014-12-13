@@ -23,8 +23,11 @@ struct ga_params
   int numToReplace;
   float initRange;
 
-  float alpha;
-  int chunkSize;
+  float alpha = 1.0;
+  bool useGradient = false;
+  bool zeroMutate = false;
+  bool truncateSel = false;
+  int chunkSize = 15000;
 };
 
 struct individual
@@ -58,7 +61,10 @@ public:
   ~genetic();
 
   int fitnessSelection();
+  int truncationSelection();
+
   void mutate(individual &a);
+  void zeroMutate(individual &a);
   void crossOver(individual &a, individual &b);
 
   void noRanking();

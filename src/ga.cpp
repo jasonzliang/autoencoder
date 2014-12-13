@@ -37,7 +37,7 @@ genetic::genetic(ga_params myParams):
   myEngine(random_device()()),
   myDist(0.0f, myParams.mutAmount)
 {
-  cout << "initializing population..." << endl;
+  // cout << "initializing population..." << endl;
 
   for (int i = 0; i < myParams.popSize; i++)
   {
@@ -67,7 +67,7 @@ genetic::genetic(ga_params myParams):
   numGen = 0;
   numEval = 0;
 
-  cout << "generating random bank..." << endl;
+  // cout << "generating random bank..." << endl;
   // randBankSize = min(50 * myParams.genomeSize, myParams.popSize * myParams.genomeSize);
   // randBankSize = myParams.genomeSize;
   randBankSize = 4 * myParams.popSize * myParams.genomeSize;
@@ -98,6 +98,20 @@ void genetic::mutate(individual &a)
     if (randBank[(randOffset + i) % randBankSize] < myParams.mutRate)
     {
       a.genome[i] += normalBank[(normalOffset + i) % randBankSize];
+    }
+  }
+}
+
+void genetic::zeroMutate(individual &a)
+{
+  int randOffset = rand() % randBankSize;
+
+  #pragma omp parallel for schedule(static, myParams.chunkSize)
+  for (int i = 0; i < myParams.genomeSize; i++)
+  {
+    if (randBank[(randOffset + i) % randBankSize] < myParams.mutRate)
+    {
+      a.genome[i] = 0.0;
     }
   }
 }
@@ -157,6 +171,11 @@ int genetic::fitnessSelection()
   }
 }
 
+int genetic::truncationSelection()
+{
+  return (rand() % (myParams.popSize - myParams.numToReplace)) + myParams.numToReplace;
+}
+
 /* only call this if population is already sorted in ascending order! */
 void genetic::noRanking()
 {
@@ -209,56 +228,68 @@ void genetic::step()
 
   vector<individual> newPopulation;
 
-  double copyTime = 0.0;
-  double crossOverTime = 0.0;
-  double mutateTime = 0.0;
-  double start;
-
   for (int i = 0; i < myParams.numToReplace; i += 2)
   {
-    int a_i = fitnessSelection();
-    int b_i = fitnessSelection();
+    int a_i, b_i;
+    if (myParams.truncateSel)
+    {
+      a_i = truncationSelection();
+      b_i = truncationSelection();
+    }
+    else
+    {
+      a_i = fitnessSelection();
+      b_i = fitnessSelection();
+    }
 
     individual a, b;
 
-    start = omp_get_wtime();
     copyIndividual(a, population[a_i]);
     copyIndividual(b, population[b_i]);
-    copyTime += omp_get_wtime() - start;
 
-    start = omp_get_wtime();
     crossOver(a, b);
-    crossOverTime += omp_get_wtime() - start;
-
-    start = omp_get_wtime();
-    mutate(a); mutate(b);
-    mutateTime += omp_get_wtime() - start;
 
     newPopulation.push_back(a);
-    newPopulation.push_back(b);
+    if (i + 1 < myParams.numToReplace)
+    {
+      newPopulation.push_back(b);
+    }
+    else
+    {
+      delete[] b.genome;
+    }
   }
-  // cout << "copyTime: " << copyTime << endl;
-  // cout << "crossOverTime: " << crossOverTime << endl;
-  // cout << "mutateTime: " << mutateTime << endl;
 
   for (int i = 0; i < myParams.numToReplace; i++)
   {
+    if (myParams.zeroMutate)
+    {
+      zeroMutate(newPopulation[i]);
+    }
+    else
+    {
+      mutate(newPopulation[i]);
+    }
+    newPopulation[i].fitness = -1.0;
+    newPopulation[i].age = 0;
+
     delete[] population[i].genome;
     population[i] = newPopulation[i];
-    population[i].fitness = -1.0;
-    population[i].age = 0;
   }
+
   numGen++;
 }
 
 genetic::~genetic()
 {
-  for (int i = 0; i < myParams.popSize - 1; i++)
+  for (int i = 0; i < myParams.popSize; i++)
   {
+    // cout << "deleting individual " << i+1 << endl;
     individual a = population[i];
     delete[] a.genome;
   }
 
+  // cout << "deleting randBanks" << endl;
   delete[] randBank;
   delete[] normalBank;
 }

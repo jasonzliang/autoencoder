@@ -8,8 +8,8 @@ hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):
   numInputs(numInputs),
   numHiddenUnits(numHiddenUnits)
 {
-  // weightRange = 1.0 / sqrt(numInputs);
-  weightRange = 4.0 * sqrt(6.0 / (numInputs + numHiddenUnits));
+  weightRange = 1.0 / sqrt(numInputs);
+  // weightRange = 4.0 * sqrt(6.0 / (numInputs + numHiddenUnits));
   init();
 }
 
@@ -46,6 +46,7 @@ void hidden_layer::init()
   }
 
   __t = new float[numHiddenUnits];
+  encode_buffer = new float[numHiddenUnits];
 }
 
 void hidden_layer::printWeights(int n)
@@ -73,16 +74,14 @@ void hidden_layer::sigmoidTransform(float *x)
 void hidden_layer::encode(float *input, float *output)
 {
 #if HAS_OPENBLAS
-  float *y = new float[numHiddenUnits];
-  cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, y, 1);
+
+  cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, encode_buffer, 1);
 
   #pragma omp parallel for schedule(static, hiddenChunkSize)
   for (int i = 0; i < numHiddenUnits; i++)
   {
-    output[i] = sigmoidTransform(y[i] + biases[i]);
+    output[i] = sigmoidTransform(encode_buffer[i] + biases[i]);
   }
-
-  delete y;
 
 #else
 
@@ -191,4 +190,5 @@ hidden_layer::~hidden_layer()
   delete[] weights;
   delete[] biases;
   delete[] __t;
+  delete[] encode_buffer;
 }

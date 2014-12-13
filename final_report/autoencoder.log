@@ -1,11 +1,17 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  12 DEC 2014 18:53
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  12 DEC 2014 22:59
 entering extended mode
- restricted \write18 enabled.
  %&-line parsing enabled.
 **autoencoder
 (./autoencoder.tex
-LaTeX2e <2014/05/01>
-Babel <3.9k> and hyphenation patterns for 78 languages loaded.
+LaTeX2e <2005/12/01>
+Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, german-x-2008-06-18, ngerman-x-2008-06-18, ancientgreek, ibycus, ar
+abic, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danish, dutc
+h, esperanto, estonian, farsi, finnish, french, galician, german, ngerman, mono
+greek, greek, hungarian, icelandic, indonesian, interlingua, irish, italian, la
+tin, lithuanian, mongolian, mongolian2a, bokmal, nynorsk, polish, portuguese, r
+omanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, turki
+sh, ukenglish, ukrainian, uppersorbian, welsh, loaded.
 (./IEEEtran.cls
 Document Class: IEEEtran 2012/11/21 V1.8c by Harald Hanche-Olsen and Anders Chr
 istensen
@@ -19,7 +25,7 @@ istensen
 \@IEEEtrantmptoksA=\toks14
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 373.
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 -- Using 8.5in x 11in (letter) paper.
@@ -92,78 +98,70 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \@IEEEtmpitemindent=\dimen116
 \c@IEEEbiography=\count90
 \@IEEEtranrubishbin=\box26
-) (/usr/local/texlive/2014/texmf-dist/tex/latex/cite/cite.sty
-LaTeX Info: Redefining \cite on input line 302.
-LaTeX Info: Redefining \nocite on input line 373.
-Package: cite 2010/09/10  v 5.3
+) (/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/cite/cite.sty
+LaTeX Info: Redefining \cite on input line 149.
+LaTeX Info: Redefining \nocite on input line 214.
+Package: cite 2003/11/04  v 4.01
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2014/04/25 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2014/05/08 v1.15 key=value parser (DPC)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks15
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/trig.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/graphics.cfg
-File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+(/v/filer4b/software/texlive/2008/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
-Package graphics Info: Driver file: pdftex.def on input line 91.
+Package graphics Info: Driver file: pdftex.def on input line 90.
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/infwarerr.sty
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-)
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
-)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2008/09/08 v0.04l Graphics/color for pdfTeX
 \Gread@gobject=\count91
 ))
 \Gin@req@height=\dimen117
 \Gin@req@width=\dimen118
-)
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2013/01/14 v2.14 AMS math features
+) (/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
 \@mathmargin=\skip44
 
 For additional information on amsmath, use the `?' option.
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amstext.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
 \@emptytoks=\toks16
 \ex@=\dimen119
 ))
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d
 \pmbraise@=\dimen120
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count92
-LaTeX Info: Redefining \frac on input line 210.
+LaTeX Info: Redefining \frac on input line 211.
 \uproot@=\count93
 \leftroot@=\count94
-LaTeX Info: Redefining \overline on input line 306.
+LaTeX Info: Redefining \overline on input line 307.
 \classnum@=\count95
 \DOTSCASE@=\count96
-LaTeX Info: Redefining \ldots on input line 378.
-LaTeX Info: Redefining \dots on input line 381.
-LaTeX Info: Redefining \cdots on input line 466.
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
 \Mathstrutbox@=\box27
 \strutbox@=\box28
 \big@size=\dimen121
-LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
-LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 \macc@depth=\count97
 \c@MaxMatrixCols=\count98
 \dotsspace@=\muskip10
@@ -184,82 +182,100 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 \multlinegap=\skip45
 \multlinetaggap=\skip46
 \mathdisplay@stack=\toks20
-LaTeX Info: Redefining \[ on input line 2665.
-LaTeX Info: Redefining \] on input line 2666.
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/algorithms/algorithmic.sty
-Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/algorithms/algorithmic.s
+ty
+Package: algorithmic 2006/06/02
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/base/ifthen.sty
+Document Style `algorithmic' - environment
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@ALC@unique=\count104
-\c@ALC@line=\count105
-\c@ALC@rem=\count106
-\c@ALC@depth=\count107
-\ALC@tlm=\skip47
-\algorithmicindent=\skip48
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2005/08/06 v4.2 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count104
+\calc@Bcount=\count105
+\calc@Adimen=\dimen128
+\calc@Bdimen=\dimen129
+\calc@Askip=\skip47
+\calc@Bskip=\skip48
+LaTeX Info: Redefining \setlength on input line 75.
+LaTeX Info: Redefining \addtolength on input line 76.
+\calc@Ccount=\count106
+\calc@Cskip=\skip49
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/algorithms/algorithm.sty
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
-
-(/usr/local/texlive/2014/texmf-dist/tex/latex/float/float.sty
+\c@ALC@line=\count107
+\c@ALC@rem=\count108
+\c@ALC@depth=\count109
+\ALC@tlm=\skip50
+\algorithmicindent=\skip51
+)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 
+Document Style `algorithm' - floating environment
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count108
+\c@float@type=\count110
 \float@exts=\toks21
 \float@box=\box29
 \@float@everytoks=\toks22
 \@floatcapt=\box30
 )
 \@float@every@algorithm=\toks23
-\c@algorithm=\count109
+\c@algorithm=\count111
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/tools/array.sty
-Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
-\col@sep=\dimen128
-\extrarowheight=\dimen129
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/tools/array.sty
+Package: array 2005/08/23 v2.4b Tabular extension package (FMi)
+\col@sep=\dimen130
+\extrarowheight=\dimen131
 \NC@list=\toks24
-\extratabsurround=\skip49
-\backup@length=\skip50
+\extratabsurround=\skip52
+\backup@length=\skip53
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/base/fixltx2e.sty
-Package: fixltx2e 2014/05/13 v1.1q fixes to LaTeX
-LaTeX Info: Redefining \em on input line 429.
-LaTeX Info: The control sequence `\[' is already robust on input line 480.
-LaTeX Info: The control sequence `\]' is already robust on input line 481.
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/base/fixltx2e.sty
+Package: fixltx2e 2006/03/24 v1.1n fixes to LaTeX
+LaTeX Info: Redefining \em on input line 420.
+LaTeX Info: The control sequence `\[' is already robust on input line 471.
+LaTeX Info: The control sequence `\]' is already robust on input line 472.
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/sttools/stfloats.sty
-Package: stfloats 2012/05/29 v1.1 Improve float mechanism and baselineskip sett
-ings
-\@dblbotnum=\count110
-\c@dblbotnumber=\count111
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/sttools/stfloats.sty
+Package: stfloats 1999/10/22
+\@dblbotnum=\count112
+\c@dblbotnumber=\count113
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip11
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+(/v/filer4b/software/texlive/2008/texmf-local/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/amssymb.sty
-Package: amssymb 2013/01/14 v3.01 AMS font symbols
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/amsfonts.sty
-Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+LaTeX Font Info:    Try loading font information for OMX+cmex on input line 76.
+
+
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/base/omxcmex.fd
+File: omxcmex.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
-(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
 ))
-(/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/color.sty
-Package: color 2014/04/23 v1.1a Standard LaTeX Color (DPC)
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/color.cfg
+(/v/filer4b/software/texlive/2008/texmf/tex/latex/config/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
-Package color Info: Driver file: pdftex.def on input line 137.
+Package color Info: Driver file: pdftex.def on input line 130.
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/preprint/balance.sty
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/preprint/balance.sty
 Package: balance 1999/02/23 4.3 (PWD)
-\oldvsize=\dimen130
+\oldvsize=\dimen132
 )
 (./autoencoder.aux)
 \openout1 = `autoencoder.aux'.
@@ -277,129 +293,75 @@ LaTeX Font Info:    ... okay on input line 22.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
 
-(/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/context/base/supp-pdf.tex
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count112
-\scratchdimen=\dimen131
+\scratchcounter=\count114
+\scratchdimen=\dimen133
 \scratchbox=\box31
-\nofMPsegments=\count113
-\nofMParguments=\count114
+\nofMPsegments=\count115
+\nofMParguments=\count116
 \everyMPshowfont=\toks25
-\MPscratchCnt=\count115
-\MPscratchDim=\dimen132
-\MPnumerator=\count116
-\makeMPintoPDFobject=\count117
+\MPscratchCnt=\count117
+\MPscratchDim=\dimen134
+\MPnumerator=\count118
 \everyMPtoPDFconversion=\toks26
-) (/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
-)
-
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-)
-(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
-Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
-
-(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/grfext.sty
-Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
-
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-))
-(/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-
-(/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-)))
-Package grfext Info: Graphics extension search list:
-(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 452.
-
-(/usr/local/texlive/2014/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
-))
-<figures/autoencoder.png, id=1, 398.48875pt x 300.12125pt>
+) <figures/autoencoder.png, id=1, 398.48875pt x 300.12125pt>
 File: figures/autoencoder.png Graphic file (type png)
 
-<use figures/autoencoder.png>
-Package pdftex.def Info: figures/autoencoder.png used on input line 40.
-(pdftex.def)             Requested size: 253.04987pt x 190.58403pt.
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+<use figures/autoencoder.png> (./intro.tex
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 6.
+LaTeX Font Info:    Try loading font information for U+msa on input line 6.
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+LaTeX Font Info:    Try loading font information for U+msb on input line 6.
 
-(/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+))
+(./related.tex [1{/v/filer4b/software/texlive/2008/texmf-var/fonts/map/pdftex/u
+pdmap/pdftex.map}
 
 
- <./figures/autoencoder.png>] <figures/experiment1.png, id=21, 650.43pt x 457.8
-3044pt>
+ <./figures/autoencoder.png>]
+<figures/experiment1.png, id=20, 650.43pt x 457.83044pt>
 File: figures/experiment1.png Graphic file (type png)
 
-<use figures/experiment1.png>
-Package pdftex.def Info: figures/experiment1.png used on input line 62.
-(pdftex.def)             Requested size: 253.04987pt x 178.12003pt.
-
+<use figures/experiment1.png>) (./algo.tex
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [2 <./figures/experiment1.png>]
-<figures/experiment2.png, id=28, 626.94225pt x 457.83044pt>
+<figures/experiment2.png, id=27, 626.94225pt x 457.83044pt>
 File: figures/experiment2.png Graphic file (type png)
 
 <use figures/experiment2.png>
-Package pdftex.def Info: figures/experiment2.png used on input line 173.
-(pdftex.def)             Requested size: 253.04987pt x 184.79158pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/experiment3_1.png, id=29, 927.9468pt x 955.4094pt>
+) (./experiment.tex
+<figures/experiment3_1.png, id=28, 927.9468pt x 955.4094pt>
 File: figures/experiment3_1.png Graphic file (type png)
 
 <use figures/experiment3_1.png>
-Package pdftex.def Info: figures/experiment3_1.png used on input line 183.
-(pdftex.def)             Requested size: 253.04987pt x 260.52977pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [3 <./figures/experiment2.png> <./figures/experiment3_1.png>]
-<figures/experiment3_2.png, id=35, 927.9468pt x 955.4094pt>
+<figures/ga_comparison.png, id=34, 643.56435pt x 450.9648pt>
+File: figures/ga_comparison.png Graphic file (type png)
+
+<use figures/ga_comparison.png> [4 <./figures/ga_comparison.png>])
+(./future.tex <figures/experiment3_2.png, id=39, 927.9468pt x 955.4094pt>
 File: figures/experiment3_2.png Graphic file (type png)
 
-<use figures/experiment3_2.png>
-Package pdftex.def Info: figures/experiment3_2.png used on input line 201.
-(pdftex.def)             Requested size: 253.04987pt x 260.52977pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-(./autoencoder.bbl [4 <./figures/experiment3_2.png>])
+<use figures/experiment3_2.png>) (./conclusion.tex) (./autoencoder.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -411,36 +373,34 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
-
-] (./autoencoder.aux) ) 
+[5 <./figures/experiment3_2.png>] (./autoencoder.aux) ) 
 Here is how much of TeX's memory you used:
- 3690 strings out of 493117
- 53608 string characters out of 6135433
- 127486 words of memory out of 5000000
- 7075 multiletter control sequences out of 15000+600000
- 38673 words of font info for 74 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 38i,16n,26p,1511b,525s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base
-/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
-10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
-0.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
-pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pf
-b></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></us
-r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></us
-r/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/te
-xlive/2014/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/201
-4/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2014/texmf-di
-st/fonts/type1/urw/times/utmri8a.pfb>
-Output written on autoencoder.pdf (5 pages, 784041 bytes).
+ 3113 strings out of 493876
+ 44659 string characters out of 1147346
+ 107852 words of memory out of 3000000
+ 6324 multiletter control sequences out of 10000+50000
+ 39297 words of font info for 73 fonts, out of 3000000 for 5000
+ 714 hyphenation exceptions out of 8191
+ 27i,16n,24p,1532b,518s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/v/filer4b/software/tex
+live/2008/texmf-dist/fonts/enc/dvips/base/8r.enc}</v/filer4b/software/texlive/2
+008/texmf-dist/fonts/type1/bluesky/cm/cmex10.pfb></v/filer4b/software/texlive/2
+008/texmf-dist/fonts/type1/bluesky/cm/cmmi10.pfb></v/filer4b/software/texlive/2
+008/texmf-dist/fonts/type1/bluesky/cm/cmmi5.pfb></v/filer4b/software/texlive/20
+08/texmf-dist/fonts/type1/bluesky/cm/cmmi7.pfb></v/filer4b/software/texlive/200
+8/texmf-dist/fonts/type1/bluesky/cm/cmr10.pfb></v/filer4b/software/texlive/2008
+/texmf-dist/fonts/type1/bluesky/cm/cmr7.pfb></v/filer4b/software/texlive/2008/t
+exmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></v/filer4b/software/texlive/2008/t
+exmf-dist/fonts/type1/bluesky/cm/cmsy5.pfb></v/filer4b/software/texlive/2008/te
+xmf-dist/fonts/type1/bluesky/cm/cmsy7.pfb></v/filer4b/software/texlive/2008/tex
+mf-dist/fonts/type1/bluesky/ams/msbm10.pfb></v/filer4b/software/texlive/2008/te
+xmf-dist/fonts/type1/urw/times/utmb8a.pfb></v/filer4b/software/texlive/2008/tex
+mf-dist/fonts/type1/urw/times/utmbi8a.pfb></v/filer4b/software/texlive/2008/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></v/filer4b/software/texlive/2008/texm
+f-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on autoencoder.pdf (5 pages, 843863 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
- 56 compressed objects within 1 object stream
- 0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 0 named destinations out of 1000 (max. 131072)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

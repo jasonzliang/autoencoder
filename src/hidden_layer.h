@@ -16,7 +16,7 @@ class hidden_layer
 protected:
   int numInputs, numHiddenUnits, numWeights, hiddenChunkSize, inputChunkSize;
   float weightRange;
-  float *weights, *biases, *__t;
+  float *weights, *biases, *__t, *encode_buffer;
 
 public:
   hidden_layer(int numInputs, int numHiddenUnits);
