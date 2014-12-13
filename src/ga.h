@@ -36,6 +36,7 @@ struct individual
   float fitness;
   float scaledFitness;
   int age;
+  // int oldRank;
 };
 
 class genetic
@@ -70,6 +71,7 @@ public:
   void noRanking();
   void linearRanking();
   void powerRanking();
+  void sortPopulation();
   void copyIndividual(individual &a, individual &b);
   void getStats();
   void step();
@@ -85,6 +87,11 @@ public:
     return population[i].genome;
   }
 
+  // inline int getOldRank(int i)
+  // {
+  //   return population[i].oldRank;
+  // }
+
   inline void setFitness(int i, float fitness)
   {
     numEval++;
@@ -97,7 +104,7 @@ public:
   {
     cout << "gen: " << numGen << " eval: " << numEval << " maxFitness: " << maxFitness << " realError: " << exp(1.0 / maxFitness) << " meanFitness: " << meanFitness << " minFitness: " << minFitness << endl;
   }
-  
+
 };
 
 

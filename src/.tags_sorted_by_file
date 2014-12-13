@@ -51,6 +51,8 @@ visualizeWeights	autoencoder.cpp	/^void autoencoder::visualizeWeights(int layer,
 ~autoencoder	autoencoder.cpp	/^autoencoder::~autoencoder()$/;"	f	class:autoencoder
 AUTOENCODER	autoencoder.h	2;"	d
 autoencoder	autoencoder.h	/^class autoencoder: public neural_network$/;"	c
+getMyParams	autoencoder.h	/^  inline ga_params *getMyParams()$/;"	f	class:autoencoder
+myParams	autoencoder.h	/^  ga_params myParams;$/;"	m	class:autoencoder
 numPreTrainLayers	autoencoder.h	/^  int numPreTrainLayers;$/;"	m	class:autoencoder
 output_l	autoencoder.h	/^  hidden_layer *output_l;$/;"	m	class:autoencoder
 preTrainLayers	autoencoder.h	/^  vector<auto_hidden_layer *> preTrainLayers;$/;"	m	class:autoencoder
@@ -156,6 +158,9 @@ experiment_1	main.cpp	/^void experiment_1(vector<int> &trainLabels, float **trai
 experiment_2	main.cpp	/^void experiment_2(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_3	main.cpp	/^void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)$/;"	f
 experiment_GA	main.cpp	/^void experiment_GA(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA2	main.cpp	/^void experiment_GA2(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA3	main.cpp	/^void experiment_GA3(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA4	main.cpp	/^void experiment_GA4(vector<int> &trainLabels, float **trainingImages)$/;"	f
 main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
 numTestingImages	main.cpp	/^int numTestingImages;$/;"	v
 numTrainingImages	main.cpp	/^int numTrainingImages;$/;"	v

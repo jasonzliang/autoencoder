@@ -15,8 +15,6 @@ corrupt it by setting each pixel to zero with probability 0.25.
 	\label{fig:experiment3_1}
 \end{figure}
 
-
-
 We first analyze how the number of threads affects the rate at which training
 error decreases. We train a single autoencoder layer with 500 hidden nodes for
 15 iterations over 5000 training images. An iteration involves going through
@@ -52,7 +50,7 @@ To further demonstrate the reconstruction capabilities of the autoencoder, we
 trained the autoencoder on corrupted or otherwise altered digits.
 In particular, we test the reconstruction
 on \textit{bg-rand}, which is generated from the MNIST dataset, excpt that
-a random backgound is added. In \textit{bg-img}, each image is given a background
+a random background is added. In \textit{bg-img}, each image is given a background
 randomly selected from one of twenty images downloaded form the internet. In 
 \textit{rot}, the digits are simply rotated by some random angle.
 These alterations to the images make the classification task more difficult. Indeed the
@@ -91,12 +89,12 @@ better.  The results of these experiments is given in
 Table.~\ref{tab:classvsenc}.
 
 To test this,we used liblinear to attempt to train a model and then predict on
-a test set for both the enocded and unencoded datasets. With the original data
+a test set for both the encoded and unencoded datasets. With the original data
 liblinear gives an accuracy of 91.68\% on the test set when using the default
 parameters. However, when the encoded data from the trained autoencoder gives
 an accuracy of 97.07\%. This is a nontrivial improvement in the classification
 accuracy. Thus, the autoencoder has created a better representation of the data
-which maed it easier for liblinear to classify. This verifies that the
+which made it easier for liblinear to classify. This verifies that the
 autoencoder is doing what it is expected to do.
 
 Similarly, we performed the same experiment as above, except in this case we
@@ -117,11 +115,9 @@ we achieved an accuracy of 96.86\%.
 		Encoded  & 97.07\%    & 95.48\%          & 96.86\%            
 	\end{tabular}
 	\label{tab:classvsenc}
-	\caption{Summary of the results of running different classifcation algorithms on the raw MNIST data and on the output from a trained autoencoder. We
+	\caption{Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We
 	see in all cases that using the encoded data produces a better result.}
 \end{table}
-
-\subsection{Training the Autencoder with a Genetic Algorithm}
 
 \begin{figure}[h] \centering
 	\includegraphics[width=1.0\linewidth]{ga_comparison.png}
@@ -129,18 +125,32 @@ we achieved an accuracy of 96.86\%.
 	\label{fig:ga_comparison}
 \end{figure}
 
-In Fig.~\ref{fig:ga_comparison}, we compare the performance of stochastic gradient descent (SGD), our previously mentioned hybrid GA (HGA), which uses backpropagation to update the best individuals in the population, and a conventional GA (CGA), which does not use any gradient information. All three algorithms are used to train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. For SGD and HGA, we fix the learning rate to 0.0002. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all 3 algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that will properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
-
 \begin{figure}[h] \centering
 	\includegraphics[width=1.0\linewidth]{ga_comparison2.png}
-	\caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.}
+	\caption{Performance of HGA for 1, 4, 8, and 16 threads.}
 	\label{fig:ga_comparison2}
 \end{figure}
 
+\begin{figure*}[h]
+	\centering
+	\subfloat[]{
+		\includegraphics[width=0.4\textwidth]{ga_comparison3.png}
+	}
+	\subfloat[]{
+		\includegraphics[width=0.4\textwidth]{ga_comparison3_big.png}
+	}
+	\caption{Comparison of performance versus number of threads and number of hidden units in autoencoder layer for HGA with population size (a) 2 and (b) 50.}
+	\label{fig:ga_comparison3}
+\end{figure*}
+
+\subsection{Training the Autoencoder with a Genetic Algorithm}
+
+In Fig.~\ref{fig:ga_comparison}, we compare the performance of stochastic gradient descent (SGD), our previously mentioned hybrid GA (HGA), which uses backpropagation to update the best individuals in the population, and a conventional GA (CGA), which does not use any gradient information. All three algorithms are used to train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. For SGD and HGA, we fix the learning rate to 0.0002. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all 3 algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that will properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
+
 Next in Fig.~\ref{fig:ga_comparison2}, we examine the scalability of HGA. HGA shows roughly 3x speedup when using 4 threads, 5x speedup when using 8 threads, and 6x speedup when using 16 threads. The performance improvement versus the number of threads is sublinear and can be attributed to two main causes: 1) Cache conflicts when performing mutation and crossover due to multiple threads writing and reading different memory locations, 2) The sequential nature of backpropagation, which HGA utilizes to help optimize the weights. However, we do see that HGA does seem to moderately better scalability than our parallel implementation of SGD. This is attributable to the fact that the mutation and crossover operators are very straightforward to parallelize and scale in performance very well. 
 
+In Fig.~\ref{fig:ga_comparison3}, the performance of HGA versus the number of threads and number of hidden units in autoencoder layers is visualized for both when HGA has a population size of 50 and its default population size of 2. As we can see, the HGA's performance scales linearly with the number of hidden units and that this relationship holds even when the population size is increased to 50. Interestingly, the performance when using 8 or 16 threads is not distinguishable for small numbers of hidden units. This is probably due to the overhead that result from creating additional threads.
 
-
-
+Finally, in Fig.~\ref{fig:ga_comparison4}, we see how the performance of HGA and CGA scales versus the population size. All other hyperparameters remain the same for both HGA and CGA. As we can see, increasing the population does not lead to any noticeable improvement in reconstruction error per iteration. The default population size of 2 seems to be optimal. However, for CGA increasing the population does seem to lead a significant improvement in reconstruction error per iteration. Unfortunately, the overall running times when using increased population sizes are also larger. 
 
 

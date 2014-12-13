@@ -94,7 +94,7 @@ void train_and_test_autoencoderGA(vector<int> &trainLabels, float **trainingImag
 {
   int numTrainingImages = 1000;
   vector<int> autoencoder_layers {784, 1000, 1000};
-  vector<float> auto_learn_rates {0.005, 0.005, 0.005};
+  vector<float> auto_learn_rates {0.001, 0.001, 0.001};
   vector<int> auto_iters {15, 15, 15};
   vector<float> noise_levels {0.1, 0.2, 0.3};
 
@@ -109,11 +109,9 @@ void experiment_GA(vector<int> &trainLabels, float **trainingImages)
   cout << "running experiment_GA" << endl;
   int numTrainingImages = 1000;
   vector<int> autoencoder_layers {784};
-  vector<float> auto_learn_rates {0.002};
-  vector<int> auto_iters {15};
+  vector<float> auto_learn_rates {0.005 * 60.0};
+  vector<int> auto_iters {5};
   vector<float> noise_levels {0.25};
-
-  //setup GA and its parameters
 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
 
@@ -122,6 +120,7 @@ void experiment_GA(vector<int> &trainLabels, float **trainingImages)
 
   delete myAutoencoder;
 
+  auto_learn_rates[0] = 0.005 * 60.0;
   myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
 
   cout << "*********with SGD/GA hybrid*********" << endl;
@@ -129,15 +128,15 @@ void experiment_GA(vector<int> &trainLabels, float **trainingImages)
 
   delete myAutoencoder;
 
-  myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
+  // myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
 
-  ga_params *myParams = myAutoencoder->getMyParams();
-  myParams->useGradient = false;
+  // ga_params *myParams = myAutoencoder->getMyParams();
+  // myParams->useGradient = false;
 
-  cout << "*********with just GA*********" << endl;
-  myAutoencoder->preTrainGA(trainingImages, numTrainingImages);
+  // cout << "*********with just GA*********" << endl;
+  // myAutoencoder->preTrainGA(trainingImages, numTrainingImages);
 
-  delete myAutoencoder;
+  // delete myAutoencoder;
 }
 
 void experiment_GA2(vector<int> &trainLabels, float **trainingImages)
@@ -178,9 +177,7 @@ void experiment_GA4(vector<int> &trainLabels, float **trainingImages)
 
     ga_params *myParams = myAutoencoder->getMyParams();
     myParams->popSize = popSizes[i];
-    myParams->numToReplace = popSizes[i];
-
-    cout << "using " << cores[i] << " cores" << endl;;
+    myParams->numToReplace = popSizes[i]/2;
     myAutoencoder->preTrainGA(trainingImages, 1000);
     delete myAutoencoder;
   }
@@ -318,7 +315,7 @@ int main(int argc, char *argv[])
   // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
   // train_and_test_autoencoderGA(training_labels, training_images, testing_labels, testing_images);
   // experiment_GA(training_labels, training_images);
-  experiment_GA3(training_labels, training_images);
+  experiment_GA(training_labels, training_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
   // experiment_3(training_labels, training_images, testing_labels, testing_images);

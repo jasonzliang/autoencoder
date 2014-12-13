@@ -70,7 +70,7 @@ genetic::genetic(ga_params myParams):
   // cout << "generating random bank..." << endl;
   // randBankSize = min(50 * myParams.genomeSize, myParams.popSize * myParams.genomeSize);
   // randBankSize = myParams.genomeSize;
-  randBankSize = 4 * myParams.popSize * myParams.genomeSize;
+  randBankSize = 5 * myParams.popSize * myParams.genomeSize;
   randBank = new float[randBankSize];
   normalBank = new float[randBankSize];
 
@@ -220,9 +220,17 @@ void genetic::copyIndividual(individual &a, individual &b)
   a.age = b.age;
 }
 
+void genetic::sortPopulation()
+{
+  // for (int i = 0; i < myParams.popSize; i++)
+  // {
+  //   population[i].oldRank = i;
+  // }
+  sort(population.begin(), population.end(), compareIndividual);
+}
+
 void genetic::step()
 {
-  sort(population.begin(), population.end(), compareIndividual);
   powerRanking();
   getStats();
 

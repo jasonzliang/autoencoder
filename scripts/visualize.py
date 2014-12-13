@@ -39,8 +39,8 @@ def comparePerformance(myFile='script_data/ga_comparison.txt', myLabels=["SGD", 
   plt.savefig(outFile, bbox_inches="tight", dpi=200)
   plt.clf()
   
-def compareNumHiddenUnits(myFile='script_data/ga_comparison3.txt', n=20
-  ,myHidden = [100, 200, 400, 800, 1600], outfile='ga_comparison3.png'):
+def compareNumHiddenUnits(myFile='script_data/ga_comparison3_bigpopsize.txt', n=20
+  ,myHidden = [100, 200, 400, 800, 1600], outfile='ga_comparison3_big.png'):
   f = open(myFile)
   raw_data = f.readlines()
   x = [(3*i, 3*i + 2) for i in xrange(n)]
@@ -101,8 +101,8 @@ def visualizeReconstructedDigits():
 
   
 if __name__ == '__main__':
-  comparePerformance(myFile="script_data/ga_comparison2.txt", 
-    myLabels=["1 thread", "4 threads", "8 threads", "16 threads"], 
-    x = [(1,17), (18,34), (35,51), (52,68)], 
-    outFile="ga_comparison2.png", xlog=False, ylog=False)
+  # comparePerformance(myFile="script_data/ga_comparison2.txt", 
+  #   myLabels=["1 thread", "4 threads", "8 threads", "16 threads"], 
+  #   x = [(1,17), (18,34), (35,51), (52,68)], 
+  #   outFile="ga_comparison2.png", xlog=False, ylog=False)
   compareNumHiddenUnits()

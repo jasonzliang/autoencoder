@@ -72,6 +72,9 @@ experiment_1	main.cpp	/^void experiment_1(vector<int> &trainLabels, float **trai
 experiment_2	main.cpp	/^void experiment_2(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_3	main.cpp	/^void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)$/;"	f
 experiment_GA	main.cpp	/^void experiment_GA(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA2	main.cpp	/^void experiment_GA2(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA3	main.cpp	/^void experiment_GA3(vector<int> &trainLabels, float **trainingImages)$/;"	f
+experiment_GA4	main.cpp	/^void experiment_GA4(vector<int> &trainLabels, float **trainingImages)$/;"	f
 fineTune	autoencoder.cpp	/^void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)$/;"	f	class:autoencoder
 fineTuneNoHidden	autoencoder.cpp	/^void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)$/;"	f	class:autoencoder
 fitness	ga.h	/^  float fitness;$/;"	m	struct:individual
@@ -87,6 +90,7 @@ getGenome	ga.h	/^  inline float *getGenome(int i)$/;"	f	class:genetic
 getInput	autoencoder.cpp	/^void autoencoder::getInput(float *&o_i)$/;"	f	class:autoencoder
 getInput	neural_network.h	/^  virtual void getInput(float *&o_i) {};$/;"	f	class:neural_network
 getInputK	autoencoder.cpp	/^void autoencoder::getInputK(float *&o_i, int k)$/;"	f	class:autoencoder
+getMyParams	autoencoder.h	/^  inline ga_params *getMyParams()$/;"	f	class:autoencoder
 getNumHiddenUnits	hidden_layer.h	/^  inline int getNumHiddenUnits()$/;"	f	class:hidden_layer
 getNumInputUnits	hidden_layer.h	/^  inline int getNumInputUnits()$/;"	f	class:hidden_layer
 getNumWeights	hidden_layer.h	/^  inline int getNumWeights()$/;"	f	class:hidden_layer
@@ -119,6 +123,7 @@ mutRate	ga.h	/^  float mutRate;$/;"	m	struct:ga_params
 mutate	ga.cpp	/^void genetic::mutate(individual &a)$/;"	f	class:genetic
 myDist	ga.h	/^  cauchy_distribution<float> myDist;$/;"	m	class:genetic
 myEngine	ga.h	/^  mt19937_64 myEngine;$/;"	m	class:genetic
+myParams	autoencoder.h	/^  ga_params myParams;$/;"	m	class:autoencoder
 myParams	ga.h	/^  ga_params myParams;$/;"	m	class:genetic
 neural_network	neural_network.cpp	/^neural_network::neural_network(int numInput, int numHidden, int numOutput, float learn_rate):$/;"	f	class:neural_network
 neural_network	neural_network.h	/^class neural_network$/;"	c

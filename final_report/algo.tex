@@ -1,3 +1,5 @@
+\subsection{Stochastic Gradient Descent}
+
 We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (input, one hidden and output layer). Some notation is given in Table \ref{tab:notation}.
 
 \begin{table}[h]
@@ -142,3 +144,35 @@ matrix-transpose-vector multiplies. The weight updates are not able to be done i
 We consider the relative performance of these two methods in Fig.~\ref{fig:ompvsblas}.
 
 We note that the Fig.~\ref{fig:performanceomp} and Fig.~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+
+\subsection{Genetic Algorithm}
+
+A genetic algorithm (GA) is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The GA works by iteratively improving upon a population of candidate solution vectors (also know as individuals) via genetic operations such as selection, mutation, and crossover. The goal is to maximize the fitness of each individual, which is determined by evaluating the individual with some objective function. In the case of autoencoders, the objective function is the reconstruction loss function defined earlier, the individual is a real valued vector that represents the weights $W$ and biases $b_j^{\{H,O\}}$, and the fitness of an individual is simply $1/E(t,z)$. Algorithm~\ref{alg:genetic} shows the pseudocode of a simple conventional genetic algorithm, which we will refer to as CGA. 
+
+\begin{algorithm}[h]
+\caption{Genetic Algorithm}
+\label{alg:genetic}
+\begin{algorithmic}
+\STATE Initialize $N$ individuals randomly
+\FOR{iter $=1,2,3...$}
+	\STATE Evaluate each individual with objective function and assign fitness
+	\STATE Scale fitness of all individuals, typically with a \textbf{power scaling}
+	\STATE Select existing individuals via \textbf{roulette selection}
+	\FOR{Every two individuals $a$ and $b$ selected}
+		\STATE Create copies $a'$ and $b'$
+		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
+		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
+	\ENDFOR
+	\STATE Replace worst $\alpha$ individuals in population with newly created individuals
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+We will explain step by step what each bold term in the pseudocode means and how it affects individuals in the population:
+
+\begin{itemize}
+  \item Power Scaling: All individuals in the population are ranked in ascending order according to their fitness. Each individual is assigned a scaled fitness is is equal to $R^{\gamma}$ where R is the position of the individual within the ranking and $\gamma$ is a parameter to be tuned. Higher values for $\gamma$ will create a scaled fitness distribution that favor individuals with higher actual fitness. Thus $\gamma$ will affect the selection of individuals later and determine how elitist the selection of individuals will be (in other words, how likely will an individual of higher fitness will be selected).
+  \item Roulette Selection: Also known as fitness proportionate selection, roulette selection randomly samples an individual from the population with proportion to its scaled fitness. There are many other selection methods such as tournament selection and truncation selection. However, our preliminary experimental results suggest that roulette selection is most appropriate for training weights of autoencoders. The purpose of this operation is to select individuals with good fitness to create the next generation's population. 
+  \item Uniform Mutation: Each element of the individual (a vector of real numbers) is mutated with probability $mr$. For each element, we generate a random number between 0 and 1. If this random number is less than $mr$, we sample value from a zero meaned Cauchy distribution with standard deviation $ma$ and add that value to the element. The purpose of this operation is to randomly perturb existing individuals and create new ones whose fitness might be slightly better. 
+  \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. This is a simple way to combine good portions of the two individual vectors together and create new individuals which might have higher fitness.
+\end{itemize}
