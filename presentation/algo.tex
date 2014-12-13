@@ -6,6 +6,28 @@
 	\frametitle{Algorithms}
 	\framesubtitle{~~}  %% needed for proper positioning of the logo ...
 
+\begin{algorithm}[H]
+	\small
+\caption{Backpropagation}
+\label{alg:backprop}
+\begin{algorithmic}
+\STATE Initialize the weights and biases randomly
+\FOR{iter $=1,2,3...$}
+  \FORALL{Examples $x$ in training set (randomize)}
+    \STATE $z\gets$ Feedforward $x$
+    \STATE Compute output layer $\delta_j^O$
+    \STATE ${W_{ij} \leftarrow W_{ij} - \eta \delta^O_j x_i}$
+    \STATE $b_j \leftarrow b_j - \eta\delta^O_j$
+    \FORALL{Layers in reverse order}
+      \STATE Compute hidden layer delta $\delta_k^H$
+      \STATE ${W^H_{ij} \leftarrow W^H_{ij} - \eta\delta^H_jx_i}$
+      \STATE $b_j \leftarrow b_j - \eta\delta^H_j$
+    \ENDFOR
+  \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Frame
@@ -13,6 +35,57 @@
 \begin{frame}[t]
 	\frametitle{Algorithms}
 	\framesubtitle{~~}  %% needed for proper positioning of the logo ...
+
+\begin{algorithm}[H]
+\small
+\caption{Conventional Genetic Algorithm (CGA)}
+\label{alg:genetic}
+\begin{algorithmic}
+\STATE Initialize $N$ individuals randomly
+\FOR{iter $=1,2,3...M$, where M is number of training examples}
+  \STATE Evaluate each individual with objective function and assign fitness
+  \STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$.
+  \STATE Select existing individuals via \textbf{roulette selection}
+  \FOR{Every two individuals $a$ and $b$ selected}
+    \STATE Create copies $a'$ and $b'$
+    \STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
+    \STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
+  \ENDFOR
+  \STATE Replace worst $\alpha$ individuals in population with newly created individuals
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Frame
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+	\frametitle{Algorithms}
+	\framesubtitle{~~}  %% needed for proper positioning of the logo ...
+
+\begin{algorithm}[H]
+\small
+\caption{Hybrid Genetic Algorithm (HGA)}
+\label{alg:hga}
+\begin{algorithmic}
+\STATE Initialize $N$ individuals randomly
+\FOR{iter $=1,2,3...M$, where M is number of training examples}
+  \STATE Evaluate each individual with objective function and assign fitness
+  \STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
+  \STATE Perform backpropagation on top $\beta$ individuals with highest fitness
+  \STATE Select existing individuals via \textbf{roulette selection}
+  \FOR{Every two individuals $a$ and $b$ selected}
+    \STATE Create copies $a'$ and $b'$
+    \STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
+    \STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
+  \ENDFOR
+  \STATE Replace worst $\alpha$ individuals in population with newly created individuals
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
 \end{frame}
 
