@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[conference,onecolumn]{IEEEtran}
 
 \usepackage{cite}
 \usepackage[pdftex]{graphicx}
@@ -15,6 +15,9 @@
 \usepackage{color}
 \usepackage{balance}
 \usepackage{subfig}
+\usepackage{multirow}
+\usepackage[margin=1in]{geometry}
+\usepackage{placeins} %enables float barrier
 %\usepackage{caption} %uncomment these for more space between a table and its caption
 %\captionsetup[table]{skip=5pt}
 
@@ -22,7 +25,7 @@
 
 \begin{document}
 
-\title{Parallel Stochastic Gradient Descent for Stacked Denoising Autoencoders}
+\title{Stacked Denoising Autoencoders: Parallel Stochastic Gradient Descent and Parallel Genetic Algorithm}
 
 \author{\IEEEauthorblockN{Jason Liang}
 \IEEEauthorblockA{jasonzliang@utexas.edu}
@@ -36,27 +39,33 @@
 We implement stacked denoising autoencoders, a special neural network that is capable of learning powerful representations of high dimensional data. Learning for autoencoders is accomplished via stochastic gradient descent and we show experimental results when training autoencoders on a standard image classification dataset. 
 \end{abstract}
 
+\FloatBarrier
+\section{Introduction}
+\input{intro}
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\linewidth]{autoencoder.png}
+\includegraphics[width=0.8\linewidth]{autoencoder.png}
 \caption{Overview of an autoencoder and its encoding, decoding stages. The weight matrix of the decoding stage is the transpose of the weight matrix of the encoding stage.}
 \label{fig:autoencoder}
 \end{figure}
-
-\section{Introduction}
-\input{intro}
+\FloatBarrier
 \section{Related Work}
 \input{related}
 \input{reconstructed}
+\FloatBarrier
 \section{Algorithm Description}
 \input{algo}
+\FloatBarrier
 
 \section{Experimental Results}
 \input{experiment}
+\FloatBarrier
 \section{Future Work}
 \input{future}
+\FloatBarrier
 \section{Conclusion}
 \input{conclusion}
+\FloatBarrier
 
 \bibliographystyle{unsrt}
 \bibliography{autoencoder}

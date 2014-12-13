@@ -1,3 +1,4 @@
+\FloatBarrier
 \subsection{Performance of Stochastic Gradient Descent Training}
 
 For the following experiments, we train our autoencoder over the MNIST handwritten digit
@@ -9,7 +10,7 @@ mentioned in \cite{vincent2010stacked}, and for each training image, randomly
 corrupt it by setting each pixel to zero with probability 0.25. 
 
 \begin{figure}[h] \centering
-	\includegraphics[width=1.0\linewidth]{experiment3_1.png}
+	\includegraphics[width=0.8\linewidth]{experiment3_1.png}
 	\caption{Visualization of the filters of the first 100 hidden nodes in an
 	denoising autoencoder trained over all 60000 images.}
 	\label{fig:experiment3_1}
@@ -31,6 +32,12 @@ backpropagation/SGD, described in Algorithm \ref{alg:backprop}, must be done
 sequentially. Parallelization can only be done within each step and incurs an
 overhead cost.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{experiment1.png}
+\caption{Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, and 8 threads.}
+\label{fig:experiment1}
+\end{figure}
 
 \subsection{Visualization of Autoencoder}
 
@@ -46,6 +53,7 @@ noisy test digits as input. The reconstructed outputs for most of the input
 images are easily recognizable as digits, which indicates that the autoencoder
 is indeed denoising and learning a good representation of the images.
 
+<<<<<<< HEAD
 To further demonstrate the reconstruction capabilities of the autoencoder, we 
 trained the autoencoder on corrupted or otherwise altered digits.
 In particular, we test the reconstruction
@@ -59,6 +67,21 @@ representation, even to the human eye. We show also in Fig.~\ref{fig:reconstruct
 the reconstructed images form the \textit{bg-img} and \textit{rot} datasets. Note that
 the images in the \textit{bg-rand} and \textit{bg-img} datasets are rotated, but they
 are all rotated in the same way.
+=======
+To further demonstrate the reconstruction capabilities of the autoencoder, we
+trained the autoencoder on corrupted or otherwise altered digits.  In
+particular, we test the reconstruction on \textit{bg-rand}, which is generated
+from the MNIST dataset, excpt that a random backgound is added. In
+\textit{bg-img}, each image is given a background randomly selected from one of
+twenty images downloaded form the internet. In \textit{rot}, the digits are
+simply rotated by some random angle.  These alterations to the images make the
+classification task more difficult. Indeed the digits are very difficult to
+identify, but the autoencoder creates an easier to identify representation,
+even to the human eye. We show also in Fig.~\ref{fig:reconstruct} the
+reconstructed images form the \textit{bg-img} and \textit{rot} datasets. Note
+that the images in the \textit{bg-rand} and \textit{bg-img} datasets are
+rotated, but they are all rotated in the same way.
+>>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7
 
 
 
@@ -108,26 +131,44 @@ Again we use liblinear with all default options except selecting logistic regres
 original MNIST data, this algorithm achieved an accuracy of 91.82\% while with the encoded data
 we achieved an accuracy of 96.86\%.
 
+We performed the same experiments on the \textit{bg-rand}, \textit{bg-img} and 
+\textit{rot} datasets as well. Across the board we see similar results. The encoding does not have much of
+an effect on the ability of kernel SVM to classify the data, but for linear SVM and logistic regresssion, 
+using the autoencoder always results in the classifier improving it's accuracy. 
+
+
 \begin{table}[h]
-	\begin{tabular}{l|lll}
-		& Linear SVM & Kernel SVM (RBF) & Logistic Regression \\ \hline
-		Original & 91.68\%    & 94.46\%          & 91.82\%             \\
-		Encoded  & 97.07\%    & 95.48\%          & 96.86\%            
-	\end{tabular}
+	\centering
+\begin{tabular}{ll|lll}
+    Dataset                        & Using autoencoder? & Linear SVM & Kernel SVM (RBF) & Logistic Regression \\ \hline
+    \multirow{2}{*}{MNIST}         & Original           & 91.68\%    & 94.46\%          & 91.82\%             \\
+                                   & Encoded            & 97.07\%    & 95.48\%          & 96.86\%             \\ \hline
+    \multirow{2}{*}{mnist-bg-rand} & Original           & 58.975\%   & 83.875\%         & 65.5917\%           \\
+                                   & Encoded            & 81.675\%   & 83.6583\%        & 83.825\%            \\ \hline
+    \multirow{2}{*}{mnist-bg-img}  & Original           & 69.25\%    & 76.4667\%        & 71.6333\%           \\
+                                   & Encoded            & 78.4333\%  & 72.8417\%        & 78.1333\%           \\ \hline
+    \multirow{2}{*}{mnist-rot}     & Original           & 11.204\%   & 13.328\%         & 11.868\%           \\
+                                   & Encoded            & 18.428\%   & 14.378\%         & 18.78\%
+\end{tabular}
 	\label{tab:classvsenc}
 	\caption{Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We
 	see in all cases that using the encoded data produces a better result.}
 \end{table}
 
 \begin{figure}[h] \centering
-	\includegraphics[width=1.0\linewidth]{ga_comparison.png}
+	\includegraphics[width=0.8\linewidth]{ga_comparison.png}
 	\caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.}
 	\label{fig:ga_comparison}
 \end{figure}
 
 \begin{figure}[h] \centering
+<<<<<<< HEAD
 	\includegraphics[width=1.0\linewidth]{ga_comparison2.png}
 	\caption{Performance of HGA for 1, 4, 8, and 16 threads.}
+=======
+	\includegraphics[width=0.8\linewidth]{ga_comparison2.png}
+	\caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.}
+>>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7
 	\label{fig:ga_comparison2}
 \end{figure}
 
@@ -143,6 +184,7 @@ we achieved an accuracy of 96.86\%.
 	\label{fig:ga_comparison3}
 \end{figure*}
 
+<<<<<<< HEAD
 \subsection{Training the Autoencoder with a Genetic Algorithm}
 
 In Fig.~\ref{fig:ga_comparison}, we compare the performance of stochastic gradient descent (SGD), our previously mentioned hybrid GA (HGA), which uses backpropagation to update the best individuals in the population, and a conventional GA (CGA), which does not use any gradient information. All three algorithms are used to train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. For SGD and HGA, we fix the learning rate to 0.0002. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all 3 algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that will properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
@@ -154,3 +196,6 @@ In Fig.~\ref{fig:ga_comparison3}, the performance of HGA versus the number of th
 Finally, in Fig.~\ref{fig:ga_comparison4}, we see how the performance of HGA and CGA scales versus the population size. All other hyperparameters remain the same for both HGA and CGA. As we can see, increasing the population does not lead to any noticeable improvement in reconstruction error per iteration. The default population size of 2 seems to be optimal. However, for CGA increasing the population does seem to lead a significant improvement in reconstruction error per iteration. Unfortunately, the overall running times when using increased population sizes are also larger. 
 
 
+=======
+\FloatBarrier
+>>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7

@@ -3,7 +3,7 @@
 We start with a random weight matrix $W$ and random biases $b$ and $b^{'}$. We take a given input $x$, and feed it forward through the network and compute the error between the target output $t$ and the actual output $z$. Often we use the squared loss error $E(t,z) = \frac{1}{2}\norm{t-z}_2^2$ to determine the difference between the two. In the case of an autoencoder, the target output is the same as the input. If the error is not satisfactory, we can adjust the weight matrix and that biases in order to attempt to learn a better representation of the data. A common method of updating the weight and biases is via backpropogation \cite{hecht1989theory}; when applied to training inputs one at a time, it is also known as stochastic gradient descent (SGD). We will first consider the update for the weights and biases from the last hidden layer to the output layer with a squared loss error function and derive the updates. We use as an example a simple three layer neural network (input, one hidden and output layer). Some notation is given in Table \ref{tab:notation}.
 
 \begin{table}[h]
-\normalsize
+	\centering
 \begin{tabular}{l|l}
 Symbol     & Meaning                                                          \\ \hline
 $E$          & Error as computed at the output layer                            \\
@@ -111,12 +111,12 @@ We note that the steps of backpropagation can only be done in sequence; thus we 
 
 The most expensive parts of the backpropogation algorithm are computing the forward activations of the network and updating the weight matrices for the network. Computing the forward propogation requires performing a matrix-vector multiplication at each layer of the network. The size of that matrix depends on the input and output sizes of that layer. Thus if we have a network with $N$ layers and the sizes of each of those layers is $n_i$, then We have $N$ matrix-vector multiplications of size $n_{i-1} \times n_i$. Updating the weights also has complexity based on the size of the matrix since it requires updating all the entries of the matrix at each iteration.
 
-To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling below. 
+To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling in Figs.~\ref{fig:performanceomp},~\ref{fig:performanceblas}, and \ref{fig:ompvsblas}.
 
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\linewidth]{performanceomp.png}
+\includegraphics[width=0.8\linewidth]{performanceomp.png}
 \caption{Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.}
 \label{fig:performanceomp}
 \end{figure}
@@ -124,7 +124,7 @@ To improve the performance of these two expensive steps, we parallelized them fi
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\linewidth]{performanceblas.png}
+\includegraphics[width=0.8\linewidth]{performanceblas.png}
 \caption{Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.}
 \label{fig:performanceblas}
 \end{figure}
@@ -133,7 +133,7 @@ To improve the performance of these two expensive steps, we parallelized them fi
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\linewidth]{ompvsblas.png}
+\includegraphics[width=0.8\linewidth]{ompvsblas.png}
 \caption{Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.}
 \label{fig:ompvsblas}
 \end{figure}
@@ -143,7 +143,9 @@ In  Fig.~\ref{fig:performanceblas} we give the performance of training the autoe
 matrix-transpose-vector multiplies. The weight updates are not able to be done in OpenBLAS, and so we continue to do that using OpenMP.
 We consider the relative performance of these two methods in Fig.~\ref{fig:ompvsblas}.
 
-We note that the Fig.~\ref{fig:performanceomp} and Fig.~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+We note that Figs.~\ref{fig:performanceomp} and~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+
+We generally get increasing amounts of speedup with increasin number of threads, but with a large number of threads we do not see improvement until the problem size increases and becomes large enough. We do not achieve linear scaling (i.e. twice as many threads does not result in the algorithm running twice as fast), since not all parts of the algorithm are parallelizable. That said, our algorithm does continue to get faster with increasing number of threads.
 
 \subsection{Genetic Algorithm}
 
