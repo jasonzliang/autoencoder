@@ -387,7 +387,7 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
   //set params
   myParams.mutRate = 0.0001;
   myParams.crossRate = 0.5;
-  myParams.useGradient = true;
+  myParams.useGradient = false;
   myParams.truncateSel = false;
   myParams.zeroMutate = false;
   // myParams.popSize = 2;

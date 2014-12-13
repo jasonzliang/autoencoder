@@ -169,10 +169,10 @@ void experiment_GA4(vector<int> &trainLabels, float **trainingImages)
   vector<int> auto_iters {15};
   vector<float> noise_levels {0.25};
 
-  int popSizes[6] = {2, 4, 8, 16, 32};
-  for (int i = 0; i < 6; i++)
+  int popSizes[5] = {2, 4, 8, 16, 32};
+  for (int i = 0; i < 5; i++)
   {
-    
+
     autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.05);
 
     ga_params *myParams = myAutoencoder->getMyParams();

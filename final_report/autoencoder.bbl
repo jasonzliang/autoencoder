@@ -40,4 +40,10 @@ Erick Cant{\'u}-Paz.
 \newblock {\em Calculateurs paralleles, reseaux et systems repartis},
   10(2):141--171, 1998.
 
+\bibitem{david2014genetic}
+Omid~E David and Iddo Greental.
+\newblock Genetic algorithms for evolving deep neural networks.
+\newblock In {\em Proceedings of the 2014 conference companion on Genetic and
+  evolutionary computation companion}, pages 1451--1452. ACM, 2014.
+
 \end{thebibliography}

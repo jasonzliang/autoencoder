@@ -146,16 +146,16 @@ We generally get increasing amounts of speedup with increasin number of threads,
 
 \subsection{Genetic Algorithm}
 
-A genetic algorithm (GA) is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The GA works by iteratively improving upon a population of candidate solution vectors (also know as individuals) via genetic operations such as selection, mutation, and crossover. The goal is to maximize the fitness of each individual, which is determined by evaluating the individual with some objective function. In the case of autoencoders, the objective function is the reconstruction loss function defined earlier, the individual is a real valued vector that represents the weights $W$ and biases $b_j^{\{H,O\}}$, and the fitness of an individual is simply $1/E(t,z)$. Algorithm~\ref{alg:genetic} shows the pseudocode of a simple conventional genetic algorithm, which we will refer to as CGA. 
+As mentioned in the introduction, a genetic algorithm (GA) is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The GA works by iteratively improving upon a population of candidate solution vectors (also know as individuals) via genetic operations such as selection, mutation, and crossover. The goal is to maximize the fitness of each individual, which is determined by evaluating the individual with some objective function. In the case of autoencoders, the objective function is the reconstruction loss function defined earlier, the individual is a real valued vector that represents the weights $W$ and biases $b_j^{\{H,O\}}$, and the fitness of an individual is simply $1/E(t,z)$. Algorithm~\ref{alg:genetic} shows the pseudocode of a simple conventional genetic algorithm, which we will refer to as CGA. 
 
 \begin{algorithm}[h]
-\caption{Genetic Algorithm}
+\caption{Conventional Genetic Algorithm (CGA)}
 \label{alg:genetic}
 \begin{algorithmic}
 \STATE Initialize $N$ individuals randomly
-\FOR{iter $=1,2,3...$}
+\FOR{iter $=1,2,3...M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
-	\STATE Scale fitness of all individuals, typically with a \textbf{power scaling}
+	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$. 
 	\STATE Select existing individuals via \textbf{roulette selection}
 	\FOR{Every two individuals $a$ and $b$ selected}
 		\STATE Create copies $a'$ and $b'$
@@ -167,11 +167,35 @@ A genetic algorithm (GA) is a biologically inspired black-box optimization algor
 \end{algorithmic}
 \end{algorithm}
 
-We will explain step by step what each bold term in the pseudocode means and how it affects individuals in the population:
+We will explain step by step what each bolded term means and how it affects individuals in the population:
 
 \begin{itemize}
-  \item Power Scaling: All individuals in the population are ranked in ascending order according to their fitness. Each individual is assigned a scaled fitness is is equal to $R^{\gamma}$ where R is the position of the individual within the ranking and $\gamma$ is a parameter to be tuned. Higher values for $\gamma$ will create a scaled fitness distribution that favor individuals with higher actual fitness. Thus $\gamma$ will affect the selection of individuals later and determine how elitist the selection of individuals will be (in other words, how likely will an individual of higher fitness will be selected).
+  \item Power Scaling: All individuals in the population are ranked in ascending order according to their fitness. Each individual is assigned a scaled fitness is is equal to $R^{\gamma}$ where R is the position of the individual within the ranking and $\gamma$ is a parameter to be tuned. Higher values for $\gamma$ will create a scaled fitness distribution that favor individuals with higher actual fitness. Thus $\gamma$ will affect the selection of individuals later and determine how elitist the selection of individuals will be (in other words, how much more likely an individual of higher fitness will be selected).
   \item Roulette Selection: Also known as fitness proportionate selection, roulette selection randomly samples an individual from the population with proportion to its scaled fitness. There are many other selection methods such as tournament selection and truncation selection. However, our preliminary experimental results suggest that roulette selection is most appropriate for training weights of autoencoders. The purpose of this operation is to select individuals with good fitness to create the next generation's population. 
-  \item Uniform Mutation: Each element of the individual (a vector of real numbers) is mutated with probability $mr$. For each element, we generate a random number between 0 and 1. If this random number is less than $mr$, we sample value from a zero meaned Cauchy distribution with standard deviation $ma$ and add that value to the element. The purpose of this operation is to randomly perturb existing individuals and create new ones whose fitness might be slightly better. 
-  \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. This is a simple way to combine good portions of the two individual vectors together and create new individuals which might have higher fitness.
+  \item Uniform Cauchy Mutation: Each element of the individual (a vector of real numbers) is mutated with probability $mr$. For each element, we generate a random number between 0 and 1. If this random number is less than $mr$, we sample value from a zero-meaned Cauchy distribution with standard deviation $ma$ and add that value to the element. The purpose of this operation is to randomly perturb existing individuals and possibly create new ones whose fitness is slightly better. 
+  \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. If crossover is performed on two individuals with good fitness, there is a chance that the elements (also known as genes) of the individuals that are responsible for their fitnesses might be combined into a new individual. 
 \end{itemize}
+
+Next we will look at HGA, a hybrid GA that combines genetic operators with backpropagation to keep the population size small and remain computationally tractable. The pseudocode for HGA is shown in Algorithm~\ref{alg:hga} and is based off recent work done by David and Greental \cite{david2014genetic} on applying GAs to learn stacked autoencoders. The main difference between our HGA and the algorithm described in \cite{david2014genetic} is that we use roulette selection instead of truncation selection and uniform Cauchy mutation instead of mutating weights to zero. 
+
+\begin{algorithm}[h]
+\caption{Hybrid Genetic Algorithm (HGA)}
+\label{alg:hga}
+\begin{algorithmic}
+\STATE Initialize $N$ individuals randomly
+\FOR{iter $=1,2,3...M$, where M is number of training examples}
+	\STATE Evaluate each individual with objective function and assign fitness
+	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
+	\STATE Perform backpropagation on top $\beta$ individuals with highest fitness
+	\STATE Select existing individuals via \textbf{roulette selection}
+	\FOR{Every two individuals $a$ and $b$ selected}
+		\STATE Create copies $a'$ and $b'$
+		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
+		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
+	\ENDFOR
+	\STATE Replace worst $\alpha$ individuals in population with newly created individuals
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+The key idea of performing backpropagation is that it assists the mutation operator in moving the individuals towards regions of high fitness. While the mutation operator perturbs individuals randomly, backpropagation will always follow the gradient. This distinction is significant in high dimensional spaces, as the mutation operator will require a large population size to work optimally, while backpropagation does not. Instead, the mutation operator serves a secondary role of helping the individuals to escape from a local optima through random perturbations. Compared to CGA with the same population size, HGA performs significantly better as we shall see in the experimental results section. 
