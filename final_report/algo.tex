@@ -74,7 +74,7 @@ b^O_j &\leftarrow b^O_j - \eta\delta^O_j.
 
 Note also that we find that the updates for the hidden layer is the same as in the squared error loss function with sigmoid activation. A general overview of the backpropagation algorithm is given by by Algorithm~\ref{alg:backprop}.
 
-The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. In particular, the weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. We note that the steps of backpropagation can only be done in sequence; thus we can only parallelize the operations done within each step. The three major operations which benefit from parallelization are computing the matrix-vector products $W^{H}x$ and $W^{O}y$, computing $\delta^O_j$ and $\delta^H_j$, and updating the entries of the weight matrices with the gradient. For performance reasons we dont store $W^O$ separately; instead we access $W^H$ with transposed indexes when decoding, calculating $\delta^O_j$, and applying the gradient update.
+The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. In particular, the weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. 
 
 Once we have trained a single autoencoder layer, we can stack another autoencoder layer on top of the first one for further training. This second autoencoder takes the output of the hidden layer (encoding stage) of the first autoencoder as input and attempts the minimize the input's reconstruction cost.
 
@@ -99,9 +99,38 @@ Once we have trained a single autoencoder layer, we can stack another autoencode
 \end{algorithmic}
 \end{algorithm}
 
+
+\subsection{Performance}
+We note that the steps of backpropagation can only be done in sequence; thus we can only parallelize the operations done within each step. The three major operations which benefit from parallelization are computing the matrix-vector products $W^{H}x$ and $W^{O}y$, computing $\delta^O_j$ and $\delta^H_j$, and updating the entries of the weight matrices with the gradient. For performance reasons we dont store $W^O$ separately; instead we access $W^H$ with transposed indexes when decoding, calculating $\delta^O_j$, and applying the gradient update.
+
+The most expensive parts of the backpropogation algorithm are computing the forward activations of the network and updating the weight matrices for the network. Computing the forward propogation requires performing a matrix-vector multiplication at each layer of the network. The size of that matrix depends on the input and output sizes of that layer. Thus if we have a network with $N$ layers and the sizes of each of those layers is $n_i$, then We have $N$ matrix-vector multiplications of size $n_{i-1} \times n_i$. Updating the weights also has complexity based on the size of the matrix since it requires updating all the entries of the matrix at each iteration.
+
+To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling below. 
+
+
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\linewidth]{experiment2.png}
-\caption{Time per iteration versus number of threads and hidden nodes. All 60000 training images are used.}
-\label{fig:experiment2}
+\includegraphics[width=1.0\linewidth]{performanceomp.png}
+\caption{Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.}
+\label{fig:performanceomp}
 \end{figure}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\linewidth]{performanceblas.png}
+\caption{Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.}
+\label{fig:performanceblas}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\linewidth]{ompvsblas.png}
+\caption{Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.}
+\label{fig:ompvsblas}
+\end{figure}
+
+We note that the Fig.~\ref{fig:performanceomp} and Fig.~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+We show a comparison between our two parallelization techniques in Fig.~\ref{fig:ompvsblas}

@@ -15,6 +15,8 @@ corrupt it by setting each pixel to zero with probability 0.25.
 	\label{fig:experiment3_1}
 \end{figure}
 
+
+
 We first analyze how the number of threads affects the rate at which training
 error decreases. We train a single autoencoder layer with 500 hidden nodes for
 15 iterations over 5000 training images. An iteration involves going through
@@ -31,15 +33,6 @@ backpropagation/SGD, described in Algorithm \ref{alg:backprop}, must be done
 sequentially. Parallelization can only be done within each step and incurs an
 overhead cost.
 
-Fig.~\ref{fig:experiment2} shows the time per iteration of SGD (over all 60000
-training images) versus the number of threads and hidden nodes in the
-autoencoder layer. For one thread, the speedup is essentially linear with the
-number of hidden nodes. For four threads and eight threads, the speedup becomes
-sublinear due to the overhead resulting from parallelization. This is
-especially noticeable when using eight threads and having lower number of
-hidden nodes; the time per iteration for eight threads with 100 hidden nodes is
-even slower than just using one thread. Using 8 threads only becomes faster
-than using four when the number of hidden nodes reach 800. 
 
 Next, in Fig.~\ref{fig:experiment3_1}, we visualize the filters that are
 learned by training an autoencoder layer with 500 hidden nodes over all 60000
@@ -48,10 +41,26 @@ matrix and indicates which aspects of the input the hidden unit is sensitive
 to. Since each row in the weight matrix is the same dimensionality as the
 input, we can visualize it as a 28 by 28 pixel image. The filters are not
 identical to the input images, but do show some similarity to them. In
-Fig.~\ref{fig:experiment3_1}, we visualize the reconstructed digits when given
+Fig.~\ref{fig:reconstruct}, we visualize the reconstructed digits when given
 noisy test digits as input. The reconstructed outputs for most of the input
 images are easily recognizable as digits, which indicates that the autoencoder
 is indeed denoising and learning a good representation of the images.
+
+To further demonstrate the reconstruction capabilities of the autoencoder, we 
+trained the autoencoder on corrupted or otherwise altered digits.
+In particular, we test the reconstruction
+on \textit{bg-rand}, which is generated from the MNIST dataset, excpt that
+a random backgound is added. In \textit{bg-img}, each image is given a background
+randomly selected from one of twenty images downloaded form the internet. In 
+\textit{rot}, the digits are simply rotated by some random angle.
+These alterations to the images make the classification task more difficult. Indeed the
+digits are very difficult to identify, but the autoencoder creates an easier to identify 
+representation, even to the human eye. We show also in Fig.~\ref{fig:reconstruct} 
+the reconstructed images form the \textit{bg-img} and \textit{rot} datasets. Note that
+the images in the \textit{bg-rand} and \textit{bg-img} datasets are rotated, but they
+are all rotated in the same way.
+
+
 
 Finally we evaluate the classification accuracy of a deep neural network that
 has multiple stacked denoising autoencoders. We train 3 stacked autoencoder
