@@ -109,7 +109,7 @@ We note that the steps of backpropagation can only be done in sequence; thus we 
 
 The most expensive parts of the backpropogation algorithm are computing the forward activations of the network and updating the weight matrices for the network. Computing the forward propogation requires performing a matrix-vector multiplication at each layer of the network. The size of that matrix depends on the input and output sizes of that layer. Thus if we have a network with $N$ layers and the sizes of each of those layers is $n_i$, then We have $N$ matrix-vector multiplications of size $n_{i-1} \times n_i$. Updating the weights also has complexity based on the size of the matrix since it requires updating all the entries of the matrix at each iteration.
 
-To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling below. 
+To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling in Figs.~\ref{fig:performanceomp},~\ref{fig:performanceblas}, and \ref{fig:ompvsblas}.
 
 
 \begin{figure}[h]
@@ -141,4 +141,5 @@ In  Fig.~\ref{fig:performanceblas} we give the performance of training the autoe
 matrix-transpose-vector multiplies. The weight updates are not able to be done in OpenBLAS, and so we continue to do that using OpenMP.
 We consider the relative performance of these two methods in Fig.~\ref{fig:ompvsblas}.
 
-We note that the Fig.~\ref{fig:performanceomp} and Fig.~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+We note that Figs.~\ref{fig:performanceomp} and~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+We generally get increasing amounts of speedup with increasin number of threads, but with a large number of threads we do not see improvement until the problem size increases and becomes large enough. We do not achieve linear scaling (i.e. twice as many threads does not result in the algorithm running twice as fast), since not all parts of the algorithm are parallelizable. That said, our algorithm does continue to get faster with increasing number of threads.
