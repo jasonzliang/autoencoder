@@ -3,6 +3,12 @@
 #include "autoencoder.h"
 #include "neural_network_cross.h"
 #include <iomanip>
+
+#if HAS_OPENBLAS
+#include "cblas.h"
+#include "openblas_config.h"
+#endif
+
 // #include <iostream>
 // #include <vector>
 
@@ -76,25 +82,35 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
 
   myAutoencoder->preTrain(trainingImages, numTrainingImages);
   //myAutoencoder->train(trainingImages, trainLabels, 5, numTrainingImages);
-	// This fine tune just below uses the hidden layer, the following one uses just an output layer (added it to the autoencoder class)
+  // This fine tune just below uses the hidden layer, the following one uses just an output layer (added it to the autoencoder class)
   //myAutoencoder->fineTune(trainingImages, numTrainingImages, trainLabels);
   myAutoencoder->fineTuneNoHidden(trainingImages, numTrainingImages, trainLabels);
-	myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
+  myAutoencoder->testFineNoHidden(testingImages, testLabels, numTestingImages);
   //myAutoencoder->test(testingImages, testLabels, numTestingImages);
   delete myAutoencoder;
 }
 
 void train_and_test_autoencoderGA(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
 {
-  vector<int> autoencoder_layers {784, 1000, 1000};
-  vector<float> auto_learn_rates {0.005, 0.005, 0.005};
-  vector<int> auto_iters {15, 15, 15};
-  vector<float> noise_levels {0.1, 0.2, 0.3};
+  int numTrainingImages = 1000;
+  vector<int> autoencoder_layers {784};
+  vector<float> auto_learn_rates {0.005 * 60.0};
+  vector<int> auto_iters {5};
+  vector<float> noise_levels {0.1};
 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
 
-  // myAutoencoder->preTrainGAMiniBatch(trainingImages, 1000);
-  myAutoencoder->preTrainGA(trainingImages, 1000);
+  cout << "*********training with SGD*********" << endl;
+  myAutoencoder->preTrain(trainingImages, numTrainingImages);
+
+  delete myAutoencoder;
+
+  // auto_learn_rates[0] = 0.001;
+
+  myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
+
+  cout << "*********with SGD/GA hybrid*********" << endl;
+  myAutoencoder->preTrainGA(trainingImages, numTrainingImages);
 
   delete myAutoencoder;
 }
@@ -146,7 +162,7 @@ void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> 
   omp_set_num_threads(omp_get_num_procs());
   cout << "running experiment 3" << endl;
   vector<int> autoencoder_layers {784};
-  vector<float> auto_learn_rates {0.001};
+  vector<float> auto_learn_rates {0.0001};
   vector<int> auto_iters {15};
   vector<float> noise_levels {0.25};
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
@@ -164,6 +180,10 @@ int main(int argc, char *argv[])
   int numCores = omp_get_num_procs();
   cout << "using " << numCores << " cores" << endl;
   omp_set_num_threads(numCores);
+#if HAS_OPENBLAS
+  cout << "setting openBlas threads" << endl;
+  openblas_set_num_threads(numCores);
+#endif
   string train_labels_file("../data/train-labels-idx1-ubyte");
   string test_labels_file("../data/t10k-labels-idx1-ubyte");
   string train_images_file("../data/train-images-idx3-ubyte");
@@ -198,11 +218,11 @@ int main(int argc, char *argv[])
 
   cout << "finished parsing input data! " << endl;
 
-  // train_and_test_network_cross(30, training_labels, training_images, testing_labels, testing_images);
-  // train_and_test_autoencoderGA(training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
+  train_and_test_autoencoderGA(training_labels, training_images, testing_labels, testing_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
-  experiment_3(training_labels, training_images, testing_labels, testing_images);
+  // experiment_3(training_labels, training_images, testing_labels, testing_images);
 
   for (int i = 0; i < numTrainingImages; i++)
   {

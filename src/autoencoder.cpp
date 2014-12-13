@@ -146,8 +146,8 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
     setCorruptedO_i(corrupted_o_i, o_i, k, numTrainingImages, a->getNumHiddenUnits());
 
     float *o_e = new float[a->getNumHiddenUnits()];
-    float *delta_e = new float[a->getNumHiddenUnits()];
     float *o_d = new float[a->getNumInputUnits()];
+    float *delta_e = new float[a->getNumHiddenUnits()];
     float *delta_d = new float[a->getNumInputUnits()];
 
     float sum_squared_error = 0.0;
@@ -282,9 +282,9 @@ void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingIma
 
     genetic *ga = new genetic(myParams);
 
-    delete[] a->getWeights();
-    delete[] a->getEncodeBiases();
-    delete[] a->getDecodeBiases();
+    float *origWeights = a->getWeights();
+    float *origEncodeBiases = a->getEncodeBiases();
+    float *origDeocodeBiases = a->getDecodeBiases();
     int encodeBiasesOffset = a->getNumWeights();
     int decodeBiasesOffset = encodeBiasesOffset + a->getNumHiddenUnits();
 
@@ -326,6 +326,24 @@ void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingIma
       cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
     }
 
+    //copy values from GA individual to autoencoder's original arrays
+    float* bestGenome = ga->getGenome(myParams.popSize - 1);
+    for (int i = 0; i < a->getNumWeights(); i++)
+    {
+      origWeights[i] = bestGenome[i];
+    }
+    for (int i = 0; i < a->getNumHiddenUnits(); i++)
+    {
+      origEncodeBiases[i]  = bestGenome[i + encodeBiasesOffset];
+    }
+    for (int i = 0; i < a->getNumInputUnits(); i++)
+    {
+      origDeocodeBiases[i] = bestGenome[i + decodeBiasesOffset];
+    }
+    a->setWeights(origWeights);
+    a->setEncodeBiases(origEncodeBiases);
+    a->setDecodeBiases(origDeocodeBiases);
+
     //cleanup
     if (k > 0)
     {
@@ -350,6 +368,7 @@ void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingIma
     myParams.numWeights = a->getNumWeights();
     myParams.numToReplace = 6;
     myParams.initRange = 1.0 * a->getWeightRange();
+
     myParams.alpha = 1.0;
     myParams.chunkSize = 15000;
 */
@@ -377,6 +396,8 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
 
     float *o_e = new float[a->getNumHiddenUnits()];
     float *o_d = new float[a->getNumInputUnits()];
+    float *delta_e = new float[a->getNumHiddenUnits()];
+    float *delta_d = new float[a->getNumInputUnits()];
 
     float sum_squared_error = 0.0;
     for (int i = 0; i < numTrainingImages; i++)
@@ -396,19 +417,24 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
     myParams.mutRate = 0.00005;
     myParams.mutAmount = 0.1 * a->getWeightRange();
     myParams.crossRate = 0.5;
-    myParams.popSize = 10;
+    myParams.popSize = 2;
     myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
     myParams.numWeights = a->getNumWeights();
-    myParams.numToReplace = 6;
+    myParams.numToReplace = 1;
     myParams.initRange = 1.0 * a->getWeightRange();
+
     myParams.alpha = 1.0;
     myParams.chunkSize = 15000;
 
+    myParams.useGradient = true;
+    myParams.truncateSel = false;
+    myParams.zeroMutate = true;
+
     genetic *ga = new genetic(myParams);
 
-    delete[] a->getWeights();
-    delete[] a->getEncodeBiases();
-    delete[] a->getDecodeBiases();
+    float *origWeights = a->getWeights();
+    float *origEncodeBiases = a->getEncodeBiases();
+    float *origDeocodeBiases = a->getDecodeBiases();
     int encodeBiasesOffset = a->getNumWeights();
     int decodeBiasesOffset = encodeBiasesOffset + a->getNumHiddenUnits();
 
@@ -434,6 +460,14 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
           a->setDecodeBiases(&(genome[decodeBiasesOffset]));
           a->encode(corrupted_o_t, o_e);
           a->decode(o_e, o_d);
+
+          if (currInd >= myParams.numToReplace and myParams.useGradient)
+          {
+            a->auto_compute_delta_output(delta_d, o_d, o_t);
+            a->auto_compute_delta_hidden(delta_e, delta_d, o_e);
+            a->auto_updateWeights(delta_e, corrupted_o_t, delta_d, o_e, preTrainLayersLearnRates[k]);
+          }
+
           float error = a->auto_squared_loss(o_t, o_d);
           ga->setFitness(currInd, 1.0 / log(error * numTrainingImages));
 
@@ -449,6 +483,24 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
       cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
     }
 
+    //copy values from GA individual to autoencoder's original arrays
+    float* bestGenome = ga->getGenome(myParams.popSize - 1);
+    for (int i = 0; i < a->getNumWeights(); i++)
+    {
+      origWeights[i] = bestGenome[i];
+    }
+    for (int i = 0; i < a->getNumHiddenUnits(); i++)
+    {
+      origEncodeBiases[i]  = bestGenome[i + encodeBiasesOffset];
+    }
+    for (int i = 0; i < a->getNumInputUnits(); i++)
+    {
+      origDeocodeBiases[i] = bestGenome[i + decodeBiasesOffset];
+    }
+    a->setWeights(origWeights);
+    a->setEncodeBiases(origEncodeBiases);
+    a->setDecodeBiases(origDeocodeBiases);
+
     //cleanup
     if (k > 0)
     {
@@ -458,8 +510,12 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
 
     delete[] o_e;
     delete[] o_d;
+    delete[] delta_e;
+    delete[] delta_d;
 
+    // cout << "deleting GA" << endl;
     delete ga;
+    // cout << "deleting success!" << endl;
   }
 }
 

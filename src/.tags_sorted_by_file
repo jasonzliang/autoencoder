@@ -8,11 +8,11 @@ CFLAGS	Makefile	/^CFLAGS = -Wall -O3 -fopenmp -std=c++11$/;"	m
 HAS_OPENBLAS	Makefile	/^HAS_OPENBLAS=0$/;"	m
 INCLUDES	Makefile	/^INCLUDES = -I. -I.\/mnist\/include -I$(OPEN_BLAS_INC)$/;"	m
 LFLAGS	Makefile	/^LFLAGS = -L$(OPEN_BLAS_LIB)$/;"	m
-LIBS	Makefile	/^LIBS =$/;"	m
+LIBS	Makefile	/^LIBS = -lopenblas$/;"	m
 MAIN	Makefile	/^MAIN = autoencoder$/;"	m
 OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
-OPEN_BLAS_INC	Makefile	/^OPEN_BLAS_INC=\/usr\/local\/opt\/openblas\/include$/;"	m
-OPEN_BLAS_LIB	Makefile	/^OPEN_BLAS_LIB=\/usr\/local\/opt\/openblas\/lib$/;"	m
+OPEN_BLAS_INC	Makefile	/^OPEN_BLAS_INC=\/home1\/03155\/jliang\/Desktop\/OpenBLAS\/jliang_install\/include$/;"	m
+OPEN_BLAS_LIB	Makefile	/^OPEN_BLAS_LIB=\/home1\/03155\/jliang\/Desktop\/OpenBLAS\/jliang_install\/lib$/;"	m
 SRCS	Makefile	/^SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp ga.cpp$/;"	m
 auto_compute_delta_hidden	auto_hidden_layer.cpp	/^void auto_hidden_layer::auto_compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer)$/;"	f	class:auto_hidden_layer
 auto_compute_delta_output	auto_hidden_layer.cpp	/^void auto_hidden_layer::auto_compute_delta_output(float *delta, float *o, float *t)$/;"	f	class:auto_hidden_layer
@@ -39,6 +39,7 @@ getInputK	autoencoder.cpp	/^void autoencoder::getInputK(float *&o_i, int k)$/;"	
 normalRandom	autoencoder.cpp	/^inline float normalRandom()$/;"	f
 preTrain	autoencoder.cpp	/^void autoencoder::preTrain(float **trainingImages, int numTrainingImages)$/;"	f	class:autoencoder
 preTrainGA	autoencoder.cpp	/^void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)$/;"	f	class:autoencoder
+preTrainGAMiniBatch	autoencoder.cpp	/^void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingImages)$/;"	f	class:autoencoder
 predictFineNoHidden	autoencoder.cpp	/^int autoencoder::predictFineNoHidden(float *o_i)$/;"	f	class:autoencoder
 reconstructImage	autoencoder.cpp	/^void autoencoder::reconstructImage(float **testingImages, int layer, int n)$/;"	f	class:autoencoder
 setCorruptedO_i	autoencoder.cpp	/^void autoencoder::setCorruptedO_i(float **corrupted_o_i, float **o_i, int k, int numTrainingImages, int length)$/;"	f	class:autoencoder
@@ -58,19 +59,27 @@ preTrainLayersNoiseLevels	autoencoder.h	/^  vector<float> preTrainLayersNoiseLev
 preTrainLayersOuterIter	autoencoder.h	/^  vector<int> preTrainLayersOuterIter;$/;"	m	class:autoencoder
 preTrainLayersOutputs	autoencoder.h	/^  vector<float *> preTrainLayersOutputs;$/;"	m	class:autoencoder
 compareIndividual	ga.cpp	/^bool compareIndividual(individual a, individual b)$/;"	f
+copyIndividual	ga.cpp	/^void genetic::copyIndividual(individual &a, individual &b)$/;"	f	class:genetic
 crossOver	ga.cpp	/^void genetic::crossOver(individual &a, individual &b)$/;"	f	class:genetic
 fitnessSelection	ga.cpp	/^int genetic::fitnessSelection()$/;"	f	class:genetic
 genetic	ga.cpp	/^genetic::genetic(ga_params myParams):$/;"	f	class:genetic
 getStats	ga.cpp	/^void genetic::getStats()$/;"	f	class:genetic
 linearRanking	ga.cpp	/^void genetic::linearRanking()$/;"	f	class:genetic
 mutate	ga.cpp	/^void genetic::mutate(individual &a)$/;"	f	class:genetic
+noRanking	ga.cpp	/^void genetic::noRanking()$/;"	f	class:genetic
+powerRanking	ga.cpp	/^void genetic::powerRanking()$/;"	f	class:genetic
 randFloat	ga.cpp	/^inline float randFloat()$/;"	f
 randRange	ga.cpp	/^inline float randRange(float Min, float Max)$/;"	f
+s	ga.cpp	/^uint64_t s[2];$/;"	v
+seed_xorshift128plus	ga.cpp	/^void seed_xorshift128plus(uint64_t s1, uint64_t s2)$/;"	f
 step	ga.cpp	/^void genetic::step()$/;"	f	class:genetic
+xorshift128plus	ga.cpp	/^uint64_t xorshift128plus()$/;"	f
 ~genetic	ga.cpp	/^genetic::~genetic()$/;"	f	class:genetic
 GA	ga.h	2;"	d
+age	ga.h	/^  int age;$/;"	m	struct:individual
+alpha	ga.h	/^  float alpha;$/;"	m	struct:ga_params
+bestIndIndex	ga.h	/^  int bestIndIndex;$/;"	m	class:genetic
 chunkSize	ga.h	/^  int chunkSize;$/;"	m	struct:ga_params
-copyIndividual	ga.h	/^  inline void copyIndividual(individual &a, individual &b)$/;"	f	class:genetic
 crossRate	ga.h	/^  float crossRate;$/;"	m	struct:ga_params
 deleteIndividual	ga.h	/^  inline void deleteIndividual(individual &a)$/;"	f	class:genetic
 fitness	ga.h	/^  float fitness;$/;"	m	struct:individual
@@ -81,22 +90,28 @@ genomeSize	ga.h	/^  int genomeSize;$/;"	m	struct:ga_params
 getGenome	ga.h	/^  inline float *getGenome(int i)$/;"	f	class:genetic
 individual	ga.h	/^struct individual$/;"	s
 initRange	ga.h	/^  float initRange;$/;"	m	struct:ga_params
-maxFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness;$/;"	m	class:genetic
-meanFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness;$/;"	m	class:genetic
-minFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness;$/;"	m	class:genetic
+maxFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
+meanFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
+minFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
 mutAmount	ga.h	/^  float mutAmount;$/;"	m	struct:ga_params
 mutRate	ga.h	/^  float mutRate;$/;"	m	struct:ga_params
-myEngine	ga.h	/^  minstd_rand myEngine;$/;"	m	class:genetic
-myNormal	ga.h	/^  normal_distribution<float> myNormal;$/;"	m	class:genetic
+myDist	ga.h	/^  cauchy_distribution<float> myDist;$/;"	m	class:genetic
+myEngine	ga.h	/^  mt19937_64 myEngine;$/;"	m	class:genetic
 myParams	ga.h	/^  ga_params myParams;$/;"	m	class:genetic
+normalBank	ga.h	/^  float *normalBank;$/;"	m	class:genetic
 numEval	ga.h	/^  int numGen, numEval;$/;"	m	class:genetic
 numGen	ga.h	/^  int numGen, numEval;$/;"	m	class:genetic
 numToReplace	ga.h	/^  int numToReplace;$/;"	m	struct:ga_params
+numWeights	ga.h	/^  int numWeights;$/;"	m	struct:ga_params
 popSize	ga.h	/^  int popSize;$/;"	m	struct:ga_params
 population	ga.h	/^  vector<individual> population;$/;"	m	class:genetic
 printStats	ga.h	/^  inline void printStats()$/;"	f	class:genetic
+randBank	ga.h	/^  float *randBank;$/;"	m	class:genetic
+randBankSize	ga.h	/^  int randBankSize;$/;"	m	class:genetic
+scaledFitness	ga.h	/^  float scaledFitness;$/;"	m	struct:individual
 setFitness	ga.h	/^  inline void setFitness(int i, float fitness)$/;"	f	class:genetic
-totalFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness;$/;"	m	class:genetic
+totalFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
+totalScaledFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
 compute_delta_hidden	hidden_layer.cpp	/^void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)$/;"	f	class:hidden_layer
 compute_delta_output	hidden_layer.cpp	/^void hidden_layer::compute_delta_output(float *delta, float *o, int t)$/;"	f	class:hidden_layer
 encode	hidden_layer.cpp	/^void hidden_layer::encode(float *input, float *output)$/;"	f	class:hidden_layer

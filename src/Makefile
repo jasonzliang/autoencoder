@@ -15,7 +15,7 @@ CC = g++
 #OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
 OPEN_BLAS_INC=/home1/03155/jliang/Desktop/OpenBLAS/jliang_install/include
 OPEN_BLAS_LIB=/home1/03155/jliang/Desktop/OpenBLAS/jliang_install/lib
-HAS_OPENBLAS=0
+HAS_OPENBLAS=1
 
 
 
