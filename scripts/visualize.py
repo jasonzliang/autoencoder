@@ -59,6 +59,7 @@ def experiment2():
   plt.clf()
 
 def experiment3():
+  print "visualizing weights"
   f = open("script_data/experiment3.txt")
   data = f.readlines()
   plt.figure(figsize=(16,16))
@@ -76,11 +77,12 @@ def experiment3():
   plt.clf()
 
 def experiment3_v2():
+  print "visualizing reconstructed digits"
   f = open("script_data/experiment3.txt")
   data = f.readlines()
   plt.figure(figsize=(16,16))
-  for i in xrange(0,100):
-    plt.subplot(10,10,i+1)
+  for i in xrange(102,202):
+    plt.subplot(10,10,i-101)
     values = np.array([float(x) for x in data[i].rstrip().split()])
     values = np.subtract(values, min(values))
     values = np.divide(values, max(values))
@@ -94,5 +96,7 @@ def experiment3_v2():
 
   
 if __name__ == '__main__':
-  experiment1()
-  experiment2()
+  experiment3()
+  experiment3_v2()
+  # experiment1()
+  # experiment2()

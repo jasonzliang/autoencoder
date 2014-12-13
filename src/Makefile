@@ -6,21 +6,21 @@
 #
 
 # define the C compiler to use
-#CC = g++
-CC = g++-4.9
+CC = g++
+#CC = g++-4.9
 #CC = /lusr/bin/g++-4.8
 
 #OpenBLAS dirs
-OPEN_BLAS_INC=/usr/local/opt/openblas/include
-OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
-#OPEN_BLAS_INC=/home1/02370/kwkelly/local/include
-#OPEN_BLAS_LIB=/home1/02370/kwkelly/local/lib
+#OPEN_BLAS_INC=/usr/local/opt/openblas/include
+#OPEN_BLAS_LIB=/usr/local/opt/openblas/lib
+OPEN_BLAS_INC=/home1/03155/jliang/Desktop/OpenBLAS/jliang_install/include
+OPEN_BLAS_LIB=/home1/03155/jliang/Desktop/OpenBLAS/jliang_install/lib
 HAS_OPENBLAS=0
 
 
 
 # define any compile-time flags
-CFLAGS = -Wall -g -fopenmp -std=c++11 -O3
+CFLAGS = -Wall -O3 -fopenmp -std=c++11
 #-O3 
 
 # define any directories containing header files other than /usr/include
@@ -35,8 +35,8 @@ LFLAGS = -L$(OPEN_BLAS_LIB)
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-#LIBS = -lopenblas
-LIBS =
+LIBS = -lopenblas
+#LIBS =
 
 # define the C source files
 SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp ga.cpp
