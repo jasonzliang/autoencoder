@@ -5,7 +5,7 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 CC	Makefile	/^CC = g++$/;"	m
 CFLAGS	Makefile	/^CFLAGS = -Wall -O3 -fopenmp -std=c++11$/;"	m
-HAS_OPENBLAS	Makefile	/^HAS_OPENBLAS=0$/;"	m
+HAS_OPENBLAS	Makefile	/^HAS_OPENBLAS=1$/;"	m
 INCLUDES	Makefile	/^INCLUDES = -I. -I.\/mnist\/include -I$(OPEN_BLAS_INC)$/;"	m
 LFLAGS	Makefile	/^LFLAGS = -L$(OPEN_BLAS_LIB)$/;"	m
 LIBS	Makefile	/^LIBS = -lopenblas$/;"	m
@@ -73,13 +73,15 @@ randRange	ga.cpp	/^inline float randRange(float Min, float Max)$/;"	f
 s	ga.cpp	/^uint64_t s[2];$/;"	v
 seed_xorshift128plus	ga.cpp	/^void seed_xorshift128plus(uint64_t s1, uint64_t s2)$/;"	f
 step	ga.cpp	/^void genetic::step()$/;"	f	class:genetic
+truncationSelection	ga.cpp	/^int genetic::truncationSelection()$/;"	f	class:genetic
 xorshift128plus	ga.cpp	/^uint64_t xorshift128plus()$/;"	f
+zeroMutate	ga.cpp	/^void genetic::zeroMutate(individual &a)$/;"	f	class:genetic
 ~genetic	ga.cpp	/^genetic::~genetic()$/;"	f	class:genetic
 GA	ga.h	2;"	d
 age	ga.h	/^  int age;$/;"	m	struct:individual
-alpha	ga.h	/^  float alpha;$/;"	m	struct:ga_params
+alpha	ga.h	/^  float alpha = 1.0;$/;"	m	struct:ga_params
 bestIndIndex	ga.h	/^  int bestIndIndex;$/;"	m	class:genetic
-chunkSize	ga.h	/^  int chunkSize;$/;"	m	struct:ga_params
+chunkSize	ga.h	/^  int chunkSize = 15000;$/;"	m	struct:ga_params
 crossRate	ga.h	/^  float crossRate;$/;"	m	struct:ga_params
 deleteIndividual	ga.h	/^  inline void deleteIndividual(individual &a)$/;"	f	class:genetic
 fitness	ga.h	/^  float fitness;$/;"	m	struct:individual
@@ -112,6 +114,9 @@ scaledFitness	ga.h	/^  float scaledFitness;$/;"	m	struct:individual
 setFitness	ga.h	/^  inline void setFitness(int i, float fitness)$/;"	f	class:genetic
 totalFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
 totalScaledFitness	ga.h	/^  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;$/;"	m	class:genetic
+truncateSel	ga.h	/^  bool truncateSel = false;$/;"	m	struct:ga_params
+useGradient	ga.h	/^  bool useGradient = false;$/;"	m	struct:ga_params
+zeroMutate	ga.h	/^  bool zeroMutate = false;$/;"	m	struct:ga_params
 compute_delta_hidden	hidden_layer.cpp	/^void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)$/;"	f	class:hidden_layer
 compute_delta_output	hidden_layer.cpp	/^void hidden_layer::compute_delta_output(float *delta, float *o, int t)$/;"	f	class:hidden_layer
 encode	hidden_layer.cpp	/^void hidden_layer::encode(float *input, float *output)$/;"	f	class:hidden_layer
@@ -125,8 +130,9 @@ updateWeights	hidden_layer.cpp	/^void hidden_layer::updateWeights(float *delta_c
 ~hidden_layer	hidden_layer.cpp	/^hidden_layer::~hidden_layer()$/;"	f	class:hidden_layer
 HIDDEN_LAYER	hidden_layer.h	2;"	d
 RandomNumber	hidden_layer.h	/^  inline float RandomNumber(float Min, float Max)$/;"	f	class:hidden_layer
-__t	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
-biases	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
+__t	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
+biases	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
+encode_buffer	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 getEncodeBiases	hidden_layer.h	/^  inline float *getEncodeBiases()$/;"	f	class:hidden_layer
 getNumHiddenUnits	hidden_layer.h	/^  inline int getNumHiddenUnits()$/;"	f	class:hidden_layer
 getNumInputUnits	hidden_layer.h	/^  inline int getNumInputUnits()$/;"	f	class:hidden_layer
@@ -144,11 +150,12 @@ setEncodeBiases	hidden_layer.h	/^  inline void setEncodeBiases(float *newBiases)
 setWeights	hidden_layer.h	/^  inline void setWeights(float *newWeights)$/;"	f	class:hidden_layer
 sigmoidTransform	hidden_layer.h	/^  inline float sigmoidTransform(float x)$/;"	f	class:hidden_layer
 weightRange	hidden_layer.h	/^  float weightRange;$/;"	m	class:hidden_layer
-weights	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
+weights	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 experiment_1	main.cpp	/^void experiment_1(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_2	main.cpp	/^void experiment_2(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_3	main.cpp	/^void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)$/;"	f
+experiment_GA	main.cpp	/^void experiment_GA(vector<int> &trainLabels, float **trainingImages)$/;"	f
 main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
 numTestingImages	main.cpp	/^int numTestingImages;$/;"	v
 numTrainingImages	main.cpp	/^int numTrainingImages;$/;"	v

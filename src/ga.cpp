@@ -37,7 +37,7 @@ genetic::genetic(ga_params myParams):
   myEngine(random_device()()),
   myDist(0.0f, myParams.mutAmount)
 {
-  cout << "initializing population..." << endl;
+  // cout << "initializing population..." << endl;
 
   for (int i = 0; i < myParams.popSize; i++)
   {
@@ -67,7 +67,7 @@ genetic::genetic(ga_params myParams):
   numGen = 0;
   numEval = 0;
 
-  cout << "generating random bank..." << endl;
+  // cout << "generating random bank..." << endl;
   // randBankSize = min(50 * myParams.genomeSize, myParams.popSize * myParams.genomeSize);
   // randBankSize = myParams.genomeSize;
   randBankSize = 4 * myParams.popSize * myParams.genomeSize;

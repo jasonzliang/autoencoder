@@ -9,7 +9,7 @@ AUTO_HIDDEN_LAYER	auto_hidden_layer.h	4;"	d
 CC	Makefile	/^CC = g++$/;"	m
 CFLAGS	Makefile	/^CFLAGS = -Wall -O3 -fopenmp -std=c++11$/;"	m
 GA	ga.h	2;"	d
-HAS_OPENBLAS	Makefile	/^HAS_OPENBLAS=0$/;"	m
+HAS_OPENBLAS	Makefile	/^HAS_OPENBLAS=1$/;"	m
 HIDDEN_LAYER	hidden_layer.h	2;"	d
 INCLUDES	Makefile	/^INCLUDES = -I. -I.\/mnist\/include -I$(OPEN_BLAS_INC)$/;"	m
 LFLAGS	Makefile	/^LFLAGS = -L$(OPEN_BLAS_LIB)$/;"	m
@@ -28,9 +28,9 @@ OPEN_BLAS_LIB	Makefile	/^OPEN_BLAS_LIB=\/home1\/03155\/jliang\/Desktop\/OpenBLAS
 OUTPUT_LAYER	output_layer.h	2;"	d
 RandomNumber	hidden_layer.h	/^  inline float RandomNumber(float Min, float Max)$/;"	f	class:hidden_layer
 SRCS	Makefile	/^SRCS = main.cpp neural_network.cpp hidden_layer.cpp autoencoder.cpp output_layer.cpp neural_network_cross.cpp auto_hidden_layer.cpp ga.cpp$/;"	m
-__t	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
+__t	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 age	ga.h	/^  int age;$/;"	m	struct:individual
-alpha	ga.h	/^  float alpha;$/;"	m	struct:ga_params
+alpha	ga.h	/^  float alpha = 1.0;$/;"	m	struct:ga_params
 auto_compute_delta_hidden	auto_hidden_layer.cpp	/^void auto_hidden_layer::auto_compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer)$/;"	f	class:auto_hidden_layer
 auto_compute_delta_output	auto_hidden_layer.cpp	/^void auto_hidden_layer::auto_compute_delta_output(float *delta, float *o, float *t)$/;"	f	class:auto_hidden_layer
 auto_hidden_layer	auto_hidden_layer.cpp	/^auto_hidden_layer::auto_hidden_layer(int numInputs, int numHiddenUnits):$/;"	f	class:auto_hidden_layer
@@ -42,11 +42,11 @@ autoencoder	autoencoder.h	/^class autoencoder: public neural_network$/;"	c
 backprop	neural_network.cpp	/^float neural_network::backprop(float *o_i, int t)$/;"	f	class:neural_network
 backprop	neural_network_cross.cpp	/^float neural_network_cross::backprop(float *o_i, int t)$/;"	f	class:neural_network_cross
 bestIndIndex	ga.h	/^  int bestIndIndex;$/;"	m	class:genetic
-biases	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
+biases	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 binarize_dataset	mnist/include/mnist_utils.hpp	/^void binarize_dataset(Dataset& dataset){$/;"	f	namespace:mnist
 binarize_each	mnist/include/mnist_utils.hpp	/^void binarize_each(Container& values, double threshold = 30.0){$/;"	f	namespace:mnist
 buffer	auto_hidden_layer.h	/^  float *decode_biases, *buffer;$/;"	m	class:auto_hidden_layer
-chunkSize	ga.h	/^  int chunkSize;$/;"	m	struct:ga_params
+chunkSize	ga.h	/^  int chunkSize = 15000;$/;"	m	struct:ga_params
 compareIndividual	ga.cpp	/^bool compareIndividual(individual a, individual b)$/;"	f
 compute_delta_hidden	hidden_layer.cpp	/^void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_next_layer, float *output_curr_layer, hidden_layer *next_layer)$/;"	f	class:hidden_layer
 compute_delta_output	hidden_layer.cpp	/^void hidden_layer::compute_delta_output(float *delta, float *o, int t)$/;"	f	class:hidden_layer
@@ -67,9 +67,11 @@ delta_k	neural_network.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:n
 delta_k	neural_network_cross.h	/^  float *o_j, *o_k, *delta_k, *delta_j;$/;"	m	class:neural_network_cross
 encode	hidden_layer.cpp	/^void hidden_layer::encode(float *input, float *output)$/;"	f	class:hidden_layer
 encode	output_layer.cpp	/^void output_layer::encode(float *input, float *output)$/;"	f	class:output_layer
+encode_buffer	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 experiment_1	main.cpp	/^void experiment_1(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_2	main.cpp	/^void experiment_2(vector<int> &trainLabels, float **trainingImages)$/;"	f
 experiment_3	main.cpp	/^void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)$/;"	f
+experiment_GA	main.cpp	/^void experiment_GA(vector<int> &trainLabels, float **trainingImages)$/;"	f
 fineTune	autoencoder.cpp	/^void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)$/;"	f	class:autoencoder
 fineTuneNoHidden	autoencoder.cpp	/^void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)$/;"	f	class:autoencoder
 fitness	ga.h	/^  float fitness;$/;"	m	struct:individual
@@ -215,12 +217,17 @@ training_images	mnist/include/mnist_reader.hpp	/^    Container<Sub<Pixel>> train
 training_images	mnist/include/mnist_reader_less.hpp	/^    std::vector<std::vector<Pixel>> training_images;$/;"	m	struct:mnist::MNIST_dataset
 training_labels	mnist/include/mnist_reader.hpp	/^    Container<Label> training_labels;$/;"	m	struct:mnist::MNIST_dataset
 training_labels	mnist/include/mnist_reader_less.hpp	/^    std::vector<Label> training_labels;$/;"	m	struct:mnist::MNIST_dataset
+truncateSel	ga.h	/^  bool truncateSel = false;$/;"	m	struct:ga_params
+truncationSelection	ga.cpp	/^int genetic::truncationSelection()$/;"	f	class:genetic
 uniformRandom	autoencoder.cpp	/^inline float uniformRandom()$/;"	f
 updateWeights	hidden_layer.cpp	/^void hidden_layer::updateWeights(float *delta_curr_layer, float *output_prev_layer, float learn_rate)$/;"	f	class:hidden_layer
+useGradient	ga.h	/^  bool useGradient = false;$/;"	m	struct:ga_params
 visualizeWeights	autoencoder.cpp	/^void autoencoder::visualizeWeights(int layer, int n)$/;"	f	class:autoencoder
 weightRange	hidden_layer.h	/^  float weightRange;$/;"	m	class:hidden_layer
-weights	hidden_layer.h	/^  float *weights, *biases, *__t;$/;"	m	class:hidden_layer
+weights	hidden_layer.h	/^  float *weights, *biases, *__t, *encode_buffer;$/;"	m	class:hidden_layer
 xorshift128plus	ga.cpp	/^uint64_t xorshift128plus()$/;"	f
+zeroMutate	ga.cpp	/^void genetic::zeroMutate(individual &a)$/;"	f	class:genetic
+zeroMutate	ga.h	/^  bool zeroMutate = false;$/;"	m	struct:ga_params
 ~auto_hidden_layer	auto_hidden_layer.cpp	/^auto_hidden_layer::~auto_hidden_layer()$/;"	f	class:auto_hidden_layer
 ~autoencoder	autoencoder.cpp	/^autoencoder::~autoencoder()$/;"	f	class:autoencoder
 ~genetic	ga.cpp	/^genetic::~genetic()$/;"	f	class:genetic

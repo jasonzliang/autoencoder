@@ -19,8 +19,10 @@ private:
   vector<auto_hidden_layer *> preTrainLayers;
   vector<float *> preTrainLayersOutputs;
   hidden_layer *output_l;
+  ga_params myParams;
 
 public:
+
   autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrainLayersLearnRates, vector<int> preTrainLayersOuterIter, vector<float> preTrainLayersNoiseLevels, int numInput, int numHidden, int numOutput, float learn_rate);
   ~autoencoder();
 
@@ -46,6 +48,11 @@ public:
 
   void reconstructImage(float **testingImages, int layer, int n);
   void visualizeWeights(int layer, int n);
+
+  inline ga_params *getMyParams()
+  {
+    return &myParams;
+  }
 };
 
 #endif

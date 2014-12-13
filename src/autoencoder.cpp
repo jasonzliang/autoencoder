@@ -43,6 +43,12 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
   }
   output_l = new hidden_layer(preTrainLayerWidths[numPreTrainLayers - 1], 10);
 
+  myParams.useGradient = true;
+  myParams.truncateSel = false;
+  myParams.zeroMutate = false;
+
+  myParams.popSize = 2;
+  myParams.numToReplace = 1;
 }
 
 void autoencoder::corrupt_masking(float *input, float *corrupted_input, float fraction, int length)
@@ -268,7 +274,6 @@ void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingIma
     double start = omp_get_wtime();
 
     //setup GA and its parameters
-    ga_params myParams;
     myParams.mutRate = 0.0001;
     myParams.mutAmount = 0.1 * a->getWeightRange();
     myParams.crossRate = 0.5;
@@ -327,7 +332,7 @@ void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingIma
     }
 
     //copy values from GA individual to autoencoder's original arrays
-    float* bestGenome = ga->getGenome(myParams.popSize - 1);
+    float *bestGenome = ga->getGenome(myParams.popSize - 1);
     for (int i = 0; i < a->getNumWeights(); i++)
     {
       origWeights[i] = bestGenome[i];
@@ -412,26 +417,19 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
 
     double start = omp_get_wtime();
 
-    //setup GA and its parameters
-    ga_params myParams;
-    myParams.mutRate = 0.00005;
-    myParams.mutAmount = 0.1 * a->getWeightRange();
-    myParams.crossRate = 0.5;
-    myParams.popSize = 2;
+    //set params
+    myParams.mutAmount = 0.2 * a->getWeightRange();
     myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
     myParams.numWeights = a->getNumWeights();
-    myParams.numToReplace = 1;
     myParams.initRange = 1.0 * a->getWeightRange();
+
+    myParams.mutRate = 0.00005;
+    myParams.crossRate = 0.001;
 
     myParams.alpha = 1.0;
     myParams.chunkSize = 15000;
 
-    myParams.useGradient = true;
-    myParams.truncateSel = false;
-    myParams.zeroMutate = true;
-
     genetic *ga = new genetic(myParams);
-
     float *origWeights = a->getWeights();
     float *origEncodeBiases = a->getEncodeBiases();
     float *origDeocodeBiases = a->getDecodeBiases();
@@ -484,7 +482,7 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
     }
 
     //copy values from GA individual to autoencoder's original arrays
-    float* bestGenome = ga->getGenome(myParams.popSize - 1);
+    float *bestGenome = ga->getGenome(myParams.popSize - 1);
     for (int i = 0; i < a->getNumWeights(); i++)
     {
       origWeights[i] = bestGenome[i];
