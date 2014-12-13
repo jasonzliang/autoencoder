@@ -1,0 +1,64 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\graphicspath{{figures/}}
+\usepackage[cmex10]{amsmath}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage{fixltx2e}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{color}
+\usepackage{balance}
+%\usepackage{caption} %uncomment these for more space between a table and its caption
+%\captionsetup[table]{skip=5pt}
+
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+\begin{document}
+
+\title{Parallel Stochastic Gradient Descent for Stacked Denoising Autoencoders}
+
+\author{\IEEEauthorblockN{Jason Liang}
+\IEEEauthorblockA{jasonzliang@utexas.edu}
+\and
+\IEEEauthorblockN{Keith Kelly}
+\IEEEauthorblockA{keith@ices.utexas.edu}}
+
+\maketitle
+
+\begin{abstract}
+We implement stacked denoising autoencoders, a special neural network that is capable of learning powerful representations of high dimensional data. Learning for autoencoders is accomplished via stochastic gradient descent and we show experimental results when training autoencoders on a standard image classification dataset. 
+\end{abstract}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\linewidth]{autoencoder.png}
+\caption{Overview of an autoencoder and its encoding, decoding stages. The weight matrix of the decoding stage is the transpose of the weight matrix of the encoding stage.}
+\label{fig:autoencoder}
+\end{figure}
+
+\section{Introduction}
+\input{intro}
+\section{Related Work}
+\input{related}
+\section{Algorithm Description}
+\input{algo}
+
+\section{Experimental Results}
+\input{experiment}
+\section{Future Work}
+\input{future}
+\section{Conclusion}
+\input{conclusion}
+
+\bibliographystyle{unsrt}
+\bibliography{autoencoder}
+
+\end{document}
+
+

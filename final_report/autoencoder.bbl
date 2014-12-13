@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{bengio2012rep}
+Yoshua Bengio, Aaron~C. Courville, and Pascal Vincent.
+\newblock Unsupervised feature learning and deep learning: {A} review and new
+  perspectives.
+\newblock {\em CoRR}, abs/1206.5538, 2012.
+
+\bibitem{vincent2010stacked}
+Pascal Vincent, Hugo Larochelle, Isabelle Lajoie, Yoshua Bengio, and
+  Pierre-Antoine Manzagol.
+\newblock Stacked denoising autoencoders: Learning useful representations in a
+  deep network with a local denoising criterion.
+\newblock {\em The Journal of Machine Learning Research}, 11:3371--3408, 2010.
+
+\bibitem{hinton2006learning}
+Geoffrey~E. Hinton, Simon Osindero, and Yee-Whye Teh.
+\newblock A fast learning algorithm for deep belief nets.
+\newblock {\em Neural Comput.}, 18(7):1527--1554, July 2006.
+
+\bibitem{hecht1989theory}
+Robert Hecht-Nielsen.
+\newblock Theory of the backpropagation neural network.
+\newblock In {\em Neural Networks, 1989. IJCNN., International Joint Conference
+  on}, pages 593--605. IEEE, 1989.
+
+\bibitem{bottou-91c}
+{L\'eon} Bottou.
+\newblock Stochastic gradient learning in neural networks.
+\newblock In {\em Proceedings of Neuro-N\^imes 91}, Nimes, France, 1991. EC2.
+
+\bibitem{srinivas1994genetic}
+Mandavilli Srinivas and Lalit~M Patnaik.
+\newblock Genetic algorithms: A survey.
+\newblock {\em Computer}, 27(6):17--26, 1994.
+
+\bibitem{cantu1998survey}
+Erick Cant{\'u}-Paz.
+\newblock A survey of parallel genetic algorithms.
+\newblock {\em Calculateurs paralleles, reseaux et systems repartis},
+  10(2):141--171, 1998.
+
+\end{thebibliography}
