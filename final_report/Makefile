@@ -7,7 +7,7 @@ all: $(FILE).pdf
 clean:
 	\rm *.aux *.blg *.out *.bbl *.log
 
-$(FILE).pdf: $(FILE).tex
+$(FILE).pdf: $(FILE).tex *.tex
 	pdflatex $(FILE)
 	bibtex $(FILE)
 	pdflatex $(FILE)
