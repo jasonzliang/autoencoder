@@ -1,18 +1,17 @@
 \documentclass[mathserif,18pt,xcolor=table]{beamer}
 
-\usepackage {bbm}
-\usepackage {textpos}
+\usepackage{bbm}
+\usepackage{textpos}
 \usepackage{tikz}
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{soul}
-\usepackage[compatibility=false]{caption}
-\usepackage{subcaption}
 \usepackage{multimedia}
 \usepackage{multirow}
-
+\usepackage{subfig}
+\graphicspath{{figures/}}
 
 
 \definecolor{utorange}{RGB}{203,96,21}
@@ -122,7 +121,7 @@
 
 % ------------------------------------------------------------
 \begin{frame}[t]
-\frametitle{Intro}
+\frametitle{Introduction}
 \framesubtitle{~~}  %% needed for proper positioning of the logo ...
 
 Slides online at
@@ -132,10 +131,11 @@ Slides online at
 
 \end{frame}
 
-\input{introduction.tex}
-
-
-\input{conclusions.tex}
+\input{introduction}
+\input{algo}
+\input{experiment}
+\input{conclusion}
+\input{future}
 
 \end{document}
 

@@ -39,6 +39,49 @@ overhead cost.
 \label{fig:experiment1}
 \end{figure}
 
+
+We note that the steps of backpropagation can only be done in sequence; thus we can only parallelize the operations done within each step. The three major operations which benefit from parallelization are computing the matrix-vector products $W^{H}x$ and $W^{O}y$, computing $\delta^O_j$ and $\delta^H_j$, and updating the entries of the weight matrices with the gradient. For performance reasons we don't store $W^O$ separately; instead we access $W^H$ with transposed indexes when decoding, calculating $\delta^O_j$, and applying the gradient update.
+
+The most expensive parts of the backpropagation algorithm are computing the forward activations of the network and updating the weight matrices for the network. Computing the forward propagation requires performing a matrix-vector multiplication at each layer of the network. The size of that matrix depends on the input and output sizes of that layer. Thus if we have a network with $N$ layers and the sizes of each of those layers is $n_i$, then We have $N$ matrix-vector multiplications of size $n_{i-1} \times n_i$. Updating the weights also has complexity based on the size of the matrix since it requires updating all the entries of the matrix at each iteration.
+
+To improve the performance of these two expensive steps, we parallelized them first using OpenMP and then later parallelized the matrix-vector products using OpenBLAS. Parallelization of these two steps is fairly straight forward and we give some results on scaling in Figs.~\ref{fig:performanceomp},~\ref{fig:performanceblas}, and \ref{fig:ompvsblas}.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{performanceomp.png}
+\caption{Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.}
+\label{fig:performanceomp}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{performanceblas.png}
+\caption{Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.}
+\label{fig:performanceblas}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{ompvsblas.png}
+\caption{Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.}
+\label{fig:ompvsblas}
+\end{figure}
+
+In  Fig.~\ref{fig:performanceomp} we give the performance of training the autoencoder using SGD for different numbers of hidden nodes and different numbers of threads using our own parallel implementation.
+In  Fig.~\ref{fig:performanceblas} we give the performance of training the autoencoder using SGD for different numbers of hidden nodes and different numbers of threads using OpenBLAS for parallelization of the matrix-vector multiplies and
+matrix-transpose-vector multiplies. The weight updates are not able to be done in OpenBLAS, and so we continue to do that using OpenMP.
+We consider the relative performance of these two methods in Fig.~\ref{fig:ompvsblas}.
+
+We note that Figs.~\ref{fig:performanceomp} and~\ref{fig:performanceblas} show similar scaling, though in most cases the OpenBLAS version outperforms our own implementation. However, for small numbers of nodes, OpenBLAS does not perform well with many threads.
+
+We generally get increasing amounts of speedup with increasing number of threads, but with a large number of threads we do not see improvement until the problem size increases and becomes large enough. We do not achieve linear scaling (i.e. twice as many threads does not result in the algorithm running twice as fast), since not all parts of the algorithm are parallelizable. That said, our algorithm does continue to get faster with increasing number of threads.
+
+
+
+
+
 \subsection{Visualization of Autoencoder}
 
 Next, in Fig.~\ref{fig:experiment3_1}, we visualize the filters that are
@@ -53,25 +96,10 @@ noisy test digits as input. The reconstructed outputs for most of the input
 images are easily recognizable as digits, which indicates that the autoencoder
 is indeed denoising and learning a good representation of the images.
 
-<<<<<<< HEAD
-To further demonstrate the reconstruction capabilities of the autoencoder, we 
-trained the autoencoder on corrupted or otherwise altered digits.
-In particular, we test the reconstruction
-on \textit{bg-rand}, which is generated from the MNIST dataset, excpt that
-a random background is added. In \textit{bg-img}, each image is given a background
-randomly selected from one of twenty images downloaded form the internet. In 
-\textit{rot}, the digits are simply rotated by some random angle.
-These alterations to the images make the classification task more difficult. Indeed the
-digits are very difficult to identify, but the autoencoder creates an easier to identify 
-representation, even to the human eye. We show also in Fig.~\ref{fig:reconstruct} 
-the reconstructed images form the \textit{bg-img} and \textit{rot} datasets. Note that
-the images in the \textit{bg-rand} and \textit{bg-img} datasets are rotated, but they
-are all rotated in the same way.
-=======
 To further demonstrate the reconstruction capabilities of the autoencoder, we
 trained the autoencoder on corrupted or otherwise altered digits.  In
 particular, we test the reconstruction on \textit{bg-rand}, which is generated
-from the MNIST dataset, excpt that a random backgound is added. In
+from the MNIST dataset, excpt that a random background is added. In
 \textit{bg-img}, each image is given a background randomly selected from one of
 twenty images downloaded form the internet. In \textit{rot}, the digits are
 simply rotated by some random angle.  These alterations to the images make the
@@ -81,7 +109,6 @@ even to the human eye. We show also in Fig.~\ref{fig:reconstruct} the
 reconstructed images form the \textit{bg-img} and \textit{rot} datasets. Note
 that the images in the \textit{bg-rand} and \textit{bg-img} datasets are
 rotated, but they are all rotated in the same way.
->>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7
 
 
 
@@ -112,7 +139,7 @@ better.  The results of these experiments is given in
 Table.~\ref{tab:classvsenc}.
 
 To test this,we used liblinear to attempt to train a model and then predict on
-a test set for both the encoded and unencoded datasets. With the original data
+a test set for both the original and encoded datasets. With the original data
 liblinear gives an accuracy of 91.68\% on the test set when using the default
 parameters. However, when the encoded data from the trained autoencoder gives
 an accuracy of 97.07\%. This is a nontrivial improvement in the classification
@@ -140,7 +167,7 @@ using the autoencoder always results in the classifier improving it's accuracy.
 \begin{table}[h]
 	\centering
 \begin{tabular}{ll|lll}
-    Dataset                        & Using autoencoder? & Linear SVM & Kernel SVM (RBF) & Logistic Regression \\ \hline
+    Dataset                        & Data               & Linear SVM & Kernel SVM (RBF) & Logistic Regression \\ \hline
     \multirow{2}{*}{MNIST}         & Original           & 91.68\%    & 94.46\%          & 91.82\%             \\
                                    & Encoded            & 97.07\%    & 95.48\%          & 96.86\%             \\ \hline
     \multirow{2}{*}{mnist-bg-rand} & Original           & 58.975\%   & 83.875\%         & 65.5917\%           \\
@@ -150,10 +177,14 @@ using the autoencoder always results in the classifier improving it's accuracy.
     \multirow{2}{*}{mnist-rot}     & Original           & 11.204\%   & 13.328\%         & 11.868\%           \\
                                    & Encoded            & 18.428\%   & 14.378\%         & 18.78\%
 \end{tabular}
-	\label{tab:classvsenc}
 	\caption{Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We
 	see in all cases that using the encoded data produces a better result.}
+	\label{tab:classvsenc}
 \end{table}
+
+
+
+
 
 \begin{figure}[h] \centering
 	\includegraphics[width=0.8\linewidth]{ga_comparison.png}
@@ -162,13 +193,8 @@ using the autoencoder always results in the classifier improving it's accuracy.
 \end{figure}
 
 \begin{figure}[h] \centering
-<<<<<<< HEAD
-	\includegraphics[width=1.0\linewidth]{ga_comparison2.png}
-	\caption{Performance of HGA for 1, 4, 8, and 16 threads.}
-=======
 	\includegraphics[width=0.8\linewidth]{ga_comparison2.png}
-	\caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.}
->>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7
+	\caption{Performance of HGA for 1, 4, 8, and 16 threads.}
 	\label{fig:ga_comparison2}
 \end{figure}
 
@@ -184,7 +210,6 @@ using the autoencoder always results in the classifier improving it's accuracy.
 	\label{fig:ga_comparison3}
 \end{figure*}
 
-<<<<<<< HEAD
 \subsection{Training the Autoencoder with a Genetic Algorithm}
 
 In Fig.~\ref{fig:ga_comparison}, we compare the performance of stochastic gradient descent (SGD), our previously mentioned hybrid GA (HGA), which uses backpropagation to update the best individuals in the population, and a conventional GA (CGA), which does not use any gradient information. All three algorithms are used to train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. For SGD and HGA, we fix the learning rate to 0.0002. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all 3 algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that will properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
@@ -196,6 +221,4 @@ In Fig.~\ref{fig:ga_comparison3}, the performance of HGA versus the number of th
 Finally, in Fig.~\ref{fig:ga_comparison4}, we see how the performance of HGA and CGA scales versus the population size. All other hyperparameters remain the same for both HGA and CGA. As we can see, increasing the population does not lead to any noticeable improvement in reconstruction error per iteration. The default population size of 2 seems to be optimal. However, for CGA increasing the population does seem to lead a significant improvement in reconstruction error per iteration. Unfortunately, the overall running times when using increased population sizes are also larger. 
 
 
-=======
 \FloatBarrier
->>>>>>> 0f597c818459f31170b2fa0fe64efcef7df3f5b7
