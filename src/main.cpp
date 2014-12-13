@@ -165,17 +165,18 @@ void experiment_GA4(vector<int> &trainLabels, float **trainingImages)
 {
   cout << "running experiment_GA2" << endl;
   vector<int> autoencoder_layers {784};
-  vector<float> auto_learn_rates {0.002};
+  vector<float> auto_learn_rates {0.005 * 60.0};
   vector<int> auto_iters {15};
   vector<float> noise_levels {0.25};
 
-  int popSizes[6] = {2, 4, 8, 16, 32, 64};
+  int popSizes[6] = {2, 4, 8, 16, 32};
   for (int i = 0; i < 6; i++)
   {
-
+    
     autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.05);
 
     ga_params *myParams = myAutoencoder->getMyParams();
+    cout << "using popsize of " << popSizes[i] << endl;
     myParams->popSize = popSizes[i];
     myParams->numToReplace = popSizes[i]/2;
     myAutoencoder->preTrainGA(trainingImages, 1000);
@@ -315,7 +316,7 @@ int main(int argc, char *argv[])
   // train_and_test_network_square(30, training_labels, training_images, testing_labels, testing_images);
   // train_and_test_autoencoderGA(training_labels, training_images, testing_labels, testing_images);
   // experiment_GA(training_labels, training_images);
-  experiment_GA(training_labels, training_images);
+  experiment_GA4(training_labels, training_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
   // experiment_3(training_labels, training_images, testing_labels, testing_images);

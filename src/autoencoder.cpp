@@ -47,10 +47,10 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
   myParams.mutRate = 0.0001;
   myParams.crossRate = 0.5;
   myParams.useGradient = true;
-  myParams.truncateSel = true;
+  myParams.truncateSel = false;
   myParams.zeroMutate = false;
-  myParams.popSize = 10;
-  myParams.numToReplace = 5;
+  myParams.popSize = 2;
+  myParams.numToReplace = 1;
   myParams.alpha = 1.0;
   myParams.chunkSize = 15000;
 }
@@ -388,11 +388,11 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
   myParams.mutRate = 0.0001;
   myParams.crossRate = 0.5;
   myParams.useGradient = true;
-  myParams.truncateSel = true;
-  myParams.zeroMutate = true;
-  myParams.popSize = 2;
-  myParams.numToReplace = 1;
-  myParams.alpha = 1.0;
+  myParams.truncateSel = false;
+  myParams.zeroMutate = false;
+  // myParams.popSize = 2;
+  // myParams.numToReplace = 1;
+  myParams.alpha = 1.0; 
   myParams.chunkSize = 15000;
 
   for (int k = 0; k < numPreTrainLayers; k++)
@@ -432,7 +432,7 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
 
     double start = omp_get_wtime();
 
-    myParams.mutAmount = 0.05 * a->getWeightRange();
+    myParams.mutAmount = 0.1 * a->getWeightRange();
     myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
     myParams.numWeights = a->getNumWeights();
     myParams.initRange = 1.0 * a->getWeightRange();

@@ -9,3 +9,7 @@ For ordinary autoencoders, we usually want that $n<m$ so that the learned repres
 
 We will consider training denoising autoencoders with stochastic gradient descent (SGD). Background literature for denoising autoencoders can be found in the related work section. The algorithm description section contains more details about how SGD is implemented for autoencoders. The experiments section describes the results of training an autoencoder on a handwritten digit image dataset. Finally in future work, we discuss our plans to improve upon existing training algorithms.
 
+Lastly, we will explore training autoencoders with other optimization algorithms such as a genetic algorithm (GA). A GA is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The motivations behind using GAs for training autoencoders are two fold: 1) GAs are a novel approach to optimization of deep neural networks with large number of parameters such as autoencoders. We would like to evaluate the performance of GAs and compare it to SGD. 2) GAs have some advantages over SGD such as being able to escape local optimas and easier to parallelize. However GAs also have drawbacks, the main one being its computational complexity over gradient descent. Unlike SGD, a GA must keep a population of individuals and 
+
+
+
