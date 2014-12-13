@@ -41,7 +41,7 @@ autoencoder::autoencoder(vector<int> preTrainLayerWidths, vector<float> preTrain
 
     cout << "layer " << i + 1 << ": number of outer iterations " << preTrainLayersOuterIter[i] << ", learning rate " << preTrainLayersLearnRates[i] << ", number of hidden units " << auto_num_output << ", noise level " << preTrainLayersNoiseLevels[i] << endl;
   }
-  output_l = new hidden_layer(preTrainLayerWidths[numPreTrainLayers-1],10);
+  output_l = new hidden_layer(preTrainLayerWidths[numPreTrainLayers - 1], 10);
 
 }
 
@@ -228,12 +228,14 @@ void autoencoder::preTrain(float **trainingImages, int numTrainingImages)
   }
 }
 
-void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
+void autoencoder::preTrainGAMiniBatch(float **trainingImages, int numTrainingImages)
 {
+  int batchSize = 5;
+
   for (int k = 0; k < numPreTrainLayers; k++)
   {
 
-    cout << "pretraining layer #" << k + 1 << "with GA, cycling through " << numTrainingImages << " training images for " << preTrainLayersOuterIter[k] << " outer iterations" << endl;
+    cout << "pretraining layer #" << k + 1 << " with GA, cycling through " << numTrainingImages << " training images for " << preTrainLayersOuterIter[k] << " outer iterations" << endl;
 
     auto_hidden_layer *a = preTrainLayers[k];
 
@@ -267,13 +269,141 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
 
     //setup GA and its parameters
     ga_params myParams;
-    myParams.mutRate = 0.1;
+    myParams.mutRate = 0.0001;
     myParams.mutAmount = 0.1 * a->getWeightRange();
     myParams.crossRate = 0.5;
-    myParams.popSize = 50;
+    myParams.popSize = 10;
     myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
-    myParams.numToReplace = 25;
+    myParams.numWeights = a->getNumWeights();
+    myParams.numToReplace = 4;
     myParams.initRange = 1.0 * a->getWeightRange();
+    myParams.alpha = 0.5;
+    myParams.chunkSize = 15000;
+
+    genetic *ga = new genetic(myParams);
+
+    delete[] a->getWeights();
+    delete[] a->getEncodeBiases();
+    delete[] a->getDecodeBiases();
+    int encodeBiasesOffset = a->getNumWeights();
+    int decodeBiasesOffset = encodeBiasesOffset + a->getNumHiddenUnits();
+
+    for (int i = 0; i < preTrainLayersOuterIter[k]; i++ )
+    {
+
+      float sum_squared_error = 0.0;
+      for (int j = 0; j < numTrainingImages; j += batchSize)
+      {
+        for (int currInd = 0; currInd < myParams.popSize; currInd++)
+        {
+          float *genome = ga->getGenome(currInd);
+          a->setWeights(genome);
+          a->setEncodeBiases(&(genome[encodeBiasesOffset]));
+          a->setDecodeBiases(&(genome[decodeBiasesOffset]));
+
+          float error = 0.0;
+          for (int currBatch = j; currBatch < j + batchSize; currBatch++)
+          {
+            int __currBatch = currBatch % numTrainingImages;
+            float *o_t = o_i[__currBatch];
+            float *corrupted_o_t = corrupted_o_i[__currBatch];
+            a->encode(corrupted_o_t, o_e);
+            a->decode(o_e, o_d);
+            error += a->auto_squared_loss(o_t, o_d);
+          }
+          ga->setFitness(currInd, 1.0 / log((error * numTrainingImages) / batchSize));
+          // ga->setFitness(currInd, 1.0 / error);
+
+          if (currInd == myParams.popSize - 1)
+          {
+            sum_squared_error += error;
+          }
+        }
+
+        ga->step();
+        // ga->printStats();
+      }
+      cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+    }
+
+    //cleanup
+    if (k > 0)
+    {
+      deleteO_i(o_i, numTrainingImages);
+    }
+    deleteO_i(corrupted_o_i, numTrainingImages);
+
+    delete[] o_e;
+    delete[] o_d;
+
+    delete ga;
+  }
+}
+
+/*  good parameters
+
+    myParams.mutRate = 0.00005;
+    myParams.mutAmount = 0.1 * a->getWeightRange();
+    myParams.crossRate = 0.5;
+    myParams.popSize = 10;
+    myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
+    myParams.numWeights = a->getNumWeights();
+    myParams.numToReplace = 6;
+    myParams.initRange = 1.0 * a->getWeightRange();
+    myParams.alpha = 1.0;
+    myParams.chunkSize = 15000;
+*/
+
+void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
+{
+  for (int k = 0; k < numPreTrainLayers; k++)
+  {
+
+    cout << "pretraining layer #" << k + 1 << " with GA, cycling through " << numTrainingImages << " training images for " << preTrainLayersOuterIter[k] << " outer iterations" << endl;
+
+    auto_hidden_layer *a = preTrainLayers[k];
+
+    float **o_i = new float*[numTrainingImages];
+    float **corrupted_o_i = new float*[numTrainingImages];
+    if (k > 0)
+    {
+      setO_i(o_i, trainingImages, k, numTrainingImages, a->getNumInputUnits());
+    }
+    else
+    {
+      o_i = trainingImages;
+    }
+    setCorruptedO_i(corrupted_o_i, o_i, k, numTrainingImages, a->getNumHiddenUnits());
+
+    float *o_e = new float[a->getNumHiddenUnits()];
+    float *o_d = new float[a->getNumInputUnits()];
+
+    float sum_squared_error = 0.0;
+    for (int i = 0; i < numTrainingImages; i++)
+    {
+      float *o_t = o_i[i];
+      getInputK(o_t, k);
+      a->encode(o_t, o_e);
+      a->decode(o_e, o_d);
+      sum_squared_error += a->auto_squared_loss(o_t, o_d);
+    }
+    cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+
+    double start = omp_get_wtime();
+
+    //setup GA and its parameters
+    ga_params myParams;
+    myParams.mutRate = 0.00005;
+    myParams.mutAmount = 0.1 * a->getWeightRange();
+    myParams.crossRate = 0.5;
+    myParams.popSize = 10;
+    myParams.genomeSize = a->getNumWeights() + a->getNumInputUnits() + a->getNumHiddenUnits();
+    myParams.numWeights = a->getNumWeights();
+    myParams.numToReplace = 6;
+    myParams.initRange = 1.0 * a->getWeightRange();
+    myParams.alpha = 1.0;
+    myParams.chunkSize = 15000;
+
     genetic *ga = new genetic(myParams);
 
     delete[] a->getWeights();
@@ -290,10 +420,14 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
       {
         float *o_t = o_i[j];
         float *corrupted_o_t = corrupted_o_i[j];
-        ga->step();
 
-        for (int currInd = 0; currInd < myParams.numToReplace; currInd++)
+        for (int currInd = 0; currInd < myParams.popSize; currInd++)
         {
+          // if (currInd >= myParams.numToReplace and currInd != myParams.popSize - 1)
+          // {
+          //   continue;
+          // }
+
           float *genome = ga->getGenome(currInd);
           a->setWeights(genome);
           a->setEncodeBiases(&(genome[encodeBiasesOffset]));
@@ -302,15 +436,15 @@ void autoencoder::preTrainGA(float **trainingImages, int numTrainingImages)
           a->decode(o_e, o_d);
           float error = a->auto_squared_loss(o_t, o_d);
           ga->setFitness(currInd, 1.0 / log(error * numTrainingImages));
+
+          if (currInd == myParams.popSize - 1)
+          {
+            sum_squared_error += error;
+          }
         }
 
-        float *genome = ga->getGenome(myParams.popSize - 1);
-        a->setWeights(genome);
-        a->setEncodeBiases(&(genome[encodeBiasesOffset]));
-        a->setDecodeBiases(&(genome[decodeBiasesOffset]));
-        a->encode(corrupted_o_t, o_e);
-        a->decode(o_e, o_d);
-        sum_squared_error += a->auto_squared_loss(o_t, o_d);
+        ga->step();
+        // ga->printStats();
       }
       cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
     }
@@ -413,237 +547,253 @@ autoencoder::~autoencoder()
   }
 }
 
-void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels){
-	cout << "STARTING THE FINE TUNING STEP" << endl;
+void autoencoder::fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)
+{
+  cout << "STARTING THE FINE TUNING STEP" << endl;
 
-	int numOuterIter = 5;
+  int numOuterIter = 5;
 
-	cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
-	float sum_squared_error = 0.0;
+  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+  float sum_squared_error = 0.0;
 
-	// Forward activiate the network to compute the initial output error
-	/*
-	for (int j = 0; j < numTrainingImages; j++)
-	{
-		float *o_i = trainingImages[j];
-		getInput(o_i);
+  // Forward activiate the network to compute the initial output error
+  /*
+  for (int j = 0; j < numTrainingImages; j++)
+  {
+    float *o_i = trainingImages[j];
+    getInput(o_i);
 
-		h->encode(o_i, o_j);
-		o->encode(o_j, o_k);
-		sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
-	}
-	*/
-	sum_squared_error = 1234123;
-	cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+    h->encode(o_i, o_j);
+    o->encode(o_j, o_k);
+    sum_squared_error += o->squared_loss(o_k, trainLabels[j]);
+  }
+  */
+  sum_squared_error = 1234123;
+  cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
 
-	double start = omp_get_wtime();
-	for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
-	{
-		float sum_squared_error = 0.0;
+  double start = omp_get_wtime();
+  for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
+  {
+    float sum_squared_error = 0.0;
 
-		int p = numPreTrainLayers;
-		for (int j = 0; j < numTrainingImages; j++)
-		{
-			// compute all forward activations
-			float *o_i = trainingImages[j];
-			float **activations;
-			float **deltas;
-			activations =  new float*[p+2];
-			deltas =  new float*[p+2];
-			for(int k=0; k<p;k++){
-				auto_hidden_layer *a = preTrainLayers[k];
-				activations[k] = new float[a->getNumHiddenUnits()];
-				deltas[k] = new float[a->getNumHiddenUnits()];
-				if(k==0){
-					a->encode(o_i, activations[k]);
-				}
-				else{
-					a->encode(activations[k-1], activations[k]);
-				}
-			}
-			activations[p] = new float[h->getNumHiddenUnits()];
-			h->encode(activations[p-1], activations[p]);
-			deltas[p] = new float[h->getNumHiddenUnits()];
-			activations[p+1] = new float[o->getNumHiddenUnits()];
-			o->encode(activations[p], activations[p+1]);
-			deltas[p+1] = new float[o->getNumHiddenUnits()];
-			// all activations computed
+    int p = numPreTrainLayers;
+    for (int j = 0; j < numTrainingImages; j++)
+    {
+      // compute all forward activations
+      float *o_i = trainingImages[j];
+      float **activations;
+      float **deltas;
+      activations =  new float*[p + 2];
+      deltas =  new float*[p + 2];
+      for (int k = 0; k < p; k++)
+      {
+        auto_hidden_layer *a = preTrainLayers[k];
+        activations[k] = new float[a->getNumHiddenUnits()];
+        deltas[k] = new float[a->getNumHiddenUnits()];
+        if (k == 0)
+        {
+          a->encode(o_i, activations[k]);
+        }
+        else
+        {
+          a->encode(activations[k - 1], activations[k]);
+        }
+      }
+      activations[p] = new float[h->getNumHiddenUnits()];
+      h->encode(activations[p - 1], activations[p]);
+      deltas[p] = new float[h->getNumHiddenUnits()];
+      activations[p + 1] = new float[o->getNumHiddenUnits()];
+      o->encode(activations[p], activations[p + 1]);
+      deltas[p + 1] = new float[o->getNumHiddenUnits()];
+      // all activations computed
 
-			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
-			o->compute_delta_output(deltas[p+1], activations[p+1], trainLabels[j]);
-			h->compute_delta_hidden(deltas[p], deltas[p+1], activations[p], o);
+      // Now compute the deltas for the hidden/output layers (not the autoencoder layers)
+      o->compute_delta_output(deltas[p + 1], activations[p + 1], trainLabels[j]);
+      h->compute_delta_hidden(deltas[p], deltas[p + 1], activations[p], o);
 
-  		o->updateWeights(deltas[p+1], activations[p], learn_rate);
-  		h->updateWeights(deltas[p], activations[p-1], learn_rate);
+      o->updateWeights(deltas[p + 1], activations[p], learn_rate);
+      h->updateWeights(deltas[p], activations[p - 1], learn_rate);
 
-			// get layers in order starting from the last one and we'll update in that order
-			for (int k = numPreTrainLayers-1; k > 1; k--) // TODO should this really only go until 1?
-			{
-				auto_hidden_layer *a = preTrainLayers[k];
-				// we use the compute delta hidden from the neural net as opposed to the
-				// autoencoder since we don't want to compare the original with encoded/decoded images.
-				if(k == p-1){
-					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], h);
-				}
-				else{
-					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], preTrainLayers[k+1]);
-				}
-				a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
-				// Need to add fine tuning for the weights from the input to the first activation layer here.
-			}
+      // get layers in order starting from the last one and we'll update in that order
+      for (int k = numPreTrainLayers - 1; k > 1; k--) // TODO should this really only go until 1?
+      {
+        auto_hidden_layer *a = preTrainLayers[k];
+        // we use the compute delta hidden from the neural net as opposed to the
+        // autoencoder since we don't want to compare the original with encoded/decoded images.
+        if (k == p - 1)
+        {
+          a->compute_delta_hidden(deltas[k], deltas[k + 1], activations[k], h);
+        }
+        else
+        {
+          a->compute_delta_hidden(deltas[k], deltas[k + 1], activations[k], preTrainLayers[k + 1]);
+        }
+        a->updateWeights(deltas[k], activations[k - 1], preTrainLayersLearnRates[k]);
+        // Need to add fine tuning for the weights from the input to the first activation layer here.
+      }
 
-			// after updating all the weights we compute the error again
-			for(int k=0; k<p;k++){
-				auto_hidden_layer *a = preTrainLayers[k];
-				if(k==0){
-					a->encode(o_i, activations[k]);
-				}
-				else{
-					a->encode(activations[k-1], activations[k]);
-				}
-			}
-			h->encode(activations[p-1], activations[p]);
-			o->encode(activations[p], activations[p+1]);
+      // after updating all the weights we compute the error again
+      for (int k = 0; k < p; k++)
+      {
+        auto_hidden_layer *a = preTrainLayers[k];
+        if (k == 0)
+        {
+          a->encode(o_i, activations[k]);
+        }
+        else
+        {
+          a->encode(activations[k - 1], activations[k]);
+        }
+      }
+      h->encode(activations[p - 1], activations[p]);
+      o->encode(activations[p], activations[p + 1]);
 
-			sum_squared_error += o->squared_loss(activations[p+1], trainLabels[j]);
+      sum_squared_error += o->squared_loss(activations[p + 1], trainLabels[j]);
 
-			// Free the memory that we allocated
-			for(int k=0; k<p;k++){
-				delete[] activations[k];
-				delete[] deltas[k];
-			}
-			delete activations;
-			delete deltas;
-		}
-		cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
-	}
+      // Free the memory that we allocated
+      for (int k = 0; k < p; k++)
+      {
+        delete[] activations[k];
+        delete[] deltas[k];
+      }
+      delete activations;
+      delete deltas;
+    }
+    cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+  }
 
 
-	return;
+  return;
 }
 
 
-void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels){
-	cout << "STARTING THE FINE TUNING STEP" << endl;
+void autoencoder::fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels)
+{
+  cout << "STARTING THE FINE TUNING STEP" << endl;
 
-	int numOuterIter = 3;
+  int numOuterIter = 3;
 
-	cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
-	float sum_squared_error = 0.0;
+  cout << "cycling through " << numTrainingImages << " training images for " << numOuterIter << " outer iterations" << endl;
+  float sum_squared_error = 0.0;
 
-	// Forward activiate the network to compute the initial output error
-	float *initac = new float[output_l->getNumHiddenUnits()];
-	for (int j = 0; j < numTrainingImages; j++)
-	{
-		float *o_i = trainingImages[j];
-		getInput(o_i);
-
-
-		output_l->encode(o_i, initac);
-		sum_squared_error += o->squared_loss(initac, trainLabels[j]);
-	}
-	delete[] initac;
-
-	cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
+  // Forward activiate the network to compute the initial output error
+  float *initac = new float[output_l->getNumHiddenUnits()];
+  for (int j = 0; j < numTrainingImages; j++)
+  {
+    float *o_i = trainingImages[j];
+    getInput(o_i);
 
 
-	double start = omp_get_wtime();
-	for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
-	{
-		float sum_squared_error = 0.0;
-		int p = numPreTrainLayers;
-		//cout << "p: " << p << endl;
-		for (int j = 0; j < numTrainingImages; j++)
-		//for (int j = 0; j < 1; j++)
-		{ 
-			// compute all forward activations
-			float *o_i = trainingImages[j];
-			float **activations;
-			float **deltas;
-			activations =  new float*[p+1];
-			deltas =  new float*[p+1];
+    output_l->encode(o_i, initac);
+    sum_squared_error += o->squared_loss(initac, trainLabels[j]);
+  }
+  delete[] initac;
 
-			//auto_hidden_layer *a = preTrainLayers[0];
-			//activations[0] = new float[a->getNumHiddenUnits()];
-			//deltas[0] = new float[a->getNumHiddenUnits()];
-			//a->encode(o_i, activations[0]);
-			
-			for(int k=0; k<p;k++){
-				auto_hidden_layer *a = preTrainLayers[k];
-				activations[k] = new float[a->getNumHiddenUnits()];
-				deltas[k] = new float[a->getNumHiddenUnits()];
-				if(k==0){
-					a->encode(o_i, activations[k]);
-				}
-				else{
-					a->encode(activations[k-1], activations[k]);
-				}
-			}
-			
-			activations[p] = new float[output_l->getNumHiddenUnits()];
-			output_l->encode(activations[p-1], activations[p]);
-			deltas[p] = new float[output_l->getNumHiddenUnits()];
-			// all activations computed
-
-			// Now compute the deltas for the hidden/output layers (not the autoencoder layers)
-			output_l->compute_delta_output(deltas[p], activations[p], trainLabels[j]);
-  		output_l->updateWeights(deltas[p], activations[p-1], learn_rate);
-			
-			if(p>=2){
-				preTrainLayers[p-1]->compute_delta_hidden(deltas[p-1], deltas[p], activations[p-1], output_l);
-				preTrainLayers[p-1]->updateWeights(deltas[p-1], activations[p-2], preTrainLayersLearnRates[p-1]);
-
-				// get layers in order starting from the last one and we'll update in that order
-				for (int k = numPreTrainLayers-2; k > 0; k--) // TODO should this really only go until 1?
-				{
-					auto_hidden_layer *a = preTrainLayers[k];
-					// we use the compute delta hidden from the neural net as opposed to the
-					// autoencoder since we don't want to compare the original with encoded/decoded images.
-					a->compute_delta_hidden(deltas[k], deltas[k+1], activations[k], preTrainLayers[k+1]);
-					a->updateWeights(deltas[k], activations[k-1], preTrainLayersLearnRates[k]);
-				}
-			}
-
-			preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], preTrainLayers[1]);
-			//preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], output_l);
-			preTrainLayers[0]->updateWeights(deltas[0], o_i, preTrainLayersLearnRates[0]);
-			
-			// after updating all the weights we compute the error again
-			/*
-			for(int k=0; k<p;k++){
-				cout << "here?!?!?" << endl;
-				auto_hidden_layer *a = preTrainLayers[k];
-				if(k==0){
-					a->encode(o_i, activations[k]);
-				}
-				else{
-					a->encode(activations[k-1], activations[k]);
-				}
-			}
-			*/
-			getInput(o_i);
-			output_l->encode(o_i,activations[p]);
-			//output_l->encode(activations[p-1], activations[p]);
-
-			//for(int l=0;l< output_l->getNumHiddenUnits();l++){
-			//	cout << activations[p][l] <<endl;
-			//}
-			sum_squared_error += output_l->squared_loss(activations[p], trainLabels[j]);
-			//cout << "j: " << j << " error: " << sum_squared_error << " label: "<< trainLabels[j] << endl;
-
-			// Free the memory that we allocated
-			for(int k=0; k<=p;k++){
-				delete[] activations[k];
-				delete[] deltas[k];
-			}
-			delete activations;
-			delete deltas;
-		}
-		cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
-	}
+  cout << "outer iter: 0 wall time: 0.00000 total error: " << sum_squared_error << endl;
 
 
-	return;
+  double start = omp_get_wtime();
+  for (int i = 0; i < numOuterIter; i++ ) // TODO should make this an input probably
+  {
+    float sum_squared_error = 0.0;
+    int p = numPreTrainLayers;
+    //cout << "p: " << p << endl;
+    for (int j = 0; j < numTrainingImages; j++)
+      //for (int j = 0; j < 1; j++)
+    {
+      // compute all forward activations
+      float *o_i = trainingImages[j];
+      float **activations;
+      float **deltas;
+      activations =  new float*[p + 1];
+      deltas =  new float*[p + 1];
+
+      //auto_hidden_layer *a = preTrainLayers[0];
+      //activations[0] = new float[a->getNumHiddenUnits()];
+      //deltas[0] = new float[a->getNumHiddenUnits()];
+      //a->encode(o_i, activations[0]);
+
+      for (int k = 0; k < p; k++)
+      {
+        auto_hidden_layer *a = preTrainLayers[k];
+        activations[k] = new float[a->getNumHiddenUnits()];
+        deltas[k] = new float[a->getNumHiddenUnits()];
+        if (k == 0)
+        {
+          a->encode(o_i, activations[k]);
+        }
+        else
+        {
+          a->encode(activations[k - 1], activations[k]);
+        }
+      }
+
+      activations[p] = new float[output_l->getNumHiddenUnits()];
+      output_l->encode(activations[p - 1], activations[p]);
+      deltas[p] = new float[output_l->getNumHiddenUnits()];
+      // all activations computed
+
+      // Now compute the deltas for the hidden/output layers (not the autoencoder layers)
+      output_l->compute_delta_output(deltas[p], activations[p], trainLabels[j]);
+      output_l->updateWeights(deltas[p], activations[p - 1], learn_rate);
+
+      if (p >= 2)
+      {
+        preTrainLayers[p - 1]->compute_delta_hidden(deltas[p - 1], deltas[p], activations[p - 1], output_l);
+        preTrainLayers[p - 1]->updateWeights(deltas[p - 1], activations[p - 2], preTrainLayersLearnRates[p - 1]);
+
+        // get layers in order starting from the last one and we'll update in that order
+        for (int k = numPreTrainLayers - 2; k > 0; k--) // TODO should this really only go until 1?
+        {
+          auto_hidden_layer *a = preTrainLayers[k];
+          // we use the compute delta hidden from the neural net as opposed to the
+          // autoencoder since we don't want to compare the original with encoded/decoded images.
+          a->compute_delta_hidden(deltas[k], deltas[k + 1], activations[k], preTrainLayers[k + 1]);
+          a->updateWeights(deltas[k], activations[k - 1], preTrainLayersLearnRates[k]);
+        }
+      }
+
+      preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], preTrainLayers[1]);
+      //preTrainLayers[0]->compute_delta_hidden(deltas[0], deltas[1], activations[0], output_l);
+      preTrainLayers[0]->updateWeights(deltas[0], o_i, preTrainLayersLearnRates[0]);
+
+      // after updating all the weights we compute the error again
+      /*
+      for(int k=0; k<p;k++){
+        cout << "here?!?!?" << endl;
+        auto_hidden_layer *a = preTrainLayers[k];
+        if(k==0){
+          a->encode(o_i, activations[k]);
+        }
+        else{
+          a->encode(activations[k-1], activations[k]);
+        }
+      }
+      */
+      getInput(o_i);
+      output_l->encode(o_i, activations[p]);
+      //output_l->encode(activations[p-1], activations[p]);
+
+      //for(int l=0;l< output_l->getNumHiddenUnits();l++){
+      //  cout << activations[p][l] <<endl;
+      //}
+      sum_squared_error += output_l->squared_loss(activations[p], trainLabels[j]);
+      //cout << "j: " << j << " error: " << sum_squared_error << " label: "<< trainLabels[j] << endl;
+
+      // Free the memory that we allocated
+      for (int k = 0; k <= p; k++)
+      {
+        delete[] activations[k];
+        delete[] deltas[k];
+      }
+      delete activations;
+      delete deltas;
+    }
+    cout << "outer iter: " << i + 1 << " wall time: " << omp_get_wtime() - start << " total error: " << sum_squared_error << endl;
+  }
+
+
+  return;
 }
 
 void autoencoder::testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages)
@@ -665,7 +815,7 @@ void autoencoder::testFineNoHidden(float **testingImages, vector<int> &testLabel
 
 int autoencoder::predictFineNoHidden(float *o_i)
 {
-	float out[output_l->getNumHiddenUnits()];
+  float out[output_l->getNumHiddenUnits()];
   output_l->encode(o_i, out);
 
   int bestIndex = -1;

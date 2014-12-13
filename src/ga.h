@@ -2,10 +2,13 @@
 #define GA
 
 #include <algorithm>
-#include <vector> 
+#include <vector>
 #include <random>
 #include <iostream>
+#include <omp.h>
 #include "float.h"
+#include <time.h>
+#include <climits>
 
 using namespace std;
 
@@ -16,49 +19,56 @@ struct ga_params
   float crossRate;
   int popSize;
   int genomeSize;
+  int numWeights;
   int numToReplace;
   float initRange;
+
+  float alpha;
+  int chunkSize;
 };
 
 struct individual
 {
   float *genome;
   float fitness;
+  float scaledFitness;
+  int age;
 };
 
 class genetic
 {
 private:
-  int numGen, numEval, chunkSize;
-  float totalFitness, maxFitness, minFitness, meanFitness;
+  int numGen, numEval;
+  float totalFitness, maxFitness, minFitness, meanFitness, totalScaledFitness;
+  int bestIndIndex;
 
   ga_params myParams;
   vector<individual> population;
 
-  minstd_rand myEngine;
-  normal_distribution<float> myNormal;
+  mt19937_64 myEngine;
+  cauchy_distribution<float> myDist;
+  // normal_distribution<float> myDist;
+
+  int randBankSize;
+  float *randBank;
+  float *normalBank;
 
 public:
   genetic(ga_params myParams);
   ~genetic();
 
   int fitnessSelection();
-  void mutate(individual a);
-  void crossOver(individual a, individual b);
+  void mutate(individual &a);
+  void crossOver(individual &a, individual &b);
 
+  void noRanking();
   void linearRanking();
+  void powerRanking();
+  void copyIndividual(individual &a, individual &b);
   void getStats();
   void step();
 
-  //copy individual b to a
-  inline void copyIndividual(individual a, individual b)
-  {
-    a.genome = new float[myParams.genomeSize];
-    copy(b.genome, b.genome + myParams.genomeSize, a.genome);
-    a.fitness = b.fitness;
-  }
-
-  inline void deleteIndividual(individual a)
+  inline void deleteIndividual(individual &a)
   {
     delete[] a.genome;
     a.genome = NULL;
@@ -73,13 +83,15 @@ public:
   {
     numEval++;
     population[i].fitness = fitness;
+    // population[i].fitness = (fitness + population[i].age * population[i].fitness) / (population[i].age + 1);
+    population[i].age++;
   }
 
   inline void printStats()
   {
-    cout << "gen: " << numGen << " eval: " << numEval << " maxFitness: " << maxFitness << " meanFitness: " << meanFitness << " minFitness: " << minFitness << endl;
+    cout << "gen: " << numGen << " eval: " << numEval << " maxFitness: " << maxFitness << " realError: " << exp(1.0 / maxFitness) << " meanFitness: " << meanFitness << " minFitness: " << minFitness << endl;
   }
-
+  
 };
 
 

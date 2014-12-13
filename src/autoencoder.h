@@ -35,13 +35,14 @@ public:
 
   void preTrain(float **trainingImages, int numTrainingImages);
   void preTrainGA(float **trainingImages, int numTrainingImages);
-	// This function train doesn't seem to exist in the autoencoder class
+  void preTrainGAMiniBatch(float **trainingImages, int numTrainingImages);
+  // This function train doesn't seem to exist in the autoencoder class
   void train(float **trainingImages, vector<int> &trainLabels, int numOuterIter, int numTrainingImages);
 
-	void fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
-	void fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
-	void testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages);
-	int predictFineNoHidden(float *o_i);
+  void fineTune(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
+  void fineTuneNoHidden(float **trainingImages, int numTrainingImages, vector<int> &trainLabels);
+  void testFineNoHidden(float **testingImages, vector<int> &testLabels, int numTestingImages);
+  int predictFineNoHidden(float *o_i);
 
   void reconstructImage(float **testingImages, int layer, int n);
   void visualizeWeights(int layer, int n);

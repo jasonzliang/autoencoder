@@ -84,6 +84,21 @@ void train_and_test_autoencoder(vector<int> &trainLabels, float **trainingImages
   delete myAutoencoder;
 }
 
+void train_and_test_autoencoderGA(vector<int> &trainLabels, float **trainingImages, vector<int> &testLabels, float **testingImages)
+{
+  vector<int> autoencoder_layers {784, 1000, 1000};
+  vector<float> auto_learn_rates {0.005, 0.005, 0.005};
+  vector<int> auto_iters {15, 15, 15};
+  vector<float> noise_levels {0.1, 0.2, 0.3};
+
+  autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 1000, 500, 10, 0.5);
+
+  // myAutoencoder->preTrainGAMiniBatch(trainingImages, 1000);
+  myAutoencoder->preTrainGA(trainingImages, 1000);
+
+  delete myAutoencoder;
+}
+
 void experiment_1(vector<int> &trainLabels, float **trainingImages)
 {
   cout << "running experiment 1" << endl;
@@ -137,7 +152,7 @@ void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> 
   autoencoder *myAutoencoder = new autoencoder(autoencoder_layers, auto_learn_rates, auto_iters, noise_levels, 500, 300, 10, 0.05);
 
   myAutoencoder->preTrain(trainingImages, 60000);
-  // myAutoencoder->visualizeWeights(0, 100);
+  myAutoencoder->visualizeWeights(0, 100);
   myAutoencoder->reconstructImage(testingImages, 0, 100);
 
   delete myAutoencoder;
@@ -145,8 +160,10 @@ void experiment_3(vector<int> &trainLabels, float **trainingImages, vector<int> 
 
 int main(int argc, char *argv[])
 {
-  cout << "using " << omp_get_num_procs() << " cores" << endl;
-  omp_set_num_threads(omp_get_num_procs());
+  // int numCores = 1;
+  int numCores = omp_get_num_procs();
+  cout << "using " << numCores << " cores" << endl;
+  omp_set_num_threads(numCores);
   string train_labels_file("../data/train-labels-idx1-ubyte");
   string test_labels_file("../data/t10k-labels-idx1-ubyte");
   string train_images_file("../data/train-images-idx3-ubyte");
@@ -181,12 +198,11 @@ int main(int argc, char *argv[])
 
   cout << "finished parsing input data! " << endl;
 
-  train_and_test_network_square(40, training_labels, training_images, testing_labels, testing_images);
   // train_and_test_network_cross(30, training_labels, training_images, testing_labels, testing_images);
-  // train_and_test_autoencoder(training_labels, training_images, testing_labels, testing_images);
+  // train_and_test_autoencoderGA(training_labels, training_images, testing_labels, testing_images);
   // experiment_1(training_labels, training_images);
   // experiment_2(training_labels, training_images);
-  // experiment_3(training_labels, training_images, testing_labels, testing_images);
+  experiment_3(training_labels, training_images, testing_labels, testing_images);
 
   for (int i = 0; i < numTrainingImages; i++)
   {

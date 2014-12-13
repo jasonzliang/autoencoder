@@ -28,7 +28,7 @@ void auto_hidden_layer::decode(float *input, float *output)
 #if HAS_OPENBLAS
   resetBuffer();
 
-	cblas_sgemv(CblasRowMajor, CblasTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, buffer, 1);
+  cblas_sgemv(CblasRowMajor, CblasTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, buffer, 1);
 
   #pragma omp parallel for schedule(static, inputChunkSize)
   for (int i = 0; i < numInputs; i++)

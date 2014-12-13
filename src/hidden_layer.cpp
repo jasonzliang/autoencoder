@@ -9,7 +9,7 @@ hidden_layer::hidden_layer(int numInputs, int numHiddenUnits):
   numHiddenUnits(numHiddenUnits)
 {
   // weightRange = 1.0 / sqrt(numInputs);
-  weightRange = 4.0 * sqrt(6.0/(numInputs + numHiddenUnits));
+  weightRange = 4.0 * sqrt(6.0 / (numInputs + numHiddenUnits));
   init();
 }
 
@@ -26,7 +26,7 @@ void hidden_layer::init()
   // hiddenChunkSize = max(numHiddenUnits / 32, 1);
   // inputChunkSize = max(numInputs / 32, 1);
   hiddenChunkSize = 2;
-  inputChunkSize = 2;  
+  inputChunkSize = 2;
 
   numWeights = numInputs * numHiddenUnits;
   weights = new float[numWeights];
@@ -73,15 +73,16 @@ void hidden_layer::sigmoidTransform(float *x)
 void hidden_layer::encode(float *input, float *output)
 {
 #if HAS_OPENBLAS
-	float* y = new float[numHiddenUnits];
-	cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, y, 1);
+  float *y = new float[numHiddenUnits];
+  cblas_sgemv(CblasRowMajor, CblasNoTrans, numHiddenUnits, numInputs, 1.0, weights, numInputs, input, 1, 0.0, y, 1);
 
-	#pragma omp parallel for schedule(static, hiddenChunkSize)
-	for (int i = 0; i < numHiddenUnits; i++){
-		output[i] = sigmoidTransform(y[i] + biases[i]);
-	}
+  #pragma omp parallel for schedule(static, hiddenChunkSize)
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    output[i] = sigmoidTransform(y[i] + biases[i]);
+  }
 
-	delete y;
+  delete y;
 
 #else
 
@@ -94,10 +95,10 @@ void hidden_layer::encode(float *input, float *output)
       sum += weights[i * numInputs + j] * input[j];
     }
     output[i] = sigmoidTransform(sum + biases[i]);
- }
+  }
 #endif
- 
-	
+
+
 }
 
 float hidden_layer::squared_loss(float *output, int t)
@@ -139,14 +140,14 @@ void hidden_layer::compute_delta_hidden(float *delta_curr_layer, float *delta_ne
   float *output_layer_weights = next_layer->getWeights();
   int numHidUnits_nextLayer = next_layer->getNumHiddenUnits();
 
-	float sum[numHiddenUnits];
-	cblas_sgemv(CblasRowMajor, CblasTrans, numHidUnits_nextLayer, numHiddenUnits, 1.0, output_layer_weights, numHiddenUnits, delta_next_layer, 1, 0.0, sum, 1);
+  float sum[numHiddenUnits];
+  cblas_sgemv(CblasRowMajor, CblasTrans, numHidUnits_nextLayer, numHiddenUnits, 1.0, output_layer_weights, numHiddenUnits, delta_next_layer, 1, 0.0, sum, 1);
 
-	#pragma omp parallel for schedule(static, hiddenChunkSize)
-	for (int i = 0; i < numHiddenUnits; i++)
-	{
-		delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum[i];
-	}
+  #pragma omp parallel for schedule(static, hiddenChunkSize)
+  for (int i = 0; i < numHiddenUnits; i++)
+  {
+    delta_curr_layer[i] = output_curr_layer[i] * (1 - output_curr_layer[i]) * sum[i];
+  }
 
 #else
 
