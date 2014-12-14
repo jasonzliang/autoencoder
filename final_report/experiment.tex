@@ -26,7 +26,7 @@ time elapsed, and the number of threads used. Regardless of the number of
 threads, the reconstruction error decreases sharply in the first few iterations
 before flattening out to around the same value after 15 iterations. The rate at
 which error decreases is significantly faster for 4 and 8 threads when
-compared to just using one. Nonetheless, the speedup is not linear and is due
+compared to just using one. Nonetheless, the speedup is not linear (using 16 threads is actually marginally slower than using 8) and is due
 to two reasons: 1) Possible cache conflicts as each thread read and writes to
 different locations in the weight matrix. 2) All the steps for
 backpropagation/SGD, described in Algorithm \ref{alg:backprop}, must be done
@@ -214,6 +214,7 @@ Population Size $N$ & $2$ \\
 Replacement Fraction $\alpha$ & $0.5$ \\
 Initial Value Range $r$ & $1/\sqrt{\text{FANIN}}$ \\
 Power Scaling Parameter $\gamma$ & $1.0$ \\
+Backpropagation Fraction $\beta$ (HGA only) & 0.5 \\ 
 
 \end{tabular}
 \caption{List of hyperparameters for CGA and HGA. FANIN is input dimensionality of autoencoder layer.}
@@ -228,7 +229,7 @@ Next in Fig.~\ref{fig:ga_comparison2}, we examine the scalability of HGA. HGA sh
 
 In Fig.~\ref{fig:ga_comparison3}, the performance of HGA versus the number of threads and number of hidden units in autoencoder layers is visualized for both when HGA has a population size of 50 and its default population size of 2. As we can see, the HGA's performance scales linearly with the number of hidden units and that this relationship holds even when the population size is increased to 50. Interestingly, the performance when using 8 or 16 threads is not distinguishable for small numbers of hidden units. This is probably due to the overhead that result from creating additional threads.
 
-Finally, in Fig.~\ref{fig:ga_comparison4}, we plot the performance of CGA and HGA for population sizes of 2, 4, 8, 16, and 32. All other hyperparameters remain the same for both HGA and CGA. As we can see, larger populations does lead to a noticeable improvement in the final reconstruction error, but at a cost of increased running time that is linear to the population size. For each fixed population size, HGA performs significantly better than CGA, with a final construction error is roughly 10 times lower. However for a given population size, HGA does take 40\% longer to finish; this is attributable to the fact that CGA does not perform backpropagation, which takes additional time. 
+Finally, in Fig.~\ref{fig:ga_comparison4}, we plot the performance of CGA and HGA for population sizes of 2, 4, 8, 16, and 32. All other hyperparameters remain the same for both HGA and CGA. As we can see, larger populations does lead to a noticeable improvement in the final reconstruction error, but at a cost of increased running time that is linear to the population size. For each fixed population size, HGA performs significantly better than CGA, with a final construction error is roughly 10 times lower. However for a given population size, HGA does take 40\% to 50\% longer to finish; this is attributable to the fact that CGA does not perform backpropagation, which takes additional time. 
 
 \begin{figure*}[h]
   \centering
@@ -238,7 +239,7 @@ Finally, in Fig.~\ref{fig:ga_comparison4}, we plot the performance of CGA and HG
   \subfloat[]{
     \includegraphics[width=0.45\linewidth]{ga_comparison4_2.png}
   }
-  \caption{Comparison of performance for CGA and HGA with population sizes of 2, 4, 8, 16, and 32. HGA performs significantly better than CGA in terms of final reconstruction}
+  \caption{Comparison of performance for CGA and HGA with population sizes of 2, 4, 8, 16, and 32. HGA performs significantly better than CGA in terms of final reconstruction error.}
   \label{fig:ga_comparison4}
 \end{figure*}
 

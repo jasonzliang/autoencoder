@@ -76,7 +76,7 @@ b^O_j &\leftarrow b^O_j - \eta\delta^O_j.
 
 Note also that we find that the updates for the hidden layer is the same as in the squared error loss function with sigmoid activation. A general overview of the backpropagation algorithm is given by by Algorithm~\ref{alg:backprop}.
 
-The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. The weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. For training denoising autoencoders in particular, $z=s(W^{O}(W^{H}x_{\text{corr}} + b) + b^{'})$, where $x_{\text{corr}}$ is a randomly corrupted version of the original input data $x_{\text{orig}}$ and the loss function is defined as $E(x_{\text{orig}}, z)$. In order words, we are trying to learn an autoencoder takes a corrupted input and tries to reconstruct the original uncorrupted version. Once we have trained a single autoencoder layer, we can stack another autoencoder layer on top of the first one for further training. This second autoencoder takes the corrupted output of the hidden layer (encoding stage) of the first autoencoder as input and is trained to minimize the loss function $E(x_{\text{orig}}, z)$.
+The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. The weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. For training denoising autoencoders in particular, $z=s(W^{O}(W^{H}x_{\text{corr}} + b) + b^{'})$, where $x_{\text{corr}}$ is a randomly corrupted version of the original input data $x_{\text{orig}}$ and the loss function is defined as $E(x_{\text{orig}}, z)$. In order words, we are trying to learn an autoencoder takes a corrupted input and tries to reconstruct the original uncorrupted version. Once we have trained a single autoencoder layer, we can stack another autoencoder layer on top of the first one for further training. This second autoencoder takes the corrupted output of the hidden layer (encoding stage) of the first autoencoder as input and is again trained to minimize the loss function $E(x_{\text{orig}}, z)$.
 
 \begin{algorithm}[h]
 \caption{Backpropagation}
@@ -117,7 +117,7 @@ As mentioned in the introduction, a genetic algorithm (GA) is a biologically ins
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$. 
 	\STATE Select existing individuals via \textbf{roulette selection}
-	\FOR{Every two individuals $a$ and $b$ selected}
+	\FOR{every two individuals $a$ and $b$ selected}
 		\STATE Create copies $a'$ and $b'$
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
@@ -136,7 +136,7 @@ We will explain step by step what each bolded term means and how it affects indi
   \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. If crossover is performed on two individuals with good fitness, there is a chance that the elements (also known as genes) of the individuals that are responsible for their fitnesses might be combined into a new individual. 
 \end{itemize}
 
-Next we will look at HGA, a hybrid GA that combines genetic operators with backpropagation to keep the population size small and remain computationally tractable. The pseudocode for HGA is shown in Algorithm~\ref{alg:hga} and is based off recent work done by David and Greental \cite{david2014genetic} on applying GAs to learn stacked autoencoders. The main difference between our HGA and the algorithm described in \cite{david2014genetic} is that we use roulette selection instead of truncation selection and uniform Cauchy mutation instead of mutating weights to zero. 
+Next we will look at HGA, a hybrid GA that combines genetic operators with backpropagation to keep the population size small and remain computationally tractable. The pseudocode for HGA is shown in Algorithm~\ref{alg:hga} and is based off recent work done by David and Greental \cite{david2014genetic} on applying GAs to learn stacked autoencoders. The main difference between our HGA and the algorithm described in \cite{david2014genetic} is that we use roulette selection instead of truncation selection and uniform Cauchy mutation instead of mutating weights to zero.
 
 \begin{algorithm}[h]
 \caption{Hybrid Genetic Algorithm (HGA)}
@@ -146,9 +146,9 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 \FOR{iter $=1,2,3...M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
-	\STATE Perform backpropagation on top $\beta$ individuals with highest fitness
+	\STATE \textit{Perform backpropagation on top $\beta$ individuals with highest fitness}
 	\STATE Select existing individuals via \textbf{roulette selection}
-	\FOR{Every two individuals $a$ and $b$ selected}
+	\FOR{every two individuals $a$ and $b$ selected}
 		\STATE Create copies $a'$ and $b'$
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
