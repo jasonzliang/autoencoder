@@ -47,29 +47,29 @@
 \citation{vincent2010stacked}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Results}{7}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Stochastic Gradient Descent}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Visualization of the filters of the first 100 hidden nodes in an denoising autoencoder trained over all 60000 images.\relax }}{7}}
-\newlabel{fig:experiment3_1}{{2}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Reconstructions of corrupted digits from the (a) MNIST dataset (b) bg-rand dataset, (c) bg-img dataset, and (d) rot dataset\relax }}{8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{8}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {}}}{8}}
-\newlabel{fig:reconstruct}{{3}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, 8, and 16 threads.\relax }}{9}}
-\newlabel{fig:experiment1}{{4}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Visualization of Trained Weights and Reconstructed Images}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, 8, and 16 threads.\relax }}{7}}
+\newlabel{fig:experiment1}{{2}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.\relax }}{8}}
+\newlabel{fig:performanceomp}{{3}{8}}
 \citation{vincent2010stacked}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.\relax }}{10}}
-\newlabel{fig:performanceomp}{{5}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Representation Learning for Supervised Classification}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.\relax }}{9}}
+\newlabel{fig:performanceblas}{{4}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Visualization of Trained Weights and Reconstructed Images}{9}}
 \citation{fan2008liblinear}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.\relax }}{11}}
-\newlabel{fig:performanceblas}{{6}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.\relax }}{10}}
+\newlabel{fig:ompvsblas}{{5}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Representation Learning for Supervised Classification}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Visualization of the filters of the first 100 hidden nodes in an denoising autoencoder trained over all 60000 images.\relax }}{11}}
+\newlabel{fig:experiment3_1}{{6}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We see in all cases that using the encoded data produces a better result.\relax }}{11}}
+\newlabel{tab:classvsenc}{{II}{11}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Genetic Algorithms}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.\relax }}{12}}
-\newlabel{fig:ompvsblas}{{7}{12}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We see in all cases that using the encoded data produces a better result.\relax }}{12}}
-\newlabel{tab:classvsenc}{{II}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Reconstructions of corrupted digits from the (a) MNIST dataset (b) bg-rand dataset, (c) bg-img dataset, and (d) rot dataset\relax }}{12}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{12}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{12}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{12}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {}}}{12}}
+\newlabel{fig:reconstruct}{{7}{12}}
 \@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces List of hyperparameters for CGA and HGA. FANIN is input dimensionality of autoencoder layer.\relax }}{13}}
 \newlabel{tab:hyperparameters}{{III}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error. HGA and CGA uses a default population size of 2 and all three algorithms cycle through 1000 training images for 15 iterations.\relax }}{13}}
