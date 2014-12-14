@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 18:07
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 18:08
 entering extended mode
  %&-line parsing enabled.
 **autoencoder
@@ -476,10 +476,10 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 File: figures/experiment3_1.png Graphic file (type png)
 
 <use figures/experiment3_1.png> [7 <./figures/experiment3_1.png>]
-<figures/experiment1.png, id=51, 650.43pt x 457.83044pt>
-File: figures/experiment1.png Graphic file (type png)
+<figures/experiment1SGD.png, id=51, 646.8165pt x 457.83044pt>
+File: figures/experiment1SGD.png Graphic file (type png)
 
-<use figures/experiment1.png>
+<use figures/experiment1SGD.png>
 <figures/performanceomp.png, id=52, 562.1pt x 421.575pt>
 File: figures/performanceomp.png Graphic file (type png)
 
@@ -501,8 +501,8 @@ File: figures/ompvsblas.png Graphic file (type png)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8 <./figures/experiment1.png>] [9 <./figures/performanceomp.png (PNG copy)>]
-[10 <./figures/performanceblas.png (PNG copy)>]
+[8 <./figures/experiment1SGD.png>] [9 <./figures/performanceomp.png (PNG copy)>
+] [10 <./figures/performanceblas.png (PNG copy)>]
 <figures/ga_comparison.png, id=65, 643.56435pt x 450.9648pt>
 File: figures/ga_comparison.png Graphic file (type png)
 
@@ -561,7 +561,7 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  4636 strings out of 493876
- 71646 string characters out of 1147346
+ 71661 string characters out of 1147346
  138118 words of memory out of 3000000
  7803 multiletter control sequences out of 10000+50000
  37555 words of font info for 71 fonts, out of 3000000 for 5000
@@ -582,7 +582,7 @@ oftware/texlive/2008/texmf-dist/fonts/type1/bluesky/ams/msbm10.pfb></v/filer4b/
 software/texlive/2008/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></v/filer4b/s
 oftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></v/filer4b/so
 ftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on autoencoder.pdf (15 pages, 1793993 bytes).
+Output written on autoencoder.pdf (15 pages, 1818156 bytes).
 PDF statistics:
  138 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)

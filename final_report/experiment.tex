@@ -25,7 +25,7 @@ Fig.~\ref{fig:experiment1} shows the relationship between reconstruction error, 
 time elapsed, and the number of threads used. Regardless of the number of
 threads, the reconstruction error decreases sharply in the first few iterations
 before flattening out to around the same value after 15 iterations. The rate at
-which error decreases is significantly faster for four and eight threads when
+which error decreases is significantly faster for 4 and 8 threads when
 compared to just using one. Nonetheless, the speedup is not linear and is due
 to two reasons: 1) Possible cache conflicts as each thread read and writes to
 different locations in the weight matrix. 2) All the steps for
