@@ -1,14 +1,1 @@
 We have implemented stacked denoising autoencoders and shown that it achieves accuracy comparable to state of the art classifiers like a SVM with RBF kernel. We also have shown that our autoencoder layers are learning good representations and are capable of denoising and reconstructing the input with little error. These learned representations improve the ability of other classification algorithms to correctly classify the data. We find that SGD scales well with increasing number of hidden units and with increasing number of threads. Lastly, we discovered that HGA, a genetic algorithm that makes use of gradient information, is competitive with SGD, and scales just as well if not better with the size of the autoencoder and number of threads. 
-
-\begin{algorithm}[h]
-\caption{Genetic Algorithm}
-\label{alg:genetic}
-\begin{algorithmic}
-\STATE Initialize $N$ individuals randomly
-\FOR{iter $=1,2,3...$}
-	\STATE Evaluate each individual with objective function and assign fitness.
-	\STATE Create $\alpha N$ ($0 < \alpha < 1$) new individuals by selecting good individuals from population and applying mutation and crossover operators to them.
-	\STATE Replace worst $\alpha N$ individuals in population with newly created individuals.
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}

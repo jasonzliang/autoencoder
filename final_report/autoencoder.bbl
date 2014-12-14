@@ -146,4 +146,10 @@ Rong-En Fan, Kai-Wei Chang, Cho-Jui Hsieh, Xiang-Rui Wang, and Chih-Jen Lin.
 \newblock Liblinear: A library for large linear classification.
 \newblock {\em The Journal of Machine Learning Research}, 9:1871--1874, 2008.
 
+\bibitem{metaoptimization}
+J.J. Grefenstette.
+\newblock Optimization of control parameters for genetic algorithms.
+\newblock {\em Systems, Man and Cybernetics, IEEE Transactions on},
+  16(1):122--128, Jan 1986.
+
 \end{thebibliography}
