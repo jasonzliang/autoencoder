@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 16:44
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 18:07
 entering extended mode
  %&-line parsing enabled.
 **autoencoder
@@ -468,49 +468,41 @@ File: figures/rot.png Graphic file (type png)
  <use figures/rot.png>)
 (./algo.tex [3 <./figures/experiment3_2.png> <./figures/rand.png> <./figures/bg
 .png> <./figures/rot.png>] [4]
-<figures/performanceomp.png, id=39, 562.1pt x 421.575pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[5]) [6] (./experiment.tex
+<figures/experiment3_1.png, id=45, 927.9468pt x 955.4094pt>
+File: figures/experiment3_1.png Graphic file (type png)
+
+<use figures/experiment3_1.png> [7 <./figures/experiment3_1.png>]
+<figures/experiment1.png, id=51, 650.43pt x 457.83044pt>
+File: figures/experiment1.png Graphic file (type png)
+
+<use figures/experiment1.png>
+<figures/performanceomp.png, id=52, 562.1pt x 421.575pt>
 File: figures/performanceomp.png Graphic file (type png)
 
 <use figures/performanceomp.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/performanceblas.png, id=40, 563.10374pt x 421.575pt>
+<figures/performanceblas.png, id=53, 563.10374pt x 421.575pt>
 File: figures/performanceblas.png Graphic file (type png)
 
 <use figures/performanceblas.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/ompvsblas.png, id=41, 563.10374pt x 421.575pt>
+<figures/ompvsblas.png, id=54, 563.10374pt x 421.575pt>
 File: figures/ompvsblas.png Graphic file (type png)
 
 <use figures/ompvsblas.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[5]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[6 <./figures/performanceomp.png (PNG copy)>] [7 <./figures/performanceblas.png
- (PNG copy)>]) [8 <./figures/ompvsblas.png (PNG copy)>] (./experiment.tex
-<figures/experiment3_1.png, id=55, 927.9468pt x 955.4094pt>
-File: figures/experiment3_1.png Graphic file (type png)
-
-<use figures/experiment3_1.png> [9 <./figures/experiment3_1.png>]
-<figures/experiment1.png, id=60, 650.43pt x 457.83044pt>
-File: figures/experiment1.png Graphic file (type png)
-
-<use figures/experiment1.png> [10 <./figures/experiment1.png>]
-
-Package caption Warning: \label before \caption on input line 153.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `tab:classvsenc' on page 11 undefined on input line 11
-2.
-
+[8 <./figures/experiment1.png>] [9 <./figures/performanceomp.png (PNG copy)>]
+[10 <./figures/performanceblas.png (PNG copy)>]
 <figures/ga_comparison.png, id=65, 643.56435pt x 450.9648pt>
 File: figures/ga_comparison.png Graphic file (type png)
 
@@ -522,11 +514,6 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 File: figures/ga_comparison2.png Graphic file (type png)
 
 <use figures/ga_comparison2.png>
-File: figures/ga_comparison2.png Graphic file (type png)
- <use figures/ga_comparison2.png>
-
-LaTeX Warning: Float too large for page by 21.28581pt on input line 173.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -541,14 +528,21 @@ File: figures/ga_comparison3_big.png Graphic file (type png)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11]
+[11 <./figures/ompvsblas.png (PNG copy)>] [12 <./figures/ga_comparison.png>]
+<figures/ga_comparison4_1.png, id=76, 647.5392pt x 450.9648pt>
+File: figures/ga_comparison4_1.png Graphic file (type png)
 
-LaTeX Warning: Reference `fig:ga_comparison4' on page 12 undefined on input lin
-e 196.
+<use figures/ga_comparison4_1.png>
+<figures/ga_comparison4_2.png, id=77, 647.5392pt x 450.9648pt>
+File: figures/ga_comparison4_2.png Graphic file (type png)
 
-[12 <./figures/ga_comparison.png>] [13 <./figures/ga_comparison2.png>] [14 <./f
-igures/ga_comparison3.png> <./figures/ga_comparison3_big.png>]) (./future.tex)
-(./conclusion.tex) (./autoencoder.bbl)
+<use figures/ga_comparison4_2.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[13 <./figures/ga_comparison2.png> <./figures/ga_comparison3.png> <./figures/ga
+_comparison3_big.png>]) (./future.tex) (./conclusion.tex) (./autoencoder.bbl
+[14 <./figures/ga_comparison4_1.png> <./figures/ga_comparison4_2.png>])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -560,21 +554,16 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[15
-
-] (./autoencoder.aux)
-
-LaTeX Warning: There were undefined references.
-
+[15] (./autoencoder.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4625 strings out of 493876
- 71323 string characters out of 1147346
- 138132 words of memory out of 3000000
- 7794 multiletter control sequences out of 10000+50000
+ 4636 strings out of 493876
+ 71646 string characters out of 1147346
+ 138118 words of memory out of 3000000
+ 7803 multiletter control sequences out of 10000+50000
  37555 words of font info for 71 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
  44i,16n,45p,1532b,618s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -593,9 +582,9 @@ oftware/texlive/2008/texmf-dist/fonts/type1/bluesky/ams/msbm10.pfb></v/filer4b/
 software/texlive/2008/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></v/filer4b/s
 oftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></v/filer4b/so
 ftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on autoencoder.pdf (15 pages, 1578550 bytes).
+Output written on autoencoder.pdf (15 pages, 1793993 bytes).
 PDF statistics:
- 134 PDF objects out of 1000 (max. 8388607)
+ 138 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 

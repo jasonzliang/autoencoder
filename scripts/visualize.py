@@ -13,7 +13,7 @@ plt.figure(figsize=(10,7))
 def comparePerformance(myFile='script_data/ga_comparison.txt', myLabels=["SGD", "HGA", "CGA"], 
   x = [(1,17), (18,34), (35,51)], outFile="ga_comparison.png",
   xlog=False, ylog=False):
-  linestyles = ['-', '--', ':', '-.']
+  linestyles = ['-', '--', ':', '-.'] * 5
   f = open(myFile)
   raw_data = f.readlines()
 #   for item in raw_data[0:17]:
@@ -26,9 +26,10 @@ def comparePerformance(myFile='script_data/ga_comparison.txt', myLabels=["SGD", 
   
   for i, d in enumerate(myList):
     time, error = d
-    plt.plot(time, error, marker='x', linewidth=2, linestyle=linestyles[i], label=myLabels[i])
+    plt.plot(time, error, linewidth=1.5, linestyle=linestyles[i], label=myLabels[i])
   plt.xlabel("time in seconds")
   plt.ylabel("total error")
+  plt.ylim(0,100000)
   ax = plt.gca()
   if xlog:
     ax.set_xscale('log')
@@ -105,4 +106,9 @@ if __name__ == '__main__':
   #   myLabels=["1 thread", "4 threads", "8 threads", "16 threads"], 
   #   x = [(1,17), (18,34), (35,51), (52,68)], 
   #   outFile="ga_comparison2.png", xlog=False, ylog=False)
-  compareNumHiddenUnits()
+  comparePerformance(myFile='script_data/ga_comparison4.txt', myLabels=["HGA-2", "HGA-4", "HGA-8", "HGA-16", "HGA-32"], 
+  x = [(1,17), (18,34), (35,51), (52,68), (69,85)], outFile="ga_comparison4_1.png",
+  xlog=False, ylog=False)
+  comparePerformance(myFile='script_data/ga_comparison4.txt', myLabels=["CGA-2", "CGA-4", "CGA-8", "CGA-16", "CGA-32"], 
+  x = [(86,102), (103,119), (120,136), (137,153), (154,170)], outFile="ga_comparison4_2.png",
+  xlog=False, ylog=False)

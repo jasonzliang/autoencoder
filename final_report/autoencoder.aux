@@ -13,7 +13,7 @@
 \newlabel{fig:autoencoder}{{1}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}}
 \citation{hecht1989theory}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces reconstructions of corrupted digits from the (a) MNIST dataset (b) bg-rand dataset, (c) bg-img dataset, and (d) rot dataset\relax }}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Reconstructions of corrupted digits from the (a) MNIST dataset (b) bg-rand dataset, (c) bg-img dataset, and (d) rot dataset\relax }}{3}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{3}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{3}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{3}}
@@ -25,42 +25,42 @@
 \newlabel{tab:notation}{{I}{4}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Backpropagation\relax }}{5}}
 \newlabel{alg:backprop}{{1}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Performance}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.\relax }}{6}}
-\newlabel{fig:performanceomp}{{3}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Genetic Algorithm}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.\relax }}{7}}
-\newlabel{fig:performanceblas}{{4}{7}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Conventional Genetic Algorithm (CGA)\relax }}{7}}
-\newlabel{alg:genetic}{{2}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Genetic Algorithm}{5}}
 \citation{david2014genetic}
 \citation{david2014genetic}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.\relax }}{8}}
-\newlabel{fig:ompvsblas}{{5}{8}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Hybrid Genetic Algorithm (HGA)\relax }}{8}}
-\newlabel{alg:hga}{{3}{8}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Conventional Genetic Algorithm (CGA)\relax }}{6}}
+\newlabel{alg:genetic}{{2}{6}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Hybrid Genetic Algorithm (HGA)\relax }}{6}}
+\newlabel{alg:hga}{{3}{6}}
 \citation{vincent2010stacked}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Results}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Performance of Stochastic Gradient Descent Training}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Visualization of the filters of the first 100 hidden nodes in an denoising autoencoder trained over all 60000 images.\relax }}{9}}
-\newlabel{fig:experiment3_1}{{6}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, and 8 threads.\relax }}{10}}
-\newlabel{fig:experiment1}{{7}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Visualization of Autoencoder}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Results}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Stochastic Gradient Descent}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Visualization of the filters of the first 100 hidden nodes in an denoising autoencoder trained over all 60000 images.\relax }}{7}}
+\newlabel{fig:experiment3_1}{{3}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total reconstruction error over 5000 images for 1, 4, and 8 threads.\relax }}{8}}
+\newlabel{fig:experiment1}{{4}{8}}
 \citation{vincent2010stacked}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Representation Learning for Supervised Classification}{11}}
-\newlabel{tab:classvsenc}{{\caption@xref {tab:classvsenc}{ on input line 153}}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.\relax }}{9}}
+\newlabel{fig:performanceomp}{{5}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Visualization of Trained Weights and Reconstructed Images}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.\relax }}{10}}
+\newlabel{fig:performanceblas}{{6}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Representation Learning for Supervised Classification}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Time per iteration versus parallelization technique and hidden nodes. We use 16 threads here.\relax }}{11}}
+\newlabel{fig:ompvsblas}{{7}{11}}
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Summary of the results of running different classification algorithms on the raw MNIST data and on the output from a trained autoencoder. We see in all cases that using the encoded data produces a better result.\relax }}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Training the Autoencoder with a Genetic Algorithm}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.\relax }}{12}}
+\newlabel{tab:classvsenc}{{II}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Genetic Algorithms}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces List of hyperparameters for CGA and HGA. FANIN is input dimensionality of autoencoder layer.\relax }}{11}}
+\newlabel{tab:hyperparameters}{{III}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error. HGA and CGA uses a default population size of 2 and all three algorithms cycle through 1000 training images for 15 iterations.\relax }}{12}}
 \newlabel{fig:ga_comparison}{{8}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Performance of HGA for 1, 4, 8, and 16 threads.\relax }}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error.\relax }}{13}}
-\newlabel{fig:ga_comparison2}{{10}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Comparison of performance versus number of threads and number of hidden units in autoencoder layer for HGA with population size (a) 2 and (b) 50.\relax }}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{14}}
-\newlabel{fig:ga_comparison3}{{11}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Performance of HGA for 1, 4, 8, and 16 threads with a population size of 2 and 1000 training images.\relax }}{13}}
+\newlabel{fig:ga_comparison2}{{9}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Comparison of performance versus number of threads and number of hidden units in autoencoder layer for HGA with population size (a) 2 and (b) 50.\relax }}{13}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{13}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{13}}
+\newlabel{fig:ga_comparison3}{{10}{13}}
 \citation{srinivas1994genetic}
 \citation{cantu1998survey}
 \citation{vincent2010stacked}
@@ -68,14 +68,18 @@
 \bibdata{autoencoder}
 \bibcite{bengio2012rep}{1}
 \bibcite{vincent2010stacked}{2}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Comparison of performance for CGA and HGA with population sizes of 2, 4, 8, 16, and 32. HGA performs significantly better than CGA in terms of final reconstruction\relax }}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{14}}
+\newlabel{fig:ga_comparison4}{{11}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Future Work}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{14}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Genetic Algorithm\relax }}{14}}
+\newlabel{alg:genetic}{{4}{14}}
+\@writefile{toc}{\contentsline {section}{References}{14}}
 \bibcite{hinton2006learning}{3}
 \bibcite{hecht1989theory}{4}
 \bibcite{bottou-91c}{5}
 \bibcite{srinivas1994genetic}{6}
 \bibcite{cantu1998survey}{7}
 \bibcite{david2014genetic}{8}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Future Work}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{15}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Genetic Algorithm\relax }}{15}}
-\newlabel{alg:genetic}{{4}{15}}
-\@writefile{toc}{\contentsline {section}{References}{15}}

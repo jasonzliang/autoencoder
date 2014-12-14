@@ -218,7 +218,7 @@ void experiment_1(vector<int> &trainLabels, float **trainingImages)
   vector<int> auto_iters {15};
   vector<float> noise_levels {0.25};
 
-  int cores[3] = {1, 4, 8};
+  int cores[3] = {1, 4, 8, 16};
   for (int i = 0; i < 3; i++)
   {
     omp_set_num_threads(cores[i]);

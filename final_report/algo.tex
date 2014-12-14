@@ -76,9 +76,7 @@ b^O_j &\leftarrow b^O_j - \eta\delta^O_j.
 
 Note also that we find that the updates for the hidden layer is the same as in the squared error loss function with sigmoid activation. A general overview of the backpropagation algorithm is given by by Algorithm~\ref{alg:backprop}.
 
-The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. In particular, the weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. 
-
-Once we have trained a single autoencoder layer, we can stack another autoencoder layer on top of the first one for further training. This second autoencoder takes the output of the hidden layer (encoding stage) of the first autoencoder as input and attempts the minimize the input's reconstruction cost.
+The algorithm and derivations for the autoencoder are a slight variation on the above derivations for a more general neural network. The weight matrix of the output layer (decoding stage) is the transpose of the weight matrix of the hidden layer (encoding stage). Thus $z=s(W^{O}(W^{H}x + b) + b^{'})$, $(W^H)^T = W^O$, and $W^H_{ij} = W^O_{ji}$. For training denoising autoencoders in particular, $z=s(W^{O}(W^{H}x_{\text{corr}} + b) + b^{'})$, where $x_{\text{corr}}$ is a randomly corrupted version of the original input data $x_{\text{orig}}$ and the loss function is defined as $E(x_{\text{orig}}, z)$. In order words, we are trying to learn an autoencoder takes a corrupted input and tries to reconstruct the original uncorrupted version. Once we have trained a single autoencoder layer, we can stack another autoencoder layer on top of the first one for further training. This second autoencoder takes the corrupted output of the hidden layer (encoding stage) of the first autoencoder as input and is trained to minimize the loss function $E(x_{\text{orig}}, z)$.
 
 \begin{algorithm}[h]
 \caption{Backpropagation}
@@ -114,7 +112,7 @@ As mentioned in the introduction, a genetic algorithm (GA) is a biologically ins
 \caption{Conventional Genetic Algorithm (CGA)}
 \label{alg:genetic}
 \begin{algorithmic}
-\STATE Initialize $N$ individuals randomly
+\STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
 \FOR{iter $=1,2,3...M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$. 
@@ -124,7 +122,7 @@ As mentioned in the introduction, a genetic algorithm (GA) is a biologically ins
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
 	\ENDFOR
-	\STATE Replace worst $\alpha$ individuals in population with newly created individuals
+	\STATE Replace worst $\alpha N$ ($0<\alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -144,7 +142,7 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 \caption{Hybrid Genetic Algorithm (HGA)}
 \label{alg:hga}
 \begin{algorithmic}
-\STATE Initialize $N$ individuals randomly
+\STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
 \FOR{iter $=1,2,3...M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
@@ -155,9 +153,9 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
 	\ENDFOR
-	\STATE Replace worst $\alpha$ individuals in population with newly created individuals
+	\STATE Replace worst $\alpha N$ ($0<\alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
-The key idea of performing backpropagation is that it assists the mutation operator in moving the individuals towards regions of high fitness. While the mutation operator perturbs individuals randomly, backpropagation will always follow the gradient. This distinction is significant in high dimensional spaces, as the mutation operator will require a large population size to work optimally, while backpropagation does not. Instead, the mutation operator serves a secondary role of helping the individuals to escape from a local optima through random perturbations. Compared to CGA with the same population size, HGA performs significantly better as we shall see in the experimental results section. 
+The key idea of performing backpropagation is that it assists the mutation operator in moving the individuals towards regions of high fitness. While the mutation operator perturbs individuals randomly, backpropagation will always follow the gradient. This distinction is significant in high dimensional spaces, as the mutation operator will require a large population size to work optimally, while backpropagation does not. Instead, the mutation operator serves a secondary role of helping the individuals to escape from a local optima through random perturbations. Preliminary results show that compared to CGA with the same population size, HGA performs significantly better. Furthermore, the performance of HGA does not degrade significantly with smaller population sizes, even when using a extremely small population size of 2. 
