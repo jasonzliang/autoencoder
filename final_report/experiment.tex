@@ -13,7 +13,7 @@ corrupt it by setting each pixel to zero with probability 0.25. All experiments 
 We first analyze how the number of threads affects the rate at which reconstruction
 error decreases for SGD. We train a single autoencoder layer with 500 hidden nodes for
 15 iterations over 5000 training images. An iteration involves going through
-all training images and for each image, use SGD to update the weight matrix. We initialize the weights of the autoencoder randomly by sampling from the interval $[-1/\sqrt{\text{FANIN}}, 1/\sqrt{\text{FANIN}}]$.
+all training images and for each image, use SGD to update the weight matrix. We initialize the weights of the autoencoder randomly by sampling from the interval $[-1/\sqrt{\text{FANIN}}, 1/\sqrt{\text{FANIN}}]$, where FANIN is the dimensionality of the input.
 Fig.~\ref{fig:experiment1} shows the relationship between reconstruction error, total
 time elapsed, and the number of threads used. Regardless of the number of
 threads, the reconstruction error decreases sharply in the first few iterations
