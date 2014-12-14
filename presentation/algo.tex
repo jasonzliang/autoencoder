@@ -48,22 +48,22 @@ where,
 	\frametitle{Algorithms}
 	\framesubtitle{~~}  %% needed for proper positioning of the logo ...
 
-\begin{algorithm}[H]
+\begin{algorithm}[h]
 \small
 \caption{Conventional Genetic Algorithm (CGA)}
 \label{alg:genetic}
 \begin{algorithmic}
-\STATE Initialize $N$ individuals randomly
-\FOR{iter $=1,2,3...M$, where M is number of training examples}
+\STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
+\FOR{iter $=1,2,3,...,M$, where $M$ is number of training examples}
   \STATE Evaluate each individual with objective function and assign fitness
-  \STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$.
+  \STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
   \STATE Select existing individuals via \textbf{roulette selection}
-  \FOR{Every two individuals $a$ and $b$ selected}
+  \FOR{every two individuals $a$ and $b$ selected}
     \STATE Create copies $a'$ and $b'$
     \STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
     \STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
   \ENDFOR
-  \STATE Replace worst $\alpha$ individuals in population with newly created individuals
+  \STATE Replace worst $\alpha N$ ($0< \alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -83,18 +83,18 @@ where,
 \caption{Hybrid Genetic Algorithm (HGA)}
 \label{alg:hga}
 \begin{algorithmic}
-\STATE Initialize $N$ individuals randomly
-\FOR{iter $=1,2,3...M$, where M is number of training examples}
+\STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
+\FOR{iter $=1,2,3,...,M$, where $M$ is number of training examples}
   \STATE Evaluate each individual with objective function and assign fitness
   \STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
-  \STATE Perform backpropagation on top $\beta$ individuals with highest fitness
+  \STATE \textit{Perform backpropagation on top $\beta N$ ($0 < \beta < 1$) individuals with highest fitness}
   \STATE Select existing individuals via \textbf{roulette selection}
-  \FOR{Every two individuals $a$ and $b$ selected}
+  \FOR{every two individuals $a$ and $b$ selected}
     \STATE Create copies $a'$ and $b'$
     \STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
     \STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
   \ENDFOR
-  \STATE Replace worst $\alpha$ individuals in population with newly created individuals
+  \STATE Replace worst $\alpha N$ ($0< \alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
