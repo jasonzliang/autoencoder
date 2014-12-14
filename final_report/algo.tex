@@ -113,7 +113,7 @@ As mentioned in the introduction, a genetic algorithm (GA) is a biologically ins
 \label{alg:genetic}
 \begin{algorithmic}
 \STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
-\FOR{iter $=1,2,3,...,M$, where M is number of training examples}
+\FOR{iter $=1,2,3,...,M$, where $M$ is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
 	\STATE Select existing individuals via \textbf{roulette selection}
@@ -131,9 +131,9 @@ We will explain step by step what each bolded term means and how it affects indi
 
 \begin{itemize}
   \item Power Scaling: All individuals in the population are ranked in ascending order according to their fitness. Each individual is assigned a scaled fitness is is equal to $R^{\gamma}$ where R is the position of the individual within the ranking and $\gamma$ is a parameter to be tuned. Higher values for $\gamma$ will create a scaled fitness distribution that favor individuals with higher actual fitness. Thus $\gamma$ will affect the selection of individuals later and determine how elitist the selection of individuals will be (in other words, how much more likely an individual of higher fitness will be selected).
-  \item Roulette Selection: Also known as fitness proportionate selection, roulette selection randomly samples an individual from the population with proportion to its scaled fitness. There are many other selection methods such as tournament selection and truncation selection. However, our preliminary experimental results suggest that roulette selection is most appropriate for training weights of autoencoders. The purpose of this operation is to select individuals with good fitness to create the next generation's population. 
-  \item Uniform Cauchy Mutation: Each element of the individual (a vector of real numbers) is mutated with probability $mr$. For each element, we generate a random number between 0 and 1. If this random number is less than $mr$, we sample value from a zero-meaned Cauchy distribution with standard deviation $ma$ and add that value to the element. The purpose of this operation is to randomly perturb existing individuals and possibly create new ones whose fitness is slightly better. 
-  \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. If crossover is performed on two individuals with good fitness, there is a chance that the elements (also known as genes) of the individuals that are responsible for their fitnesses might be combined into a new individual. 
+  \item Roulette Selection: Also known as fitness proportionate selection, roulette selection randomly samples an individual from the population with probability proportional to its scaled fitness. There are many other selection methods such as tournament selection and truncation selection. However, our preliminary experimental results suggest that roulette selection is most appropriate for training weights of autoencoders. The purpose of this operation is to select individuals with good fitness for creating the next generation's population. 
+  \item Uniform Cauchy Mutation: Each element of the individual (a vector of real numbers) is mutated with probability $mr$. For each element, we generate a random number between 0 and 1. If this random number is less than $mr$, we sample a value from a zero-meaned Cauchy distribution with standard deviation $ma$ and add that value to the element. The purpose of this operation is to randomly perturb existing individuals and possibly create new ones whose fitness is slightly better. 
+  \item Uniform Crossover: Each element of the individual is swapped with the same corresponding element of another individual with probability $cr$. If crossover is performed on two individuals with good fitnesses, there is a chance that the elements of the individuals that are responsible for their high fitnesses might be combined together into a new individual. 
 \end{itemize}
 
 Next we will look at HGA, a hybrid GA that combines genetic operators with backpropagation to keep the population size small and remain computationally tractable. The pseudocode for HGA is shown in Algorithm~\ref{alg:hga} and is based off recent work done by David and Greental \cite{david2014genetic} on applying GAs to learn stacked autoencoders. The main difference between our HGA and the algorithm described in \cite{david2014genetic} is that we use roulette selection instead of truncation selection and uniform Cauchy mutation instead of mutating weights to zero.
@@ -143,10 +143,10 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 \label{alg:hga}
 \begin{algorithmic}
 \STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
-\FOR{iter $=1,2,3,...,M$, where M is number of training examples}
+\FOR{iter $=1,2,3,...,M$, where $M$ is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
-	\STATE \textit{Perform backpropagation on top $\beta$ individuals with highest fitness}
+	\STATE \textit{Perform backpropagation on top $\beta N$ ($0 < \beta < 1$) individuals with highest fitness}
 	\STATE Select existing individuals via \textbf{roulette selection}
 	\FOR{every two individuals $a$ and $b$ selected}
 		\STATE Create copies $a'$ and $b'$
