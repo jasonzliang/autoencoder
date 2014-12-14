@@ -150,9 +150,9 @@ better.  The results of these experiments is given in
 Table.~\ref{tab:classvsenc}.
 
 To test this, we used liblinear \cite{fan2008liblinear} to attempt to train a model and then predict on
-a test set for both the original and encoded datasets. With the original data
+a test set for both the original and encoded datasets. With the original data,
 liblinear gives an accuracy of 91.68\% on the test set when using the default
-parameters. However, when the encoded data from the trained autoencoder gives
+parameters. However, the encoded data from the trained autoencoder gives
 an accuracy of 97.07\%. This is a nontrivial improvement in the classification
 accuracy. Thus, the autoencoder has created a better representation of the data
 which made it easier for liblinear to classify. This verifies that the
