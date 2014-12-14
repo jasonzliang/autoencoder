@@ -2,44 +2,44 @@ This is BibTeX, Version 0.99c (Web2C 7.5.7)
 The top-level auxiliary file: autoencoder.aux
 The style file: unsrt.bst
 Database file #1: autoencoder.bib
-You've used 27 entries,
+You've used 30 entries,
             1791 wiz_defined-function locations,
-            616 strings with 8305 characters,
-and the built_in function-call counts, 7298 in all, are:
-= -- 710
-> -- 264
-< -- 8
-+ -- 99
-- -- 72
-* -- 480
-:= -- 1083
-add.period$ -- 88
-call.type$ -- 27
-change.case$ -- 27
+            636 strings with 8914 characters,
+and the built_in function-call counts, 8388 in all, are:
+= -- 813
+> -- 307
+< -- 10
++ -- 114
+- -- 84
+* -- 552
+:= -- 1234
+add.period$ -- 98
+call.type$ -- 30
+change.case$ -- 30
 chr.to.int$ -- 0
-cite$ -- 27
-duplicate$ -- 345
-empty$ -- 715
-format.name$ -- 72
-if$ -- 1682
+cite$ -- 30
+duplicate$ -- 399
+empty$ -- 819
+format.name$ -- 84
+if$ -- 1942
 int.to.chr$ -- 0
-int.to.str$ -- 27
-missing$ -- 27
-newline$ -- 138
-num.names$ -- 27
-pop$ -- 76
+int.to.str$ -- 30
+missing$ -- 30
+newline$ -- 153
+num.names$ -- 32
+pop$ -- 89
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 188
+skip$ -- 225
 stack$ -- 0
-substring$ -- 588
-swap$ -- 111
-text.length$ -- 8
+substring$ -- 681
+swap$ -- 135
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 75
-width$ -- 29
-write$ -- 304
+while$ -- 86
+width$ -- 32
+write$ -- 338

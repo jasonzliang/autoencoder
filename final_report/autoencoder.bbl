@@ -152,4 +152,24 @@ J.J. Grefenstette.
 \newblock {\em Systems, Man and Cybernetics, IEEE Transactions on},
   16(1):122--128, Jan 1986.
 
+\bibitem{srinivas94adaptive}
+M.~Srinivas and L.M. Patnaik.
+\newblock Adaptive probabilities of crossover and mutation in genetic
+  algorithms.
+\newblock {\em Systems, Man and Cybernetics, IEEE Transactions on},
+  24(4):656--667, Apr 1994.
+
+\bibitem{zinkevich2010psgd}
+Martin Zinkevich, Markus Weimer, Lihong Li, and Alex~J. Smola.
+\newblock Parallelized stochastic gradient descent.
+\newblock In J.D. Lafferty, C.K.I. Williams, J.~Shawe-Taylor, R.S. Zemel, and
+  A.~Culotta, editors, {\em Advances in Neural Information Processing Systems
+  23}, pages 2595--2603. Curran Associates, Inc., 2010.
+
+\bibitem{Belding95thedistributed}
+Theodore~C. Belding.
+\newblock The distributed genetic algorithm revisited.
+\newblock In {\em Proceedings of the Sixth International Conference on Genetic
+  Algorithms}, pages 114--121, 1995.
+
 \end{thebibliography}
