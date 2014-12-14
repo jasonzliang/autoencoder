@@ -49,7 +49,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Stochastic Gradient Descent}{7}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Performance results on a single autoencoder layer with 500 hidden nodes and trained for 15 iterations. Plot shows time elapsed versus total training error over 5000 images for 1, 4, 8, and 16 threads.\relax }}{7}}
 \newlabel{fig:experiment1}{{2}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We use our own parallel implementation using OpenMP and we use 5000 training images.\relax }}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with our own OpenMP implementation and use 5000 training images.\relax }}{8}}
 \newlabel{fig:performanceomp}{{3}{8}}
 \citation{vincent2010stacked}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Time per iteration versus the number of threads and hidden nodes. We parallelize with OpenBLAS and we use 5000 training images.\relax }}{9}}
@@ -74,26 +74,26 @@
 \newlabel{tab:hyperparameters}{{III}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error. HGA and CGA uses a default population size of 2 and all three algorithms cycle through 1000 training images for 15 iterations.\relax }}{13}}
 \newlabel{fig:ga_comparison}{{8}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Performance of HGA for 1, 4, 8, and 16 threads with a population size of 2 and 1000 training images.\relax }}{14}}
 \newlabel{fig:ga_comparison2}{{9}{14}}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Comparison of performance versus number of threads and number of hidden units in autoencoder layer for HGA with population size (a) 2 and (b) 50.\relax }}{14}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{14}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{14}}
 \newlabel{fig:ga_comparison3}{{10}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion}{14}}
 \citation{metaoptimization}
 \citation{srinivas94adaptive}
 \citation{zinkevich2010psgd}
 \citation{Belding95thedistributed}
+\bibstyle{unsrt}
+\bibdata{autoencoder}
+\bibcite{bengio2012rep}{1}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Comparison of performance for CGA and HGA with population sizes of 2, 4, 8, 16, and 32. HGA performs significantly better than CGA in terms of final reconstruction error.\relax }}{15}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{15}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{15}}
 \newlabel{fig:ga_comparison4}{{11}{15}}
 \@writefile{toc}{\contentsline {section}{\numberline {VI}Future Work}{15}}
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{15}}
-\bibstyle{unsrt}
-\bibdata{autoencoder}
-\bibcite{bengio2012rep}{1}
 \bibcite{vincent2010stacked}{2}
 \bibcite{wold1987principal}{3}
 \bibcite{scholkopf1997kernel}{4}
