@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 22:09
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 22:24
 entering extended mode
  %&-line parsing enabled.
 **autoencoder
@@ -505,13 +505,13 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 <figures/ga_comparison.png, id=65, 643.56435pt x 450.9648pt>
 File: figures/ga_comparison.png Graphic file (type png)
 
 <use figures/ga_comparison.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -605,7 +605,7 @@ msbm10.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/u
 tmb8a.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/ut
 mr8a.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on autoencoder.pdf (17 pages, 1830961 bytes).
+Output written on autoencoder.pdf (17 pages, 1835652 bytes).
 PDF statistics:
  148 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)

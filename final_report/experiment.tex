@@ -194,12 +194,6 @@ using the autoencoder always results in the classifier improving it's accuracy.
 	\label{tab:classvsenc}
 \end{table}
 
-\begin{figure}[h] \centering
-	\includegraphics[width=0.8\linewidth]{ga_comparison.png}
-	\caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error. HGA and CGA uses a default population size of 2 and all three algorithms cycle through 1000 training images for 15 iterations.}
-	\label{fig:ga_comparison}
-\end{figure}
-
 \subsection{Genetic Algorithms}
 
 \begin{table}[h]
@@ -220,9 +214,15 @@ Backpropagation Fraction $\beta$ (HGA only) & $0.5$ \\
 \label{tab:hyperparameters}
 \end{table}
 
-For all of the following experiments, we train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. The default hyperparameters for CGA and HGA are listed in Table.~\ref{tab:hyperparameters}. 
+\begin{figure}[h] \centering
+  \includegraphics[width=0.8\linewidth]{ga_comparison.png}
+  \caption{Comparison of the performance of SGD, HGA, and CGA. SGD is fastest, while HGA achieves the lowest reconstruction error. HGA and CGA uses a default population size of 2 and all three algorithms cycle through 1000 training images for 15 iterations.}
+  \label{fig:ga_comparison}
+\end{figure}
 
-In Fig.~\ref{fig:ga_comparison}, we compare the performance of stochastic gradient descent (SGD), our previously mentioned hybrid GA (HGA), which uses backpropagation to update the best individuals in the population, and a conventional GA (CGA), which does not use any gradient information. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all three algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that with properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
+For all of the following experiments, we train a single autoencoder layer with 1000 hidden units and cycle through 1000 training digits for 15 iterations. The default hyperparameters for CGA and HGA are listed in Table.~\ref{tab:hyperparameters}. To parallelize the GA, we modified the mutation and crossover operators to support multiple threads. Because mutation and crossover modifies each element of the individual independently, no locking is required. The assignment of fitnesses to the individuals is already parallelized since it reuses the same code from SGD that computes the value of the loss function. The rest of the GA does not need parallelization since the remaining operations are computationally cheap. 
+
+In Fig.~\ref{fig:ga_comparison}, we compare the performance of SGD, HGA, which uses backpropagation to update the best individuals in the population, and CGA, which does not use any gradient information. SGD is the fastest by roughly a factor of two when compared to HGA, while CGA is somewhere in between. However, HGA is able to achieve the lowest reconstruction error (8709 vs SGD's 9427). CGA performed the worst out of all three algorithms, having a reconstruction error that is three times larger than that of the other algorithms. The hyperparameters for HGA and CGA are hand tuned and not necessary optimal. However, we believe that with properly tuned hyperparameters, HGA might be competitive with SGD for both final reconstruction error and performance time. 
 
 Next in Fig.~\ref{fig:ga_comparison2}, we examine the scalability of HGA. HGA shows roughly 3x speedup when using 4 threads, 5x speedup when using 8 threads, and 6x speedup when using 16 threads. The performance improvement versus the number of threads is sublinear and can be attributed to two main causes: 1) Cache conflicts when performing mutation and crossover due to multiple threads writing and reading different memory locations, 2) The sequential nature of backpropagation, which HGA utilizes to help optimize the weights. However, we do see that HGA does seem to moderately better scalability than our parallel implementation of SGD. This is attributable to the fact that the mutation and crossover operators are very straightforward to parallelize and scale in performance very well. 
 
