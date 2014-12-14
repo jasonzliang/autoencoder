@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 23:09
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 23:33
 entering extended mode
  %&-line parsing enabled.
 **autoencoder
@@ -543,8 +543,8 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 ) (./discussion.tex [13 <./figures/ga_comparison.png>] [14 <./figures/ga_compar
 ison2.png> <./figures/ga_comparison3.png> <./figures/ga_comparison3_big.png>])
-(./future.tex) (./conclusion.tex) [15 <./figures/ga_comparison4_1.png> <./figur
-es/ga_comparison4_2.png>] (./autoencoder.bbl
+(./future.tex) (./conclusion.tex) (./autoencoder.bbl [15 <./figures/ga_comparis
+on4_1.png> <./figures/ga_comparison4_2.png>]
 Missing character: There is no â in font ptmri7t!
 Missing character: There is no € in font ptmri7t!
 Missing character: There is no ” in font ptmri7t!
@@ -599,7 +599,7 @@ msbm10.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/u
 tmb8a.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/ut
 mr8a.pfb></v/filer4b/software/texlive/2008/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on autoencoder.pdf (16 pages, 1834699 bytes).
+Output written on autoencoder.pdf (16 pages, 1834648 bytes).
 PDF statistics:
  145 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)

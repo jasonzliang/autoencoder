@@ -4,15 +4,15 @@ The style file: unsrt.bst
 Database file #1: autoencoder.bib
 You've used 30 entries,
             1791 wiz_defined-function locations,
-            636 strings with 8914 characters,
-and the built_in function-call counts, 8388 in all, are:
-= -- 813
-> -- 307
+            636 strings with 8911 characters,
+and the built_in function-call counts, 8370 in all, are:
+= -- 812
+> -- 303
 < -- 10
-+ -- 114
-- -- 84
-* -- 552
-:= -- 1234
++ -- 113
+- -- 83
+* -- 550
+:= -- 1231
 add.period$ -- 98
 call.type$ -- 30
 change.case$ -- 30
@@ -20,8 +20,8 @@ chr.to.int$ -- 0
 cite$ -- 30
 duplicate$ -- 399
 empty$ -- 819
-format.name$ -- 84
-if$ -- 1942
+format.name$ -- 83
+if$ -- 1938
 int.to.chr$ -- 0
 int.to.str$ -- 30
 missing$ -- 30
@@ -31,7 +31,7 @@ pop$ -- 89
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 225
+skip$ -- 224
 stack$ -- 0
 substring$ -- 681
 swap$ -- 135
