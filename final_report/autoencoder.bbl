@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{bengio2012rep}
 Yoshua Bengio, Aaron~C. Courville, and Pascal Vincent.
@@ -13,10 +13,37 @@ Pascal Vincent, Hugo Larochelle, Isabelle Lajoie, Yoshua Bengio, and
   deep network with a local denoising criterion.
 \newblock {\em The Journal of Machine Learning Research}, 11:3371--3408, 2010.
 
-\bibitem{hinton2006learning}
-Geoffrey~E. Hinton, Simon Osindero, and Yee-Whye Teh.
-\newblock A fast learning algorithm for deep belief nets.
-\newblock {\em Neural Comput.}, 18(7):1527--1554, July 2006.
+\bibitem{wold1987principal}
+Svante Wold, Kim Esbensen, and Paul Geladi.
+\newblock Principal component analysis.
+\newblock {\em Chemometrics and intelligent laboratory systems}, 2(1):37--52,
+  1987.
+
+\bibitem{scholkopf1997kernel}
+Bernhard Sch{\"o}lkopf, Alexander Smola, and Klaus-Robert M{\"u}ller.
+\newblock Kernel principal component analysis.
+\newblock In {\em Artificial Neural Networks—ICANN'97}, pages 583--588.
+  Springer, 1997.
+
+\bibitem{tenenbaum2000global}
+Joshua~B Tenenbaum, Vin De~Silva, and John~C Langford.
+\newblock A global geometric framework for nonlinear dimensionality reduction.
+\newblock {\em Science}, 290(5500):2319--2323, 2000.
+
+\bibitem{van2008visualizing}
+Laurens Van~der Maaten and Geoffrey Hinton.
+\newblock Visualizing data using t-sne.
+\newblock {\em Journal of Machine Learning Research}, 9(2579-2605):85, 2008.
+
+\bibitem{hinton2006reducing}
+Geoffrey~E Hinton and Ruslan~R Salakhutdinov.
+\newblock Reducing the dimensionality of data with neural networks.
+\newblock {\em Science}, 313(5786):504--507, 2006.
+
+\bibitem{haykin2004comprehensive}
+Simon Haykin and Neural Network.
+\newblock A comprehensive foundation.
+\newblock {\em Neural Networks}, 2(2004), 2004.
 
 \bibitem{hecht1989theory}
 Robert Hecht-Nielsen.
@@ -29,10 +56,84 @@ Robert Hecht-Nielsen.
 \newblock Stochastic gradient learning in neural networks.
 \newblock In {\em Proceedings of Neuro-N\^imes 91}, Nimes, France, 1991. EC2.
 
+\bibitem{rifai2011contractive}
+Salah Rifai, Pascal Vincent, Xavier Muller, Xavier Glorot, and Yoshua Bengio.
+\newblock Contractive auto-encoders: Explicit invariance during feature
+  extraction.
+\newblock In {\em Proceedings of the 28th International Conference on Machine
+  Learning (ICML-11)}, pages 833--840, 2011.
+
+\bibitem{bengio2009learning}
+Yoshua Bengio.
+\newblock Learning deep architectures for ai.
+\newblock {\em Foundations and trends{\textregistered} in Machine Learning},
+  2(1):1--127, 2009.
+
+\bibitem{schmidhuber2014deep}
+J{\"u}rgen Schmidhuber.
+\newblock Deep learning in neural networks: An overview.
+\newblock {\em arXiv preprint arXiv:1404.7828}, 2014.
+
+\bibitem{hinton2006fast}
+Geoffrey Hinton, Simon Osindero, and Yee-Whye Teh.
+\newblock A fast learning algorithm for deep belief nets.
+\newblock {\em Neural computation}, 18(7):1527--1554, 2006.
+
+\bibitem{lecun1995convolutional}
+Yann LeCun and Yoshua Bengio.
+\newblock Convolutional networks for images, speech, and time series.
+\newblock {\em The handbook of brain theory and neural networks}, 3361, 1995.
+
+\bibitem{hinton2006learning}
+Geoffrey~E. Hinton, Simon Osindero, and Yee-Whye Teh.
+\newblock A fast learning algorithm for deep belief nets.
+\newblock {\em Neural Comput.}, 18(7):1527--1554, July 2006.
+
+\bibitem{ciresan2011committee}
+Dan Ciresan, Ueli Meier, Jonathan Masci, and J{\"u}rgen Schmidhuber.
+\newblock A committee of neural networks for traffic sign classification.
+\newblock In {\em Neural Networks (IJCNN), The 2011 International Joint
+  Conference on}, pages 1918--1921. IEEE, 2011.
+
+\bibitem{krizhevsky2012imagenet}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1097--1105, 2012.
+
+\bibitem{goodfellow2013multi}
+Ian~J Goodfellow, Yaroslav Bulatov, Julian Ibarz, Sacha Arnoud, and Vinay Shet.
+\newblock Multi-digit number recognition from street view imagery using deep
+  convolutional neural networks.
+\newblock {\em arXiv preprint arXiv:1312.6082}, 2013.
+
 \bibitem{srinivas1994genetic}
 Mandavilli Srinivas and Lalit~M Patnaik.
 \newblock Genetic algorithms: A survey.
 \newblock {\em Computer}, 27(6):17--26, 1994.
+
+\bibitem{gomez2006efficient}
+Faustino Gomez, J{\"u}rgen Schmidhuber, and Risto Miikkulainen.
+\newblock Efficient non-linear control through neuroevolution.
+\newblock In {\em Machine Learning: ECML 2006}, pages 654--662. Springer, 2006.
+
+\bibitem{floreano2008neuroevolution}
+Dario Floreano, Peter D{\"u}rr, and Claudio Mattiussi.
+\newblock Neuroevolution: from architectures to learning.
+\newblock {\em Evolutionary Intelligence}, 1(1):47--62, 2008.
+
+\bibitem{koutnik2014evolving}
+Jan Koutn{\'\i}k, Juergen Schmidhuber, and Faustino Gomez.
+\newblock Evolving deep unsupervised convolutional networks for vision-based
+  reinforcement learning.
+\newblock In {\em Proceedings of the 2014 conference on Genetic and
+  evolutionary computation}, pages 541--548. ACM, 2014.
+
+\bibitem{david2014genetic}
+Omid~E David and Iddo Greental.
+\newblock Genetic algorithms for evolving deep neural networks.
+\newblock In {\em Proceedings of the 2014 conference companion on Genetic and
+  evolutionary computation companion}, pages 1451--1452. ACM, 2014.
 
 \bibitem{cantu1998survey}
 Erick Cant{\'u}-Paz.
@@ -40,10 +141,9 @@ Erick Cant{\'u}-Paz.
 \newblock {\em Calculateurs paralleles, reseaux et systems repartis},
   10(2):141--171, 1998.
 
-\bibitem{david2014genetic}
-Omid~E David and Iddo Greental.
-\newblock Genetic algorithms for evolving deep neural networks.
-\newblock In {\em Proceedings of the 2014 conference companion on Genetic and
-  evolutionary computation companion}, pages 1451--1452. ACM, 2014.
+\bibitem{fan2008liblinear}
+Rong-En Fan, Kai-Wei Chang, Cho-Jui Hsieh, Xiang-Rui Wang, and Chih-Jen Lin.
+\newblock Liblinear: A library for large linear classification.
+\newblock {\em The Journal of Machine Learning Research}, 9:1871--1874, 2008.
 
 \end{thebibliography}

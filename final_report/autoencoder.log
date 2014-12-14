@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 18:08
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2012.10.5)  13 DEC 2014 22:00
 entering extended mode
  %&-line parsing enabled.
 **autoencoder
@@ -430,79 +430,84 @@ driver: pdftex
 
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
-(./intro.tex
+(./intro.tex <figures/autoencoder.png, id=1, 398.48875pt x 300.12125pt>
+File: figures/autoencoder.png Graphic file (type png)
+
+<use figures/autoencoder.png>
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10> on input line 6.
+(Font)              <10> on input line 13.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 6.
+(Font)              <7> on input line 13.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 6.
-LaTeX Font Info:    Try loading font information for U+msa on input line 6.
+(Font)              <5> on input line 13.
+LaTeX Font Info:    Try loading font information for U+msa on input line 13.
 
 (/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 6.
+LaTeX Font Info:    Try loading font information for U+msb on input line 13.
 
 (/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
 [1{/v/filer4b/software/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.ma
-p}]) <figures/autoencoder.png, id=16, 398.48875pt x 300.12125pt>
-File: figures/autoencoder.png Graphic file (type png)
-
-<use figures/autoencoder.png> (./related.tex [2 <./figures/autoencoder.png>])
-(./reconstructed.tex
-<figures/experiment3_2.png, id=22, 927.9468pt x 955.4094pt>
-File: figures/experiment3_2.png Graphic file (type png)
-
-<use figures/experiment3_2.png>
-<figures/rand.png, id=23, 927.9468pt x 959.0229pt>
-File: figures/rand.png Graphic file (type png)
- <use figures/rand.png>
-<figures/bg.png, id=24, 927.9468pt x 959.0229pt>
-File: figures/bg.png Graphic file (type png)
- <use figures/bg.png>
-<figures/rot.png, id=25, 927.9468pt x 959.0229pt>
-File: figures/rot.png Graphic file (type png)
- <use figures/rot.png>)
-(./algo.tex [3 <./figures/experiment3_2.png> <./figures/rand.png> <./figures/bg
-.png> <./figures/rot.png>] [4]
+p} <./figures/autoencoder.png>]) (./related.tex [2]) (./algo.tex [3] [4]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [5]) [6] (./experiment.tex
-<figures/experiment3_1.png, id=45, 927.9468pt x 955.4094pt>
+<figures/experiment3_1.png, id=37, 927.9468pt x 955.4094pt>
 File: figures/experiment3_1.png Graphic file (type png)
 
-<use figures/experiment3_1.png> [7 <./figures/experiment3_1.png>]
-<figures/experiment1SGD.png, id=51, 646.8165pt x 457.83044pt>
+<use figures/experiment3_1.png>
+<figures/experiment3_2.png, id=38, 927.9468pt x 955.4094pt>
+File: figures/experiment3_2.png Graphic file (type png)
+
+<use figures/experiment3_2.png>
+<figures/rand.png, id=39, 927.9468pt x 959.0229pt>
+File: figures/rand.png Graphic file (type png)
+ <use figures/rand.png>
+<figures/bg.png, id=40, 927.9468pt x 959.0229pt>
+File: figures/bg.png Graphic file (type png)
+ <use figures/bg.png>
+<figures/rot.png, id=41, 927.9468pt x 959.0229pt>
+File: figures/rot.png Graphic file (type png)
+ <use figures/rot.png>
+[7 <./figures/experiment3_1.png>]
+<figures/experiment1SGD.png, id=47, 646.8165pt x 457.83044pt>
 File: figures/experiment1SGD.png Graphic file (type png)
 
 <use figures/experiment1SGD.png>
-<figures/performanceomp.png, id=52, 562.1pt x 421.575pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[8 <./figures/experiment3_2.png> <./figures/rand.png> <./figures/bg.png> <./fig
+ures/rot.png>] <figures/performanceomp.png, id=55, 562.1pt x 421.575pt>
 File: figures/performanceomp.png Graphic file (type png)
 
 <use figures/performanceomp.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/performanceblas.png, id=53, 563.10374pt x 421.575pt>
+<figures/performanceblas.png, id=56, 563.10374pt x 421.575pt>
 File: figures/performanceblas.png Graphic file (type png)
 
 <use figures/performanceblas.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/ompvsblas.png, id=54, 563.10374pt x 421.575pt>
+<figures/ompvsblas.png, id=57, 563.10374pt x 421.575pt>
 File: figures/ompvsblas.png Graphic file (type png)
 
 <use figures/ompvsblas.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8 <./figures/experiment1SGD.png>] [9 <./figures/performanceomp.png (PNG copy)>
-] [10 <./figures/performanceblas.png (PNG copy)>]
+[9 <./figures/experiment1SGD.png>] [10 <./figures/performanceomp.png (PNG copy)
+>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 <figures/ga_comparison.png, id=65, 643.56435pt x 450.9648pt>
 File: figures/ga_comparison.png Graphic file (type png)
 
@@ -528,21 +533,44 @@ File: figures/ga_comparison3_big.png Graphic file (type png)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11 <./figures/ompvsblas.png (PNG copy)>] [12 <./figures/ga_comparison.png>]
-<figures/ga_comparison4_1.png, id=76, 647.5392pt x 450.9648pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[11 <./figures/performanceblas.png (PNG copy)>] [12 <./figures/ompvsblas.png (P
+NG copy)>] <figures/ga_comparison4_1.png, id=75, 647.5392pt x 450.9648pt>
 File: figures/ga_comparison4_1.png Graphic file (type png)
 
 <use figures/ga_comparison4_1.png>
-<figures/ga_comparison4_2.png, id=77, 647.5392pt x 450.9648pt>
+<figures/ga_comparison4_2.png, id=76, 647.5392pt x 450.9648pt>
 File: figures/ga_comparison4_2.png Graphic file (type png)
 
 <use figures/ga_comparison4_2.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[13 <./figures/ga_comparison2.png> <./figures/ga_comparison3.png> <./figures/ga
-_comparison3_big.png>]) (./future.tex) (./conclusion.tex) (./autoencoder.bbl
-[14 <./figures/ga_comparison4_1.png> <./figures/ga_comparison4_2.png>])
+[13 <./figures/ga_comparison.png>] [14 <./figures/ga_comparison2.png> <./figure
+s/ga_comparison3.png> <./figures/ga_comparison3_big.png>] [15 <./figures/ga_com
+parison4_1.png> <./figures/ga_comparison4_2.png>]) (./discussion.tex)
+(./future.tex) (./conclusion.tex) (./autoencoder.bbl [16
+
+]
+Missing character: There is no â in font ptmri7t!
+Missing character: There is no € in font ptmri7t!
+Missing character: There is no ” in font ptmri7t!
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 69.
+
+(/v/filer4b/software/texlive/2008/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/it' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 69.
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 69.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 69.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 69.
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -554,17 +582,17 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[15] (./autoencoder.aux)
+[17] (./autoencoder.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4636 strings out of 493876
- 71661 string characters out of 1147346
- 138118 words of memory out of 3000000
- 7803 multiletter control sequences out of 10000+50000
- 37555 words of font info for 71 fonts, out of 3000000 for 5000
+ 4700 strings out of 493876
+ 72633 string characters out of 1147346
+ 138190 words of memory out of 3000000
+ 7853 multiletter control sequences out of 10000+50000
+ 41799 words of font info for 83 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
  44i,16n,45p,1532b,618s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/v/filer4b/software/texlive/2008/texmf-dist/fonts/enc/dvips/base/8r.enc}</v/
@@ -578,13 +606,14 @@ er4b/software/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmr5.pfb></v/filer
 /software/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></v/filer4b
 /software/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy5.pfb></v/filer4b/
 software/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy7.pfb></v/filer4b/s
-oftware/texlive/2008/texmf-dist/fonts/type1/bluesky/ams/msbm10.pfb></v/filer4b/
-software/texlive/2008/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></v/filer4b/s
-oftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></v/filer4b/so
-ftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on autoencoder.pdf (15 pages, 1818156 bytes).
+oftware/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy8.pfb></v/filer4b/so
+ftware/texlive/2008/texmf-dist/fonts/type1/bluesky/ams/msbm10.pfb></v/filer4b/s
+oftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></v/filer4b/so
+ftware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></v/filer4b/sof
+tware/texlive/2008/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on autoencoder.pdf (17 pages, 1831271 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
+ 148 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  81 words of extra memory for PDF output out of 10000 (max. 10000000)
 

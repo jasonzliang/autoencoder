@@ -106,23 +106,23 @@ we train one layer at a time using backpropagation, but during the fine-tuning s
 
 \subsection{Genetic Algorithm}
 
-As mentioned in the introduction, a genetic algorithm (GA) is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The GA works by iteratively improving upon a population of candidate solution vectors (also know as individuals) via genetic operations such as selection, mutation, and crossover. The goal is to maximize the fitness of each individual, which is determined by evaluating the individual with some objective function. In the case of autoencoders, the objective function is the reconstruction loss function defined earlier, the individual is a real valued vector that represents the weights $W$ and biases $b_j^{\{H,O\}}$, and the fitness of an individual is simply $1/E(t,z)$. Algorithm~\ref{alg:genetic} shows the pseudocode of a simple conventional genetic algorithm, which we will refer to as CGA. 
+As mentioned in the introduction, a genetic algorithm (GA) is a biologically inspired black-box optimization algorithm is capable of optimizing arbitrary non-convex, non-differential objective functions. The GA works by iteratively improving upon a population of candidate solution vectors (also know as individuals) via genetic operations such as selection, mutation, and crossover. The goal is to maximize the fitness of each individual, which is determined by evaluating the individual with some objective function. In the case of autoencoders, the objective function is the reconstruction loss function $E(t,z)$, the individual is a real valued vector that represents the weights ($W$) and biases ($b$, $b'$) and the fitness of an individual is simply $1/E(t,z)$. Algorithm~\ref{alg:genetic} shows the pseudocode of a simple conventional genetic algorithm, which we will refer to as CGA. 
 
 \begin{algorithm}[h]
 \caption{Conventional Genetic Algorithm (CGA)}
 \label{alg:genetic}
 \begin{algorithmic}
 \STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
-\FOR{iter $=1,2,3...M$, where M is number of training examples}
+\FOR{iter $=1,2,3,...,M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
-	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$. 
+	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
 	\STATE Select existing individuals via \textbf{roulette selection}
 	\FOR{every two individuals $a$ and $b$ selected}
 		\STATE Create copies $a'$ and $b'$
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
 	\ENDFOR
-	\STATE Replace worst $\alpha N$ ($0<\alpha < 1$) individuals in population with newly created individuals
+	\STATE Replace worst $\alpha N$ ($0< \alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -143,7 +143,7 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 \label{alg:hga}
 \begin{algorithmic}
 \STATE Initialize $N$ individuals randomly by uniformly sampling values from $[-r, r]$
-\FOR{iter $=1,2,3...M$, where M is number of training examples}
+\FOR{iter $=1,2,3,...,M$, where M is number of training examples}
 	\STATE Evaluate each individual with objective function and assign fitness
 	\STATE Scale fitness of all individuals, typically with \textbf{power scaling} with parameter $\gamma$
 	\STATE \textit{Perform backpropagation on top $\beta$ individuals with highest fitness}
@@ -153,7 +153,7 @@ Next we will look at HGA, a hybrid GA that combines genetic operators with backp
 		\STATE Perform \textbf{uniform mutation} on $a'$ and $b'$ with mutation rate $mr$ and mutation amount $ma$
 		\STATE Perform \textbf{uniform crossover} using $a'$ and $b'$ with crossover rate $cr$
 	\ENDFOR
-	\STATE Replace worst $\alpha N$ ($0<\alpha < 1$) individuals in population with newly created individuals
+	\STATE Replace worst $\alpha N$ ($0< \alpha < 1$) individuals in population with newly created individuals
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}

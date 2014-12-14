@@ -25,7 +25,7 @@
 
 \begin{document}
 
-\title{Stacked Denoising Autoencoders: Parallel Stochastic Gradient Descent and Parallel Genetic Algorithm}
+\title{Trained Stacked Denoising Autoencoders for Representation Learning}
 
 \author{\IEEEauthorblockN{Jason Liang}
 \IEEEauthorblockA{jasonzliang@utexas.edu}
@@ -36,22 +36,15 @@
 \maketitle
 
 \begin{abstract}
-We implement stacked denoising autoencoders, a special neural network that is capable of learning powerful representations of high dimensional data. Learning for autoencoders is accomplished via stochastic gradient descent and we show experimental results when training autoencoders on a standard image classification dataset. 
+We implement stacked denoising autoencoders, a class of neural networks that are capable of learning powerful representations of high dimensional data. We describe stochastic gradient descent for unsupervised training of autoencoders, as well as a novel genetic algorithm based approach that makes use of gradient information. We analyze the performance of both optimization algorithms and also the representation learning ability of the autoencoder when it is trained on standard image classification datasets. 
 \end{abstract}
 
 \FloatBarrier
 \section{Introduction}
 \input{intro}
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\linewidth]{autoencoder.png}
-\caption{Overview of an autoencoder and its encoding, decoding stages. The weight matrix of the decoding stage is the transpose of the weight matrix of the encoding stage.}
-\label{fig:autoencoder}
-\end{figure}
 \FloatBarrier
 \section{Related Work}
 \input{related}
-\input{reconstructed}
 \FloatBarrier
 \section{Algorithm Description}
 \input{algo}
@@ -61,6 +54,7 @@ We implement stacked denoising autoencoders, a special neural network that is ca
 \input{experiment}
 \FloatBarrier
 \section{Discussion}
+% \input{reconstructed}
 \input{discussion}
 \FloatBarrier
 \section{Future Work}
