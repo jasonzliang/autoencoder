@@ -159,7 +159,7 @@ which made it easier for liblinear to classify. This verifies that the
 autoencoder is doing what it is expected to do.
 
 Similarly, we performed the same experiment as above, except in this case we
-used libsvm with an RBF kernel and all the default parameters.  Without
+used libsvm \cite{chang2011libsvm} with an RBF kernel and all the default parameters.  Without
 encoding the data first, we get an accuracy of 94.46\%, but using the encoded
 data gives a prediction accuracy of 95.48\%. As above, the encoded data allows libsvm
 better classify the data. We should note that our accuracy is not as good as the one reported earlier as we did not tune the hyperparameters (C and kernel width) of the SVM classifier. 
