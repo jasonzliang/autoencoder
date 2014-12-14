@@ -6,6 +6,7 @@
 	\frametitle{Algorithms}
 	\framesubtitle{~~}  %% needed for proper positioning of the logo ...
 
+\begin{minipage}[c]{0.45\linewidth}
 \begin{algorithm}[H]
 	\small
 \caption{Backpropagation}
@@ -27,6 +28,17 @@
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+\end{minipage}\qquad
+\begin{minipage}[c]{0.45\linewidth}
+where,
+\begin{equation*}
+	\small
+	\begin{split}
+\delta^O_j &= (z_j-t_j)z_j(1-z_j) \\
+\delta^H_j &= \left(\sum_{k=1}^m (z_k - t_k)(1-z_k)z_kW_{jk}^O \right)y_j(1-y_j)
+\end{split}
+\end{equation*}
+\end{minipage}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
