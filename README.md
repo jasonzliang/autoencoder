@@ -1,9 +1,9 @@
 Stacked Denoising Autoencoders
 by Jason Liang and Keith Kelly
 
-Features:  
--C++ implementation of feed-forward neural networks and stacked denoising autoencoders  
--MultiThreaded and Fast: Order of magnitude faster than training with Theano 
+Features:	
+1)C++ implementation of feed-forward neural networks and stacked denoising autoencoders  	
+2)MultiThreaded and Fast: Order of magnitude faster than training with Theano 	
 
 To build with OpenMP:
 1)cd to src directory and type "make"
